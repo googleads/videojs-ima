@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Video.js IMA Plugin Test Suite</title>
+    <!-- Load Video.js -->
+    <link rel="stylesheet" href="//vjs.zencdn.net/4.6/video-js.css">
+    <script src="//vjs.zencdn.net/4.6/video.js"></script>
+    <!-- Load QUnit -->
+    <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.14.0.css">
+    <script src="//code.jquery.com/qunit/qunit-1.14.0.js"></script>
+    <!-- Load videojs-contrib-ads -->
+    <link rel="stylesheet" href="//rawgit.com/videojs/videojs-contrib-ads/master/src/videojs.ads.css">
+    <script src="//rawgit.com/videojs/videojs-contrib-ads/master/src/videojs.ads.js"></script>
+    <!-- Load IMA library -->
+    <script src="//s0.2mdn.net/instream/html5/ima3_debug.js"></script>
+    <!-- Load local IMA plugin -->
+    <link rel="stylesheet" href="../src/videojs.ima.css">
+    <script src="../src/videojs.ima.js"></script>
+    <script src="videojs.ima.test.js"></script>
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+      <video id="content_video" class="video-js vjs-default-skin"
+          controls preload="auto" width="640" height="360">
+        <source src="http://rmcdn.2mdn.net/Demo/vast_inspector/android.mp4" type="video/mp4" ></source>
+      </video>
+    </div>
+  </body>
+</html>

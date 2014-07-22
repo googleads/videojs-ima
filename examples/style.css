@@ -1,0 +1,158 @@
+/**
+ * Copyright 2014 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+body {
+  font-family: arial, verdana, sans-serif;
+  overflow: hidden;
+}
+
+header, footer { text-align:center; width: 100%; }
+
+header {
+  height: 40px;
+  font-size: 40px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+footer {
+  margin-top: 20px;
+}
+
+#ima-sample-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 728px;
+}
+
+#ima-sample-videoplayer {
+  position: relative;
+  background-color: #000;
+  border-radius: 5px;
+  box-shadow: 0px 0px 20px rgba(50, 50, 50, 0.95);
+  border: 2px #ccc solid;
+  width: 640px;
+  height: 360px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+#ima-sample-content-wrapper {
+  position:relative;
+  top: 0px;
+  left: 0px
+}
+
+#ima-sample-playpause, #ima-sample-replay {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  height: 40px;
+  width: 100px;
+  border-style: none;
+  font-weight: bold;
+  font-size: 25px;
+  opacity: 0.5;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px transparent solid;
+  color: #000;
+  cursor: pointer;
+  line-height: 0;
+}
+
+#ima-sample-replay {
+  display: none;
+}
+
+#ima-sample-playpause:hover, #ima-sample-replay:hover {
+  border: 1px #f00 solid;
+  color: #f00;
+}
+
+#ima-sample-fullscreen {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  height: 40px;
+  width: 100px;
+  border-style: none;
+  font-weight: bold;
+  font-size: 25px;
+  opacity: 0.5;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px transparent solid;
+  color: #000;
+  cursor: pointer;
+  line-height: 0;
+}
+
+#ima-sample-fullscreen:hover {
+  border: 1px #f00 solid;
+  color: #f00;
+}
+
+#ima-sample-content, #ima-sample-adcontainer {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 640px;
+  height: 360px;
+}
+
+#ima-sample-playlistDiv {
+  height: 122px;
+  width: 224px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.ima-sample-playlistItem {
+  height: 122px;
+  width: 102px;
+  float: left;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.ima-sample-playlistImg {
+  border: 1px solid;
+}
+
+#ima-sample-console {
+  font-family: courier, monospace;
+  font-size: 12px;
+  margin-top: 20px;
+  height: 200px;
+  width: 630px;
+  padding: 5px;
+  border: 1px #ccc solid;
+  overflow-y: scroll;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#ima-sample-companionDiv {
+  width: 728px;
+  height: 90px;
+  margin-top: 20px;
+}
