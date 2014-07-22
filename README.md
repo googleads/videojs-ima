@@ -98,4 +98,4 @@ See [this wiki article](../../wiki/Becoming-a-contributor) for details.
   - A JavaScript enabled browser
 
 ##Authors
-  - gms@google.com (Shawn Busolits) Please direct questions or bug reports to the Github issues page.
+  - api.sbusolits@gmail.com (Shawn Busolits) Please direct questions or bug reports to the Github issues page.
