@@ -66,7 +66,7 @@
           false);
       player.ima.createControls_();
       adDisplayContainer =
-          new google.ima.AdDisplayContainer(adContainerDiv);
+          new google.ima.AdDisplayContainer(adContainerDiv, contentPlayer);
     };
 
     /**
@@ -240,6 +240,7 @@
     player.ima.onContentPauseRequested_ = function(adEvent) {
       adsActive = true;
       adPlaying = true;
+      player.off('ended', localContentEndedListener);
       if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
         // Skip this call for post-roll ads
         player.ads.startLinearAdMode();
@@ -258,6 +259,7 @@
     player.ima.onContentResumeRequested_ = function(adEvent) {
       adsActive = false;
       adPlaying = false;
+      player.on('ended', localContentEndedListener);
       adContainerDiv.style.display = 'none';
       controlsDiv.style.display = 'none';
       vjsControls.show();
@@ -611,6 +613,11 @@
     var settings;
 
     /**
+     * Video element playing content.
+     */
+    var contentPlayer;
+
+    /**
      * Video.js control bar.
      */
     var vjsControls;
@@ -765,6 +772,19 @@
      */
     var contentEndedListeners = [];
 
+    /**
+     * Local content ended listener for contentComplete.
+     */
+    var localContentEndedListener = function() {
+      if (adsLoader && !contentComplete) {
+        adsLoader.contentComplete();
+        contentComplete = true;
+      }
+      for (var index in contentEndedListeners) {
+        contentEndedListeners[index]();
+      }
+    };
+
     settings = extend({}, defaults, options || {});
 
     // Currently this isn't used but I can see it being needed in the future, so
@@ -773,24 +793,18 @@
       window.console.log('Error: must provide id of video.js div');
       return;
     }
+    contentPlayer = document.getElementById(settings['id'] + '_html5_api');
 
     setInterval(player.ima.updateCurrentTime, seekCheckInterval);
     setInterval(player.ima.checkForSeeking, seekCheckInterval);
 
-    player.on('ended', function() {
-      if (adsLoader && !contentComplete) {
-        adsLoader.contentComplete();
-        contentComplete = true;
-      }
-      for (var index in contentEndedListeners) {
-        contentEndedListeners[index]();
-      }
-    });
+    player.on('ended', localContentEndedListener);
 
     player.ads({debug: settings.debug});
 
+    adsRenderingSettings = new google.ima.AdsRenderingSettings();
+    adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
     if (settings['adsRenderingSettings']) {
-      adsRenderingSettings = new google.ima.AdsRenderingSettings();
       for (var setting in settings['adsRenderingSettings']) {
         adsRenderingSettings[setting] =
             settings['adsRenderingSettings'][setting];
