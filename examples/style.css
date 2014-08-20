@@ -52,6 +52,10 @@ footer {
   margin-top: 20px;
 }
 
+#content_video {
+  overflow: hidden;
+}
+
 #ima-sample-content-wrapper {
   position:relative;
   top: 0px;
