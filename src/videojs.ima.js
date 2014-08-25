@@ -51,9 +51,9 @@
       adContainerDiv =
           vjsControls.el().parentNode.insertBefore(
               document.createElement('div'),
-              vjsControls.el().parentNode.childNodes[
-                  vjsControls.el().parentNode.childNodes.length-1]);
+              vjsControls.el());
       adContainerDiv.id = 'ima-ad-container';
+      adContainerDiv.style.display = 'none';
       adContainerDiv.style.width = player.width() + 'px';
       adContainerDiv.style.height = player.height() + 'px';
       adContainerDiv.addEventListener(
@@ -227,8 +227,9 @@
      * @ignore
      */
     player.ima.onAdError_ = function(adErrorEvent) {
-      window.console.log('Ad error: ' + adErrorEvent.getAdError());
+      window.console.log('Ad error: ' + adErrorEvent.getError());
       adsManager.destroy();
+      adContainerDiv.style.display = 'none';
       player.play();
     };
 
@@ -246,7 +247,6 @@
         player.ads.startLinearAdMode();
       }
       adContainerDiv.style.display = 'block';
-      controlsDiv.style.display = 'block';
       vjsControls.hide();
       player.pause();
     };
@@ -261,7 +261,6 @@
       adPlaying = false;
       player.on('ended', localContentEndedListener);
       adContainerDiv.style.display = 'none';
-      controlsDiv.style.display = 'none';
       vjsControls.show();
       if (!currentAd) {
         // Something went wrong playing the ad
@@ -411,10 +410,10 @@
      * @ignore
      */
     player.ima.onAdFullscreenClick_ = function() {
-      if (player.isFullScreen()) {
-        player.cancelFullScreen();
+      if (player.isFullscreen()) {
+        player.cancelFullscreen();
       } else {
-        player.requestFullScreen();
+        player.requestFullscreen();
       }
     };
 
@@ -424,7 +423,7 @@
      * @ignore
      */
     player.ima.onFullscreenChange_ = function() {
-      if (player.isFullScreen()) {
+      if (player.isFullscreen()) {
         fullscreenDiv.className = 'ima-fullscreen';
         adContainerDiv.style.width = window.screen.width + 'px';
         adContainerDiv.style.height = window.screen.height + 'px';
