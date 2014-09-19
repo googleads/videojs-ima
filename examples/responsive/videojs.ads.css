@@ -1,0 +1,52 @@
+/**
+ * videojs.ads.css
+ */
+
+/* Ad playback */
+.vjs-ad-playing.vjs-ad-playing .vjs-progress-control {
+  pointer-events: none;
+}
+.vjs-ad-playing.vjs-ad-playing .vjs-play-progress {
+  background-color: #ffe400;
+}
+
+/* Ad loading */
+.vjs-ad-playing.vjs-ad-loading .vjs-loading-spinner {
+  display: block;
+}
+
+/* page container as content holder */
+.page-container {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+/* make it responsive */
+.embed-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  height: auto;
+}
+
+.embed-container iframe,
+.embed-container object,
+.embed-container embed,
+.embed-container video,
+.embed-container .video-js--responsive {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#ima-ad-container > div:first-child {
+  height: 100%;
+  width: 100%;
+}
+#ima-ad-container iframe {
+  height: 100%;
+}
