@@ -1,0 +1,90 @@
+<!--
+  Copyright 2014 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<html>
+  <head>
+    <link href="//vjs.zencdn.net/4.7/video-js.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+    <link rel="stylesheet" href="../../third_party/videojs-ads/videojs.ads.css" />
+    <link rel="stylesheet" href="../../src/videojs.ima.css" />
+
+    <!-- GPT Companion Code
+         For more info see 
+         https://developers.google.com/interactive-media-ads/docs/companions/companions-gpt -->
+    <!-- Initialize the tagging library -->
+     <script type='text/javascript'>
+       var googletag = googletag || {};
+       googletag.cmd = googletag.cmd || [];
+       (function() {
+         var gads = document.createElement('script');
+         gads.async = true;
+         gads.type = 'text/javascript';
+         gads.src = '//www.googletagservices.com/tag/js/gpt.js';
+         var node = document.getElementsByTagName('script')[0];
+         node.parentNode.insertBefore(gads, node);
+       })();
+     </script>
+
+     <!-- Register your companion slots -->
+     <script type='text/javascript'>
+       googletag.cmd.push(function() {
+         // Supply YOUR_NETWORK/YOUR_UNIT_PATH in place of 6062/iab_vast_samples.
+         googletag.defineSlot('/6062/iab_vast_samples', [728, 90], 'companionDiv')
+             .addService(googletag.companionAds())
+             .addService(googletag.pubads());
+         googletag.companionAds().setRefreshUnfilledSlots(true);
+         googletag.pubads().enableVideoAds();
+         googletag.enableServices();
+       });
+     </script>
+
+    <title>Video.js ima Plugin</title>
+  </head>
+  <body>
+    <div id="ima-sample-container">
+      <header>IMA HTML5 SDK Advanced Demo</header>
+
+      <div id="ima-sample-videoplayer">
+        <div id="ima-sample-placeholder"></div>
+      </div>
+
+      <!-- Declare a div where you want the companion to appear. Use
+            googletag.display() to make sure the ad is displayed. -->
+      <div id="ima-sample-companionDiv">
+        <script type="text/javascript">
+          // Using the command queue to enable asynchronous loading.
+          // The unit will not actually display now - it will display when
+          // the video player is displaying the ads.
+          googletag.cmd.push(function() { googletag.display('companionDiv'); });
+        </script>
+      </div>
+
+      <div id="ima-sample-console">
+      Welcome to IMA HTML5 SDK Demo!
+      </div>
+
+        <footer>Copyright (C) 2013 Google Inc.</footer>
+    </div>
+    <script src="//vjs.zencdn.net/4.7/video.js"></script>
+    <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+    <script src="../../third_party/videojs-ads/videojs.ads.js"></script>
+    <script src="../../src/videojs.ima.js"></script>
+    <script src="ads.js"></script>
+    <script type="text/javascript">
+      var ads = new Ads();
+    </script>
+  </body>
+</html>

@@ -39,6 +39,12 @@ footer {
   width: 728px;
 }
 
+#ima-sample-placeholder {
+  background-image: url("posters/android.png");
+  width: 640px;
+  height: 360px;
+}
+
 #ima-sample-videoplayer {
   position: relative;
   background-color: #000;
