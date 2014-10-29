@@ -818,6 +818,11 @@
 
     adsLoader = new google.ima.AdsLoader(adDisplayContainer);
 
+    adsLoader.getSettings().setVpaidAllowed(true);
+    if (settings.vpaidAllowed == false) {
+      adsLoader.getSettings().setVpaidAllowed(false);
+    }
+
     if (settings.locale) {
       adsLoader.getSettings().setLocale(settings.locale);
     }

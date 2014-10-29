@@ -78,6 +78,7 @@ The plugin accepts additional settings beyond the two required settings shown in
   locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2 (three-letter) code(2). Defaults to 'en'.
   nonLinearWidth: <Number> Desired width of non-linear ads. Defaults to player width.
   nonLinearHeight: <Number> Desired height for non-linear ads. Defaults to 1/3 player height.
+  vpaidAllowed: <boolean> Whether or not to allow VPAID ads. Defaults to true.
 }
 ```
 (1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
