@@ -51,9 +51,9 @@
       adContainerDiv =
           vjsControls.el().parentNode.insertBefore(
               document.createElement('div'),
-              vjsControls.el().parentNode.childNodes[
-                  vjsControls.el().parentNode.childNodes.length-1]);
+              vjsControls.el());
       adContainerDiv.id = 'ima-ad-container';
+      adContainerDiv.style.display = 'none';
       adContainerDiv.style.width = player.width() + 'px';
       adContainerDiv.style.height = player.height() + 'px';
       adContainerDiv.addEventListener(
@@ -66,7 +66,7 @@
           false);
       player.ima.createControls_();
       adDisplayContainer =
-          new google.ima.AdDisplayContainer(adContainerDiv);
+          new google.ima.AdDisplayContainer(adContainerDiv, contentPlayer);
     };
 
     /**
@@ -198,6 +198,7 @@
             player.width(),
             player.height(),
             google.ima.ViewMode.NORMAL);
+        adsManager.setVolume(player.muted() ? 0 : player.volume());
         adsManager.start();
       } catch (adError) {
          player.ima.onAdError_(adError);
@@ -226,8 +227,9 @@
      * @ignore
      */
     player.ima.onAdError_ = function(adErrorEvent) {
-      window.console.log('Ad error: ' + adErrorEvent.getAdError());
+      window.console.log('Ad error: ' + adErrorEvent.getError());
       adsManager.destroy();
+      adContainerDiv.style.display = 'none';
       player.play();
     };
 
@@ -239,12 +241,12 @@
     player.ima.onContentPauseRequested_ = function(adEvent) {
       adsActive = true;
       adPlaying = true;
+      player.off('ended', localContentEndedListener);
       if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
         // Skip this call for post-roll ads
         player.ads.startLinearAdMode();
       }
       adContainerDiv.style.display = 'block';
-      controlsDiv.style.display = 'block';
       vjsControls.hide();
       player.pause();
     };
@@ -257,8 +259,8 @@
     player.ima.onContentResumeRequested_ = function(adEvent) {
       adsActive = false;
       adPlaying = false;
+      player.on('ended', localContentEndedListener);
       adContainerDiv.style.display = 'none';
-      controlsDiv.style.display = 'none';
       vjsControls.show();
       if (!currentAd) {
         // Something went wrong playing the ad
@@ -408,10 +410,10 @@
      * @ignore
      */
     player.ima.onAdFullscreenClick_ = function() {
-      if (player.isFullScreen()) {
-        player.cancelFullScreen();
+      if (player.isFullscreen()) {
+        player.cancelFullscreen();
       } else {
-        player.requestFullScreen();
+        player.requestFullscreen();
       }
     };
 
@@ -421,7 +423,7 @@
      * @ignore
      */
     player.ima.onFullscreenChange_ = function() {
-      if (player.isFullScreen()) {
+      if (player.isFullscreen()) {
         fullscreenDiv.className = 'ima-fullscreen';
         adContainerDiv.style.width = window.screen.width + 'px';
         adContainerDiv.style.height = window.screen.height + 'px';
@@ -610,6 +612,11 @@
     var settings;
 
     /**
+     * Video element playing content.
+     */
+    var contentPlayer;
+
+    /**
      * Video.js control bar.
      */
     var vjsControls;
@@ -764,6 +771,19 @@
      */
     var contentEndedListeners = [];
 
+    /**
+     * Local content ended listener for contentComplete.
+     */
+    var localContentEndedListener = function() {
+      if (adsLoader && !contentComplete) {
+        adsLoader.contentComplete();
+        contentComplete = true;
+      }
+      for (var index in contentEndedListeners) {
+        contentEndedListeners[index]();
+      }
+    };
+
     settings = extend({}, defaults, options || {});
 
     // Currently this isn't used but I can see it being needed in the future, so
@@ -772,24 +792,18 @@
       window.console.log('Error: must provide id of video.js div');
       return;
     }
+    contentPlayer = document.getElementById(settings['id'] + '_html5_api');
 
     setInterval(player.ima.updateCurrentTime, seekCheckInterval);
     setInterval(player.ima.checkForSeeking, seekCheckInterval);
 
-    player.on('ended', function() {
-      if (adsLoader && !contentComplete) {
-        adsLoader.contentComplete();
-        contentComplete = true;
-      }
-      for (var index in contentEndedListeners) {
-        contentEndedListeners[index]();
-      }
-    });
+    player.on('ended', localContentEndedListener);
 
     player.ads({debug: settings.debug});
 
+    adsRenderingSettings = new google.ima.AdsRenderingSettings();
+    adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
     if (settings['adsRenderingSettings']) {
-      adsRenderingSettings = new google.ima.AdsRenderingSettings();
       for (var setting in settings['adsRenderingSettings']) {
         adsRenderingSettings[setting] =
             settings['adsRenderingSettings'][setting];
@@ -803,6 +817,11 @@
     player.ima.createAdContainer_();
 
     adsLoader = new google.ima.AdsLoader(adDisplayContainer);
+
+    adsLoader.getSettings().setVpaidAllowed(true);
+    if (settings.vpaidAllowed == false) {
+      adsLoader.getSettings().setVpaidAllowed(false);
+    }
 
     if (settings.locale) {
       adsLoader.getSettings().setLocale(settings.locale);
