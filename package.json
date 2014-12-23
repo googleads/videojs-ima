@@ -11,8 +11,8 @@
     "test": "python -m SimpleHTTPServer"
   },
   "dependencies": {
-    "video.js": "~4.4",
-    "videojs-contrib-ads": "~0.2.0"
+    "video.js": "~4.11",
+    "videojs-contrib-ads": "~0.5.0"
   },
   "repository": {
     "type": "git",
