@@ -53,7 +53,6 @@
               document.createElement('div'),
               vjsControls.el());
       adContainerDiv.id = 'ima-ad-container';
-      adContainerDiv.style.display = 'none';
       adContainerDiv.style.width = player.width() + 'px';
       adContainerDiv.style.height = player.height() + 'px';
       adContainerDiv.addEventListener(
@@ -247,6 +246,7 @@
         player.ads.startLinearAdMode();
       }
       adContainerDiv.style.display = 'block';
+      controlsDiv.style.display = 'block';
       vjsControls.hide();
       player.pause();
     };
