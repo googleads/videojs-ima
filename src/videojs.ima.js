@@ -80,6 +80,7 @@
       countdownDiv = document.createElement('div');
       countdownDiv.id = 'ima-countdown-div';
       countdownDiv.innerHTML = 'Advertisement';
+      countdownDiv.style.display = showCountdown ? 'block' : 'none';
       seekBarDiv = document.createElement('div');
       seekBarDiv.id = 'ima-seek-bar-div';
       seekBarDiv.style.width = player.width() + 'px';
@@ -607,6 +608,16 @@
     }
 
     /**
+     * Changes the flag to show or hide the ad countdown timer.
+     *
+     * @param {boolean} showCountdownIn Show or hide the countdown timer.
+     */
+    player.ima.setShowCountdown = function(showCountdownIn) {
+      showCountdown = showCountdownIn;
+      countdownDiv.style.display = showCountdown ? 'block' : 'none';
+    }
+
+    /**
      * Stores user-provided settings.
      */
     var settings;
@@ -615,6 +626,11 @@
      * Video element playing content.
      */
     var contentPlayer;
+
+    /**
+     * Boolean flag to show or hide the ad countdown timer.
+     */
+    var showCountdown;
 
     /**
      * Video.js control bar.
@@ -793,6 +809,11 @@
       return;
     }
     contentPlayer = document.getElementById(settings['id'] + '_html5_api');
+    // Default showing countdown timer to true.
+    showCountdown = true;
+    if (settings['showCountdown'] == false) {
+      showCountdown = false;
+    }
 
     setInterval(player.ima.updateCurrentTime, seekCheckInterval);
     setInterval(player.ima.checkForSeeking, seekCheckInterval);
