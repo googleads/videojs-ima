@@ -10,6 +10,10 @@ To see the plugin in action, check out our [samples](//googleads.github.io/video
 ##Features
 - Easily integrate the Google IMA SDK into Video.js to enable advertising on your video content.
 
+##Requirements
+  - Your favorite text editor
+  - A JavaScript enabled browser
+
 ##Getting started
 The easiest way to get started is by using [npm](//www.npmjs.org/).
 
@@ -78,6 +82,7 @@ The plugin accepts additional settings beyond the two required settings shown in
   locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2 (three-letter) code(2). Defaults to 'en'.
   nonLinearWidth: <Number> Desired width of non-linear ads. Defaults to player width.
   nonLinearHeight: <Number> Desired height for non-linear ads. Defaults to 1/3 player height.
+  showCountdown: <boolean> Whether or not to show the ad countdown timer. Defaults to true.
   vpaidAllowed: <boolean> Whether or not to allow VPAID ads. Defaults to true.
 }
 ```
@@ -88,15 +93,15 @@ The plugin accepts additional settings beyond the two required settings shown in
 ##Where do I report issues?
 Please report issues on the [issues page](../../issues).
 
+##Terms of Service
+The IMA SDK plugin for Video.js uses the IMA SDK, and as such is subject to the
+[IMA SDK Terms of Service](https://developers.google.com/interactive-media-ads/terms).
+
 ##Support
 If you have questions about the framework, you can ask them at //groups.google.com/d/forum/google-media-framework
 
 ##How do I contribute?
 See [this wiki article](../../wiki/Becoming-a-contributor) for details.
-
-##Requirements
-  - Your favorite text editor
-  - A JavaScript enabled browser
 
 ##Authors
   - api.sbusolits@gmail.com (Shawn Busolits) Please direct questions or bug reports to the Github issues page.
