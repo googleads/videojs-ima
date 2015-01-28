@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Google Inc.
+ * Copyright 2014-2015 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -149,7 +149,7 @@
       adsRequest.nonLinearAdSlotHeight =
           settings.nonLinearHeight || (player.height() / 3);
 
-      adsLoader.requestAds(adsRequest);
+      player.ima.adsLoader.requestAds(adsRequest);
     };
 
     /**
@@ -204,6 +204,11 @@
          player.ima.onAdError_(adError);
       }
     };
+
+    /**
+     * Instantiate the adsLoader to be accessible outside
+     */
+    player.ima.adsLoader = {};
 
     /**
      * Listener for errors fired by the AdsLoader.
@@ -490,8 +495,8 @@
         adsManager.destroy();
         adsManager = null;
       }
-      if (adsLoader && !contentComplete) {
-        adsLoader.contentComplete();
+      if (player.ima.adsLoader && !contentComplete) {
+        player.ima.adsLoader.contentComplete();
       }
       contentComplete = false;
     };
@@ -688,11 +693,6 @@
     var adDisplayContainerInitialized = false;
 
     /**
-     * IMA SDK AdsLoader
-     */
-    var adsLoader;
-
-    /**
      * IMA SDK AdsManager
      */
     var adsManager;
@@ -791,8 +791,8 @@
      * Local content ended listener for contentComplete.
      */
     var localContentEndedListener = function() {
-      if (adsLoader && !contentComplete) {
-        adsLoader.contentComplete();
+      if (player.ima.adsLoader && !contentComplete) {
+        player.ima.adsLoader.contentComplete();
         contentComplete = true;
       }
       for (var index in contentEndedListeners) {
@@ -837,22 +837,22 @@
 
     player.ima.createAdContainer_();
 
-    adsLoader = new google.ima.AdsLoader(adDisplayContainer);
+    player.ima.adsLoader = new google.ima.AdsLoader(adDisplayContainer);
 
-    adsLoader.getSettings().setVpaidAllowed(true);
+    player.ima.adsLoader.getSettings().setVpaidAllowed(true);
     if (settings.vpaidAllowed == false) {
-      adsLoader.getSettings().setVpaidAllowed(false);
+      player.ima.adsLoader.getSettings().setVpaidAllowed(false);
     }
 
     if (settings.locale) {
-      adsLoader.getSettings().setLocale(settings.locale);
+      player.ima.adsLoader.getSettings().setLocale(settings.locale);
     }
 
-    adsLoader.addEventListener(
+    player.ima.adsLoader.addEventListener(
       google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
       player.ima.onAdsManagerLoaded_,
       false);
-    adsLoader.addEventListener(
+    player.ima.adsLoader.addEventListener(
       google.ima.AdErrorEvent.Type.AD_ERROR,
       player.ima.onAdsLoaderError_,
       false);

@@ -51,10 +51,43 @@ test('ad plays on good ad tag', function() {
   }
   player.ima.initializeAdDisplayContainer();
   player.ima.requestAds();
+
   player.play();
   stop();
   setTimeout(function() {
     equal(1, contentPauseCount);
     start();
   }, 5000);
+});
+
+test('adsLoader should not be null', function() {
+  var options = {
+    id: 'video',
+    adTagUrl: 'http://this.site.does.not.exist.google.com'
+  };
+  player.ima(options);
+  ok(player.ima.adsLoader != null)
+})
+
+test('adsLoader should trigger an event', function() {
+  var options = {
+    id: 'video',
+    adTagUrl: 'http://this.site.does.not.exist.google.com'
+  };
+  player.ima(options);
+  player.ima.adsLoader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, function(e){ callbackListener(e) })
+  player.ima.initializeAdDisplayContainer();
+  player.ima.requestAds();
+  player.play();
+  stop();
+
+  var callbackCount = 0;
+  function callbackListener(event){
+    callbackCount++;
+  }
+
+  setTimeout(function(){
+    ok(callbackCount!=0, 'should accept add event listener on adsLoader');
+    start();
+  }, 5000)
 });
