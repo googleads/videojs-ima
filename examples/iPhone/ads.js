@@ -24,11 +24,9 @@ var Ads = function() {
   this.options = {
     id: 'content_video',
     adTagUrl: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x480&' +
-        'iu=%2F3510761%2FadRulesSampleTags&' +
-        'ciu_szs=160x600%2C300x250%2C728x90&' +
-        'cust_params=adrule%3Dpremidpostpodandbumpers&impl=s&gdfp_req=1&' +
-        'env=vp&ad_rule=1&vid=47570401&cmsid=481&output=xml_vast2&' +
-        'unviewed_position_start=1&url=[referrer_url]&correlator=[timestamp]',
+        'iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&' +
+        'gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&' +
+        'cust_params=sample_ct%3Dlinear%26deployment%3Dgmf-js&correlator=',
     debug: true,
     nativeControlsForTouch: false
   };
