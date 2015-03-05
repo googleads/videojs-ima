@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-#ima-ad-container {
+.ima-ad-container {
   top: 0px;
   position: absolute;
   display: block;
+}
+
+/* Move overlay when controls are active. */
+.video-js.vjs-user-inactive.vjs-playing .ima-ad-container {
+  top: 0px;
+}
+
+.video-js.vjs-user-active.vjs-playing .ima-ad-container {
+  top: -30px;
 }
 
 #ima-controls-div {
