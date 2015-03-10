@@ -35,6 +35,9 @@
   },
 
   defaults = {
+    debug: false,
+    timeout: 5000,
+    prerollTimeout: 100
   },
 
   imaPlugin = function(options, readyCallback) {
@@ -820,7 +823,11 @@
 
     player.on('ended', localContentEndedListener);
 
-    player.ads({debug: settings.debug});
+    player.ads({
+      debug: settings.debug,
+      timeout: settings.timeout,
+      prerollTimeout: settings.prerollTimeout
+    });
 
     adsRenderingSettings = new google.ima.AdsRenderingSettings();
     adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
