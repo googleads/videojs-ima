@@ -218,7 +218,7 @@
       if (adsManager) {
         adsManager.destroy();
       }
-      player.play();
+      player.trigger('adserror');
     };
 
     /**
@@ -231,7 +231,7 @@
       window.console.log('Ad error: ' + adErrorEvent.getError());
       adsManager.destroy();
       adContainerDiv.style.display = 'none';
-      player.play();
+      player.trigger('adserror');
     };
 
     /**

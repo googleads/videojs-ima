@@ -30,8 +30,8 @@ test('video plays on bad ad tag', function() {
   player.play();
   stop();
   setTimeout(function() {
-    // Play called once by us and once by the plugin on error.
-    equal(2, playCount);
+    // Play called once by the plugin on error.
+    equal(playCount, 1);
     start();
   }, 5000);
 });
@@ -54,7 +54,7 @@ test('ad plays on good ad tag', function() {
   player.play();
   stop();
   setTimeout(function() {
-    equal(1, contentPauseCount);
+    equal(contentPauseCount, 1);
     start();
   }, 5000);
 });
