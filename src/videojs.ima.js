@@ -35,6 +35,9 @@
   },
 
   defaults = {
+    debug: false,
+    timeout: 5000,
+    prerollTimeout: 100
   },
 
   imaPlugin = function(options, readyCallback) {
@@ -218,7 +221,7 @@
       if (adsManager) {
         adsManager.destroy();
       }
-      player.play();
+      player.trigger('adserror');
     };
 
     /**
@@ -231,7 +234,7 @@
       window.console.log('Ad error: ' + adErrorEvent.getError());
       adsManager.destroy();
       adContainerDiv.style.display = 'none';
-      player.play();
+      player.trigger('adserror');
     };
 
     /**
@@ -821,7 +824,11 @@
 
     player.on('ended', localContentEndedListener);
 
-    player.ads({debug: settings.debug});
+    player.ads({
+      debug: settings.debug,
+      timeout: settings.timeout,
+      prerollTimeout: settings.prerollTimeout
+    });
 
     adsRenderingSettings = new google.ima.AdsRenderingSettings();
     adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
