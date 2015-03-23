@@ -15,9 +15,6 @@
  */
 
 var Ads = function() {
-  // Create player and start ads when the video player is clicked, but only the
-  // first time it's clicked.
-  this.clickedOnce = false;
   this.placeholder = document.getElementById('ima-sample-placeholder');
   this.placeholder.addEventListener('click', this.bind(this, this.init));
 
