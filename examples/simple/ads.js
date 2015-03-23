@@ -30,7 +30,8 @@ player.ima(options);
 // Remove controls from the player on iPad to stop native controls from stealing
 // our click
 var contentPlayer =  document.getElementById('content_video_html5_api');
-if (navigator.userAgent.match(/iPad/i) != null &&
+if ((navigator.userAgent.match(/iPad/i) ||
+      navigator.userAgent.match(/Android/i)) &&
     contentPlayer.hasAttribute('controls')) {
   contentPlayer.removeAttribute('controls');
 }
@@ -38,7 +39,13 @@ if (navigator.userAgent.match(/iPad/i) != null &&
 // Initialize the ad container when the video player is clicked, but only the
 // first time it's clicked.
 var clickedOnce = false;
-player.on('click', function() {
+var startEvent = 'click';
+if (navigator.userAgent.match(/iPhone/i) ||
+    navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/Android/i)) {
+  startEvent = 'tap';
+}
+player.on(startEvent, function() {
     if (!clickedOnce) {
       player.ima.initializeAdDisplayContainer();
       player.ima.requestAds();
