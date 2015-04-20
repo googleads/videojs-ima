@@ -626,6 +626,11 @@
     }
 
     /**
+     * Current plugin version.
+     */
+    var VERSION = '0.2.0';
+
+    /**
      * Stores user-provided settings.
      */
     var settings;
@@ -864,6 +869,9 @@
     if (settings.locale) {
       adsLoader.getSettings().setLocale(settings.locale);
     }
+
+    adsLoader.getSettings().setPlayerType('videojs-ima');
+    adsLoader.getSettings().setPlayerVersion(VERSION);
 
     adsLoader.addEventListener(
       google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
