@@ -78,8 +78,9 @@ The plugin accepts additional settings beyond the two required settings shown in
   id: <string> REQUIRED The id of your video player
   adTagUrl: <string> REQUIRED A URL which returns a VAST response
   adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK Docs(1).
+  contribAdsSettings: <Object> Additional settings to be passed to the contrib-ads plugin(2), used by this IMA plugin.
   debug: <boolean> True to load the debug version of the plugin, false to load the non-debug version. Defaults to false.
-  locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2 (three-letter) code(2). Defaults to 'en'.
+  locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2 (three-letter) code(3). Defaults to 'en'.
   nonLinearWidth: <Number> Desired width of non-linear ads. Defaults to player width.
   nonLinearHeight: <Number> Desired height for non-linear ads. Defaults to 1/3 player height.
   showCountdown: <boolean> Whether or not to show the ad countdown timer. Defaults to true.
@@ -88,7 +89,9 @@ The plugin accepts additional settings beyond the two required settings shown in
 ```
 (1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
 <br />
-(2) [Valid locale codes](http://www.loc.gov/standards/iso639-2/php/English_list.php)
+(2) [contrib-ads plugin](//github.com/videojs/videojs-contrib-ads)
+<br />
+(3) [Valid locale codes](http://www.loc.gov/standards/iso639-2/php/English_list.php)
 
 ##Where do I report issues?
 Please report issues on the [issues page](../../issues).
