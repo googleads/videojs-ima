@@ -56,7 +56,6 @@
               document.createElement('div'),
               vjsControls.el());
       adContainerDiv.id = 'ima-ad-container';
-      adContainerDiv.className = 'ima-ad-container';
       adContainerDiv.style.width = player.width() + 'px';
       adContainerDiv.style.height = player.height() + 'px';
       adContainerDiv.addEventListener(
@@ -300,6 +299,11 @@
       if (currentAd.isLinear()) {
         adTrackingTimer = setInterval(
             player.ima.onAdPlayheadTrackerInterval_, 250);
+        // Don't bump container when controls are shown
+        adContainerDiv.className = '';
+      } else {
+        // Bump container when controls are shown
+        adContainerDiv.className = 'bumpable-ima-ad-container';
       }
     };
 
