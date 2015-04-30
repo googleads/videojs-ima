@@ -530,7 +530,8 @@
      * Sets the content of the video player. You should use this method instead
      * of setting the content src directly to ensure the proper ad tag is
      * requested when the video content is loaded.
-     * @param {string} contentSrc The URI for the content to be played.
+     * @param {?string} contentSrc The URI for the content to be played. Leave
+     *     blank to use the existing content.
      * @param {?string} adTag The ad tag to be requested when the content loads.
      *     Leave blank to use the existing ad tag.
      * @param {?boolean} playOnLoad True to play the content once it has loaded,
@@ -541,7 +542,9 @@
       player.ima.resetIMA_();
       settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
       player.pause();
-      player.src(contentSrc);
+      if (contentSrc) {
+        player.src(contentSrc);
+      }
       if (playOnLoad) {
         player.on('loadedmetadata', function() {
           player.ima.playContentFromZero_();
