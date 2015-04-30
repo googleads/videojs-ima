@@ -45,6 +45,12 @@ footer {
   height: 360px;
 }
 
+.urlLink {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 #ima-sample-videoplayer {
   position: relative;
   background-color: #000;
