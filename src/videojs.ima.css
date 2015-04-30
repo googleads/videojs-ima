@@ -21,12 +21,12 @@
 }
 
 /* Move overlay when controls are active. */
-.video-js.vjs-user-inactive.vjs-playing .ima-ad-container {
-  top: 0px;
+.video-js.vjs-user-inactive.vjs-playing .bumpable-ima-ad-container {
+  margin-top: 0px;
 }
 
-.video-js.vjs-user-active.vjs-playing .ima-ad-container {
-  top: -40px;
+.video-js.vjs-user-active.vjs-playing .bumpable-ima-ad-container {
+  margin-top: -40px;
 }
 
 #ima-controls-div {

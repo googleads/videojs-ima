@@ -34,7 +34,7 @@
     return obj;
   },
 
-  defaults = {
+  ima_defaults = {
     debug: false,
     timeout: 5000,
     prerollTimeout: 100
@@ -56,7 +56,6 @@
               document.createElement('div'),
               vjsControls.el());
       adContainerDiv.id = 'ima-ad-container';
-      adContainerDiv.className = 'ima-ad-container';
       adContainerDiv.style.width = player.width() + 'px';
       adContainerDiv.style.height = player.height() + 'px';
       adContainerDiv.addEventListener(
@@ -300,6 +299,11 @@
       if (currentAd.isLinear()) {
         adTrackingTimer = setInterval(
             player.ima.onAdPlayheadTrackerInterval_, 250);
+        // Don't bump container when controls are shown
+        adContainerDiv.className = '';
+      } else {
+        // Bump container when controls are shown
+        adContainerDiv.className = 'bumpable-ima-ad-container';
       }
     };
 
@@ -526,7 +530,8 @@
      * Sets the content of the video player. You should use this method instead
      * of setting the content src directly to ensure the proper ad tag is
      * requested when the video content is loaded.
-     * @param {string} contentSrc The URI for the content to be played.
+     * @param {?string} contentSrc The URI for the content to be played. Leave
+     *     blank to use the existing content.
      * @param {?string} adTag The ad tag to be requested when the content loads.
      *     Leave blank to use the existing ad tag.
      * @param {?boolean} playOnLoad True to play the content once it has loaded,
@@ -537,7 +542,9 @@
       player.ima.resetIMA_();
       settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
       player.pause();
-      player.src(contentSrc);
+      if (contentSrc) {
+        player.src(contentSrc);
+      }
       if (playOnLoad) {
         player.on('loadedmetadata', function() {
           player.ima.playContentFromZero_();
@@ -620,6 +627,11 @@
       showCountdown = showCountdownIn;
       countdownDiv.style.display = showCountdown ? 'block' : 'none';
     }
+
+    /**
+     * Current plugin version.
+     */
+    var VERSION = '0.2.0';
 
     /**
      * Stores user-provided settings.
@@ -804,7 +816,7 @@
       }
     };
 
-    settings = extend({}, defaults, options || {});
+    settings = extend({}, ima_defaults, options || {});
 
     // Currently this isn't used but I can see it being needed in the future, so
     // to avoid implementation problems with later updates I'm requiring it.
@@ -824,11 +836,16 @@
 
     player.on('ended', localContentEndedListener);
 
-    player.ads({
+    var contrib_ads_defaults = {
       debug: settings.debug,
       timeout: settings.timeout,
       prerollTimeout: settings.prerollTimeout
-    });
+    };
+
+    var ads_plugin_settings =
+        extend({}, contrib_ads_defaults, options['contribAdsSettings'] || {});
+
+    player.ads(ads_plugin_settings);
 
     adsRenderingSettings = new google.ima.AdsRenderingSettings();
     adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
@@ -855,6 +872,9 @@
     if (settings.locale) {
       adsLoader.getSettings().setLocale(settings.locale);
     }
+
+    adsLoader.getSettings().setPlayerType('videojs-ima');
+    adsLoader.getSettings().setPlayerVersion(VERSION);
 
     adsLoader.addEventListener(
       google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,

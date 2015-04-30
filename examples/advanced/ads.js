@@ -18,6 +18,13 @@ var Ads = function() {
 
   this.player = videojs('content_video');
 
+  this.adTagInput = document.getElementById('tagInput');
+  this.sampleAdTag = document.getElementById('sampleAdTag');
+  this.sampleAdTag.addEventListener(
+      'click',
+      this.bind(this, this.onSampleAdTagClick_),
+      false);
+
   // Remove controls from the player on iPad to stop native controls from stealing
   // our click
   var contentPlayer =  document.getElementById('content_video_html5_api');
@@ -45,11 +52,6 @@ var Ads = function() {
 
   this.options = {
     id: 'content_video',
-    adTagUrl: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x480&' +
-        'iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&' +
-        'impl=s&gdfp_req=1&env=vp&output=xml_vmap1&unviewed_position_start=1&' +
-        'cust_params=sample_ar%3Dpremidpostpod%26deployment%3Dgmf-js&' +
-        'cmsid=496&vid=short_onecue&correlator=',
     debug: true
   };
 
@@ -72,10 +74,26 @@ var Ads = function() {
 
 };
 
+Ads.prototype.SAMPLE_AD_TAG = 'http://pubads.g.doubleclick.net/gampad/ads?' +
+    'sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&' +
+    'ad_rule=1&impl=s&gdfp_req=1&env=vp&output=xml_vmap1&' +
+    'unviewed_position_start=1&' +
+    'cust_params=sample_ar%3Dpremidpostpod%26deployment%3Dgmf-js&cmsid=496&' +
+    'vid=short_onecue&correlator=';
+
 Ads.prototype.init = function() {
-  this.player.ima.initializeAdDisplayContainer();
-  this.player.ima.requestAds();
-  this.player.play();
+  if (this.adTagInput.value == '') {
+    this.log('Error: please fill in an ad tag');
+  } else {
+    this.player.ima.initializeAdDisplayContainer();
+    this.player.ima.setContent(null, this.adTagInput.value, true);
+    this.player.ima.requestAds();
+    this.player.play();
+  }
+};
+
+Ads.prototype.onSampleAdTagClick_ = function() {
+  this.adTagInput.value = this.SAMPLE_AD_TAG;
 };
 
 Ads.prototype.adsManagerLoadedCallback = function() {
@@ -88,9 +106,12 @@ Ads.prototype.adsManagerLoadedCallback = function() {
 };
 
 Ads.prototype.onAdEvent = function(event) {
-  this.console.innerHTML =
-      this.console.innerHTML + '<br/>Ad event: ' + event.type;
+  this.log('Ad event: ' + event.type);
 };
+
+Ads.prototype.log = function(message) {
+  this.console.innerHTML = this.console.innerHTML + '<br/>' + message;
+}
 
 Ads.prototype.bind = function(thisObj, fn) {
   return function() {
