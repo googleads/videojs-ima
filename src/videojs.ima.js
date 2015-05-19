@@ -591,13 +591,23 @@
     };
 
     /**
+     * Set up intervals to check for seeking and update current video time.
+     */
+    player.ima.setUpPlayerIntervals_ = function() {
+      updateTimeIntervalHandle =
+          setInterval(player.ima.updateCurrentTime, seekCheckInterval);
+      seekCheckIntervalHandle =
+          setInterval(player.ima.checkForSeeking, seekCheckInterval);
+    };
+
+    /**
      * Updates the current time of the video
      */
     player.ima.updateCurrentTime = function() {
       if (!contentPlayheadTracker.seeking) {
         contentPlayheadTracker.currentTime = player.currentTime();
       }
-    }
+    };
 
     /**
      * Detects when the user is seeking through a video.
@@ -616,7 +626,7 @@
         contentPlayheadTracker.seeking = false;
       }
       contentPlayheadTracker.previousTime = player.currentTime();
-    }
+    };
 
     /**
      * Changes the flag to show or hide the ad countdown timer.
@@ -626,7 +636,7 @@
     player.ima.setShowCountdown = function(showCountdownIn) {
       showCountdown = showCountdownIn;
       countdownDiv.style.display = showCountdown ? 'block' : 'none';
-    }
+    };
 
     /**
      * Current plugin version.
@@ -761,6 +771,16 @@
     var contentComplete = false;
 
     /**
+     * Handle to interval that repeatedly updates current time.
+     */
+    var updateTimeIntervalHandle;
+
+    /**
+     * Handle to interval that repeatedly checks for seeking.
+     */
+    var seekCheckIntervalHandle;
+
+    /**
      * Interval (ms) on which to check if the user is seeking through the
      * content.
      */
@@ -814,6 +834,9 @@
       for (var index in contentEndedListeners) {
         contentEndedListeners[index]();
       }
+      clearInterval(updateTimeIntervalHandle);
+      clearInterval(seekCheckIntervalHandle);
+      player.one('play', player.ima.setUpPlayerIntervals_);
     };
 
     settings = extend({}, ima_defaults, options || {});
@@ -831,8 +854,7 @@
       showCountdown = false;
     }
 
-    setInterval(player.ima.updateCurrentTime, seekCheckInterval);
-    setInterval(player.ima.checkForSeeking, seekCheckInterval);
+    player.one('play', player.ima.setUpPlayerIntervals_);
 
     player.on('ended', localContentEndedListener);
 
