@@ -423,7 +423,7 @@
      */
     player.ima.onAdFullscreenClick_ = function() {
       if (player.isFullscreen()) {
-        player.cancelFullscreen();
+        player.exitFullscreen();
       } else {
         player.requestFullscreen();
       }
