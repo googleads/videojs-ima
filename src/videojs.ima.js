@@ -187,6 +187,9 @@
       adsManager.addEventListener(
           google.ima.AdEvent.Type.COMPLETE,
           player.ima.onAdComplete_);
+      adsManager.addEventListener(
+          google.ima.AdEvent.Type.SKIPPED,
+          player.ima.onAdComplete_);
 
       player.trigger('adsready');
     };
@@ -420,7 +423,7 @@
      */
     player.ima.onAdFullscreenClick_ = function() {
       if (player.isFullscreen()) {
-        player.cancelFullscreen();
+        player.exitFullscreen();
       } else {
         player.requestFullscreen();
       }
