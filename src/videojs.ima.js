@@ -549,13 +549,9 @@
         player.src(contentSrc);
       }
       if (playOnLoad) {
-        player.on('loadedmetadata', function() {
-          player.ima.playContentFromZero_();
-        });
+        player.on('loadedmetadata', player.ima.playContentFromZero_);
       } else {
-        player.on('loadedmetadata', function() {
-          player.ima.seekContentToZero_();
-        });
+        player.on('loadedmetadata', player.ima.seekContentToZero_);
       }
     };
 
