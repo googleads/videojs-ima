@@ -29,19 +29,13 @@ var Ads = function() {
 
   // Start ads when the video player is clicked, but only the first time it's
   // clicked.
-  this.clickedOnce = false;
   var startEvent = 'click';
   if (navigator.userAgent.match(/iPhone/i) ||
       navigator.userAgent.match(/iPad/i) ||
       navigator.userAgent.match(/Android/i)) {
     startEvent = 'tap';
   }
-  this.player.on(startEvent, this.bind(this, function() {
-      if (!this.clickedOnce) {
-        this.init();
-        this.clickedOnce = true;
-      }
-  }));
+  this.player.one(startEvent, this.bind(this, this.init));
 
   this.options = {
     id: 'content_video',

@@ -38,18 +38,15 @@ if ((navigator.userAgent.match(/iPad/i) ||
 
 // Initialize the ad container when the video player is clicked, but only the
 // first time it's clicked.
-var clickedOnce = false;
 var startEvent = 'click';
 if (navigator.userAgent.match(/iPhone/i) ||
     navigator.userAgent.match(/iPad/i) ||
     navigator.userAgent.match(/Android/i)) {
   startEvent = 'tap';
 }
-player.on(startEvent, function() {
-    if (!clickedOnce) {
-      player.ima.initializeAdDisplayContainer();
-      player.ima.requestAds();
-      player.play();
-      clickedOnce = true;
-    }
+
+player.one(startEvent, function() {
+    player.ima.initializeAdDisplayContainer();
+    player.ima.requestAds();
+    player.play();
 });
