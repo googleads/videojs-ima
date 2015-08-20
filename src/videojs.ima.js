@@ -267,7 +267,9 @@
       adsActive = false;
       adPlaying = false;
       player.on('ended', localContentEndedListener);
-      adContainerDiv.style.display = 'none';
+      if (currentAd && currentAd.isLinear()) {
+        adContainerDiv.style.display = 'none';
+      }
       vjsControls.show();
       if (!currentAd) {
         // Something went wrong playing the ad
