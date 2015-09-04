@@ -84,7 +84,8 @@ The plugin accepts additional settings beyond the two required settings shown in
   nonLinearWidth: <Number> Desired width of non-linear ads. Defaults to player width.
   nonLinearHeight: <Number> Desired height for non-linear ads. Defaults to 1/3 player height.
   showCountdown: <boolean> Whether or not to show the ad countdown timer. Defaults to true.
-  vpaidAllowed: <boolean> Whether or not to allow VPAID ads. Defaults to true.
+  vpaidAllowed: <boolean> (DEPRECATED, please use vpaidMode).
+  vpaidMode: <google.ima.ImaSdkSettings.VpaidMode(4)> VPAID Mode. Defaults to ENABLED. This setting overrides vpaidAllowed.
 }
 ```
 (1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
@@ -92,6 +93,8 @@ The plugin accepts additional settings beyond the two required settings shown in
 (2) [contrib-ads plugin](//github.com/videojs/videojs-contrib-ads)
 <br />
 (3) [Valid locale codes](http://www.loc.gov/standards/iso639-2/php/English_list.php)
+<br />
+(4) [google.ima.ImaSdkSettings.VpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.ImaSdkSettings.VpaidMode)
 
 ##Where do I report issues?
 Please report issues on the [issues page](../../issues).
