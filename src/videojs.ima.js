@@ -890,9 +890,14 @@
 
     adsLoader = new google.ima.AdsLoader(adDisplayContainer);
 
-    adsLoader.getSettings().setVpaidAllowed(true);
+    adsLoader.getSettings().setVpaidMode(
+        google.ima.ImaSdkSettings.VpaidMode.ENABLED);
     if (settings.vpaidAllowed == false) {
-      adsLoader.getSettings().setVpaidAllowed(false);
+      adsLoader.getSettings().setVpaidMode(
+          google.ima.ImaSdkSettings.VpaidMode.DISABLED);
+    }
+    if (settings.vpaidMode) {
+      adsLoader.getSettings().setVpaidMode(settings.vpaidMode);
     }
 
     if (settings.locale) {
