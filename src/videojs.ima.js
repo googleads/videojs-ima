@@ -102,6 +102,14 @@
           'click',
           player.ima.onAdMuteClick_,
           false);
+      sliderDiv = document.createElement('div');
+      sliderDiv.id = 'ima-slider-div';
+      sliderDiv.addEventListener(
+          'mousedown',
+          player.ima.onAdVolumeSliderMouseDown_,
+          false);
+      sliderLevelDiv = document.createElement('div');
+      sliderLevelDiv.id = 'ima-slider-level-div';
       fullscreenDiv = document.createElement('div');
       fullscreenDiv.id = 'ima-fullscreen-div';
       fullscreenDiv.className = 'ima-non-fullscreen';
@@ -121,9 +129,13 @@
       controlsDiv.insertBefore(
           muteDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
       controlsDiv.insertBefore(
+          sliderDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
+      controlsDiv.insertBefore(
           fullscreenDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
       seekBarDiv.insertBefore(
           progressDiv, seekBarDiv.childNodes[controlsDiv.childNodes.length]);
+      sliderDiv.insertBefore(
+          sliderLevelDiv, sliderDiv.childNodes[sliderDiv.childNodes.length]);
     };
 
     /**
@@ -380,6 +392,7 @@
       controlsDiv.style.height = '37px';
       playPauseDiv.style.display = 'block';
       muteDiv.style.display = 'block';
+      sliderDiv.style.display = 'block';
       fullscreenDiv.style.display = 'block';
     };
 
@@ -410,17 +423,69 @@
         // Bubble down to content player
         player.muted(false);
         adMuted = false;
+        sliderLevelDiv.style.width = player.volume() * 100 + "%";
       } else {
         muteDiv.className = 'ima-muted';
         adsManager.setVolume(0);
         // Bubble down to content player
         player.muted(true);
         adMuted = true;
+        sliderLevelDiv.style.width = "0%";
       }
     };
 
+    /* Listener for mouse down events during ad playback. Used for volume.
+     * @ignore
+     */
+    player.ima.onAdVolumeSliderMouseDown_ = function() {
+       document.addEventListener('mouseup', player.ima.onMouseUp_, false);
+       document.addEventListener('mousemove', player.ima.onMouseMove_, false);
+    }
+
+    /* Mouse movement listener used for volume slider.
+     * @ignore
+     */
+    player.ima.onMouseMove_ = function(event) {
+      player.ima.setVolumeSlider_(event);
+    }
+
+    /* Mouse release listener used for volume slider.
+     * @ignore
+     */
+    player.ima.onMouseUp_ = function(event) {
+      player.ima.setVolumeSlider_(event);
+      document.removeEventListener('mousemove', player.ima.onMouseMove_);
+      document.removeEventListener('mouseup', player.ima.onMouseUp_);
+    }
+
+    /* Utility function so set vvolume and associated UI
+     * @ignore
+     */
+    player.ima.setVolumeSlider_ = function(event) {
+      var percent =
+          (event.clientX - sliderDiv.getBoundingClientRect().left) /
+              sliderDiv.offsetWidth;
+      percent *= 100;
+      //Bounds value 0-100 if mouse is outside slider region.
+      percent = Math.min(Math.max(percent, 0), 100);
+      sliderLevelDiv.style.width = percent + "%";
+      player.volume(percent / 100); //0-1
+      adsManager.setVolume(percent / 100);
+      if (player.volume() == 0) {
+        muteDiv.className = 'ima-muted';
+        player.muted(true);
+        adMuted = true;
+      }
+      else
+      {
+        muteDiv.className = 'ima-non-muted';
+        player.muted(false);
+        adMuted = false;
+      }
+    }
+
     /**
-     * Listener for clicks on the fullscreen button durin ad playback.
+     * Listener for clicks on the fullscreen button during ad playback.
      * @ignore
      */
     player.ima.onAdFullscreenClick_ = function() {
@@ -701,6 +766,16 @@
      * Div used to display ad mute button.
      */
     var muteDiv;
+
+    /**
+     * Div used by the volume slider.
+     */
+    var sliderDiv;
+
+    /**
+     * Volume slider level visuals
+     */
+    var sliderLevelDiv;
 
     /**
      * Div used to display ad fullscreen button.
