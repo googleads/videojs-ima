@@ -87,7 +87,7 @@
   height: 10px;
 }
 
-#ima-play-pause-div, #ima-mute-div, #ima-fullscreen-div {
+#ima-play-pause-div, #ima-mute-div, #ima-slider-div, #ima-fullscreen-div {
   width: 35px;
   height: 20px;
   top: 11px;
@@ -102,7 +102,22 @@
 
 #ima-mute-div {
   left: auto;
+  right: 85px;
+}
+
+#ima-slider-div {
+  left: auto;
   right: 35px;
+  width: 50px;
+  height: 10px;
+  top: 20px;
+  background-color: #555555;
+}
+
+#ima-slider-level-div {
+  width: 100%;
+  height: 10px;
+  background-color: #ECC546;
 }
 
 #ima-fullscreen-div {
