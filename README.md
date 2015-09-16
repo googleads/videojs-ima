@@ -96,6 +96,10 @@ The plugin accepts additional settings beyond the two required settings shown in
 <br />
 (4) [google.ima.ImaSdkSettings.VpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.ImaSdkSettings.VpaidMode)
 
+## API Docs
+For a list of methods exposed by the plugin, see our full [API
+Docs](https://github.com/googleads/videojs-ima/wiki/API-Docs).
+
 ##Where do I report issues?
 Please report issues on the [issues page](../../issues).
 
