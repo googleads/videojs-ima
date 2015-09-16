@@ -186,6 +186,9 @@
       adsManager.addEventListener(
           google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED,
           player.ima.onContentResumeRequested_);
+      adsManager.addEventListener(
+          google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
+          player.ima.onAllAdsCompleted_);
 
       adsManager.addEventListener(
           google.ima.AdEvent.Type.LOADED,
@@ -293,6 +296,21 @@
       }
       countdownDiv.innerHTML = '';
     };
+
+    /**
+     * Records that ads have completed and calls contentAndAdsEndedListeners
+     * if content is also complete.
+     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+     * @ignore
+     */
+    player.ima.onAllAdsCompleted_ = function(adEvent) {
+      allAdsCompleted = true;
+      if (contentComplete == true) {
+        for (var index in contentAndAdsEndedListeners) {
+          contentAndAdsEndedListeners[index]();
+        }
+      }
+    }
 
     /**
      * Starts the content video when a non-linear ad is loaded.
@@ -572,6 +590,7 @@
         adsLoader.contentComplete();
       }
       contentComplete = false;
+      allAdsCompleted = false;
     };
 
     /**
@@ -636,6 +655,16 @@
     player.ima.addContentEndedListener = function(listener) {
       contentEndedListeners.push(listener);
     };
+
+    /**
+     * Adds a listener that will be called when content and all ads have
+     * finished playing.
+     * @param {function} listener The listener to be called when content and
+     *     ads complete.
+     */
+    player.ima.addContentAndAdsEndedListener = function(listener) {
+      contentAndAdsEndedListeners.push(listener);
+    }
 
     /**
      * Pauses the ad.
@@ -850,6 +879,11 @@
     var contentComplete = false;
 
     /**
+     * True if ALL_ADS_COMPLETED has fired, false until then.
+     */
+     var allAdsCompleted = false;
+
+    /**
      * Handle to interval that repeatedly updates current time.
      */
     var updateTimeIntervalHandle;
@@ -903,6 +937,16 @@
     var contentEndedListeners = [];
 
     /**
+     * Content and ads ended listeners passed by the publisher to the plugin.
+     * These will be called when the plugin detects that content *and all
+     * ads* have completed. This differs from the contentEndedListeners in that
+     * contentEndedListeners will fire between content ending and a post-roll
+     * playing, whereas the contentAndAdsEndedListeners will fire after the
+     * post-roll completes.
+     */
+     var contentAndAdsEndedListeners = [];
+
+    /**
      * Local content ended listener for contentComplete.
      */
     var localContentEndedListener = function() {
@@ -912,6 +956,11 @@
       }
       for (var index in contentEndedListeners) {
         contentEndedListeners[index]();
+      }
+      if (allAdsCompleted) {
+        for (var index in contentAndAdsEndedListeners) {
+          contentAndAdsEndedListeners[index]();
+        }
       }
       clearInterval(updateTimeIntervalHandle);
       clearInterval(seekCheckIntervalHandle);
