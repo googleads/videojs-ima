@@ -45,7 +45,7 @@
 
     /**
      * Creates the ad container passed to the IMA SDK.
-     * @ignore
+     * @private
      */
     player.ima.createAdContainer_ = function() {
       // The adContainerDiv is the DOM of the element that will house
@@ -73,7 +73,7 @@
 
     /**
      * Creates the controls for the ad.
-     * @ignore
+     * @private
      */
     player.ima.createControls_ = function() {
       controlsDiv = document.createElement('div');
@@ -171,7 +171,7 @@
      * Listener for the ADS_MANAGER_LOADED event. Creates the AdsManager,
      * sets up event listeners, and triggers the 'adsready' event for
      * videojs-ads-contrib.
-     * @ignore
+     * @private
      */
     player.ima.onAdsManagerLoaded_ = function(adsManagerLoadedEvent) {
       adsManager = adsManagerLoadedEvent.getAdsManager(
@@ -231,7 +231,7 @@
      * @param {google.ima.AdErrorEvent} event The error event thrown by the
      *     AdsLoader. See
      *     https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdError.Type
-     * @ignore
+     * @private
      */
     player.ima.onAdsLoaderError_ = function(event) {
       window.console.log('AdsLoader error: ' + event.getError());
@@ -245,7 +245,7 @@
      * Listener for errors thrown by the AdsManager.
      * @param {google.ima.AdErrorEvent} adErrorEvent The error event thrown by
      *     the AdsManager.
-     * @ignore
+     * @private
      */
     player.ima.onAdError_ = function(adErrorEvent) {
       window.console.log('Ad error: ' + adErrorEvent.getError());
@@ -257,7 +257,7 @@
     /**
      * Pauses the content video and displays the ad container so ads can play.
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @ignore
+     * @private
      */
     player.ima.onContentPauseRequested_ = function(adEvent) {
       adsActive = true;
@@ -276,7 +276,7 @@
     /**
      * Resumes content video and hides the ad container.
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @ignore
+     * @private
      */
     player.ima.onContentResumeRequested_ = function(adEvent) {
       adsActive = false;
@@ -315,7 +315,7 @@
     /**
      * Starts the content video when a non-linear ad is loaded.
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @ignore
+     * @private
      */
     player.ima.onAdLoaded_ = function(adEvent) {
       if (!adEvent.getAd().isLinear()) {
@@ -327,7 +327,7 @@
      * Starts the interval timer to check the current ad time when an ad starts
      * playing.
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @ignore
+     * @private
      */
     player.ima.onAdStarted_ = function(adEvent) {
       currentAd = adEvent.getAd();
@@ -345,7 +345,7 @@
     /**
      * Clears the interval timer for current ad time when an ad completes.
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @ignore
+     * @private
      */
     player.ima.onAdComplete_ = function(adEvent) {
       if (currentAd.isLinear()) {
@@ -356,7 +356,7 @@
     /**
      * Gets the current time and duration of the ad and calls the method to
      * update the ad UI.
-     * @ignore
+     * @private
      */
     player.ima.onAdPlayheadTrackerInterval_ = function() {
       var remainingTime = adsManager.getRemainingTime();
@@ -393,7 +393,7 @@
 
     /**
      * Hides the ad controls on mouseout.
-     * @ignore
+     * @private
      */
     player.ima.hideAdControls_ = function() {
       playPauseDiv.style.display = 'none';
@@ -404,7 +404,7 @@
 
     /**
      * Shows ad controls on mouseover.
-     * @ignore
+     * @private
      */
     player.ima.showAdControls_ = function() {
       controlsDiv.style.height = '37px';
@@ -416,7 +416,7 @@
 
     /**
      * Listener for clicks on the play/pause button during ad playback.
-     * @ignore
+     * @private
      */
     player.ima.onAdPlayPauseClick_ = function() {
       if (adPlaying) {
@@ -432,7 +432,7 @@
 
     /**
      * Listener for clicks on the mute button during ad playback.
-     * @ignore
+     * @private
      */
     player.ima.onAdMuteClick_ = function() {
       if (adMuted) {
@@ -453,7 +453,7 @@
     };
 
     /* Listener for mouse down events during ad playback. Used for volume.
-     * @ignore
+     * @private
      */
     player.ima.onAdVolumeSliderMouseDown_ = function() {
        document.addEventListener('mouseup', player.ima.onMouseUp_, false);
@@ -461,14 +461,14 @@
     }
 
     /* Mouse movement listener used for volume slider.
-     * @ignore
+     * @private
      */
     player.ima.onMouseMove_ = function(event) {
       player.ima.setVolumeSlider_(event);
     }
 
     /* Mouse release listener used for volume slider.
-     * @ignore
+     * @private
      */
     player.ima.onMouseUp_ = function(event) {
       player.ima.setVolumeSlider_(event);
@@ -477,7 +477,7 @@
     }
 
     /* Utility function so set vvolume and associated UI
-     * @ignore
+     * @private
      */
     player.ima.setVolumeSlider_ = function(event) {
       var percent =
@@ -504,7 +504,7 @@
 
     /**
      * Listener for clicks on the fullscreen button during ad playback.
-     * @ignore
+     * @private
      */
     player.ima.onAdFullscreenClick_ = function() {
       if (player.isFullscreen()) {
@@ -517,7 +517,7 @@
     /**
      * Listens for the video.js player to change its fullscreen status. This
      * keeps the fullscreen-ness of the AdContainer in sync with the player.
-     * @ignore
+     * @private
      */
     player.ima.onFullscreenChange_ = function() {
       if (player.isFullscreen()) {
@@ -543,7 +543,7 @@
      * Listens for the video.js player to change its volume. This keeps the ad
      * volume in sync with the content volume if the volume of the player is
      * changed while content is playing
-     * @ignore
+     * @private
      */
     player.ima.onVolumeChange_ = function() {
       var newVolume = player.muted() ? 0 : player.volume();
@@ -556,7 +556,7 @@
      * Seeks content to 00:00:00. This is used as an event handler for the
      * loadedmetadata event, since seeking is not possible until that event has
      * fired.
-     * @ignore
+     * @private
      */
     player.ima.seekContentToZero_ = function() {
       player.off('loadedmetadata', player.ima.seekContentToZero_);
@@ -567,7 +567,7 @@
      * Seeks content to 00:00:00 and starts playback. This is used as an event
      * handler for the loadedmetadata event, since seeking is not possible until
      * that event has fired.
-     * @ignore
+     * @private
      */
     player.ima.playContentFromZero_ = function() {
       player.off('loadedmetadata', player.ima.playContentFromZero_);
@@ -579,7 +579,7 @@
      * Destroys the AdsManager, sets it to null, and calls contentComplete to
      * reset correlators. Once this is done it requests ads again to keep the
      * inventory available.
-     * @ignore
+     * @private
      */
     player.ima.resetIMA_ = function() {
       if (adsManager) {
@@ -597,8 +597,7 @@
      * Ads an EventListener to the AdsManager. For a list of available events,
      * see
      * https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdEvent.Type
-     * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to
-     *     listen.
+     * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to listen.
      * @param {function} callback The method to call when the event is fired.
      */
     player.ima.addEventListener = function(event, callback) {
@@ -649,8 +648,7 @@
      * used instead of setting an 'ended' listener directly to ensure that the
      * ima can do proper cleanup of the SDK before other event listeners
      * are called.
-     * @param {function} listener The listener to be called when content
-     *     completes.
+     * @param {function} listener The listener to be called when content completes.
      */
     player.ima.addContentEndedListener = function(listener) {
       contentEndedListeners.push(listener);
@@ -690,12 +688,13 @@
 
     /**
      * Set up intervals to check for seeking and update current video time.
+     * @private
      */
     player.ima.setUpPlayerIntervals_ = function() {
       updateTimeIntervalHandle =
           setInterval(player.ima.updateCurrentTime, seekCheckInterval);
       seekCheckIntervalHandle =
-          setInterval(player.ima.checkForSeeking, seekCheckInterval);
+          setInterval(player.ima.checkForSeeking_, seekCheckInterval);
     };
 
     /**
@@ -714,8 +713,10 @@
      * There *is* a seeking property of the HTML5 video element, but it's not
      * properly implemented on all platforms (e.g. mobile safari), so we have to
      * check ourselves to be sure.
+     *
+     * @private
      */
-    player.ima.checkForSeeking = function() {
+    player.ima.checkForSeeking_ = function() {
       var tempCurrentTime = player.currentTime();
       var diff = (tempCurrentTime - contentPlayheadTracker.previousTime) * 1000;
       if (Math.abs(diff) > seekCheckInterval + seekThreshold) {
