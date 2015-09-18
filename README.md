@@ -78,6 +78,7 @@ The plugin accepts additional settings beyond the two required settings shown in
   id: <string> REQUIRED The id of your video player
   adTagUrl: <string> REQUIRED A URL which returns a VAST response
   adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK Docs(1).
+  autoPlayAdBreaks: <boolean> Whether or not to automatically play VMAP or ad rules ad breaks. Defaults to true.
   contribAdsSettings: <Object> Additional settings to be passed to the contrib-ads plugin(2), used by this IMA plugin.
   debug: <boolean> True to load the debug version of the plugin, false to load the non-debug version. Defaults to false.
   locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2 (three-letter) code(3). Defaults to 'en'.
@@ -95,6 +96,17 @@ The plugin accepts additional settings beyond the two required settings shown in
 (3) [Valid locale codes](http://www.loc.gov/standards/iso639-2/php/English_list.php)
 <br />
 (4) [google.ima.ImaSdkSettings.VpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.ImaSdkSettings.VpaidMode)
+
+## Disable automatic ad break playback
+In some circumstances you may want to prevent the SDK from playing ad breaks
+until you're ready for them. In this scenario, you can disable automatic
+playback of ad breaks in favor of letting the SDK know when you're ready for an
+ad break to play. To do so:
+
+1. Set ```autoPlayAdBreaks``` to false in the initial options.
+2. Provide an ad break ready listener via ```setAdBreakReadyListener```.
+3. Call ```player.ima.playAdBreak()``` in your ad break ready listener when
+   you're ready to play the ads.
 
 ## API Docs
 For a list of methods exposed by the plugin, see our full [API
