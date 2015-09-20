@@ -589,12 +589,6 @@
       if (adsLoader && !contentComplete) {
         adsLoader.contentComplete();
       }
-      if(updateTimeIntervalHandle){
-        clearInterval(updateTimeIntervalHandle);
-      }
-      if(seekCheckIntervalHandle){
-        clearInterval(seekCheckIntervalHandle);
-      }
       contentComplete = false;
       allAdsCompleted = false;
     };
@@ -974,6 +968,18 @@
       player.one('play', player.ima.setUpPlayerIntervals_);
     };
 
+    var playerDisposedListener = function(){
+      if(updateTimeIntervalHandle){
+        clearInterval(updateTimeIntervalHandle);
+      }
+      if(seekCheckIntervalHandle){
+        clearInterval(seekCheckIntervalHandle);
+      }
+      if(adTrackingTimer){
+        clearInterval(adTrackingTimer);
+      }
+    };
+
     settings = extend({}, ima_defaults, options || {});
 
     // Currently this isn't used but I can see it being needed in the future, so
@@ -992,6 +998,7 @@
     player.one('play', player.ima.setUpPlayerIntervals_);
 
     player.on('ended', localContentEndedListener);
+    player.on('dispose', playerDisposedListener);
 
     var contrib_ads_defaults = {
       debug: settings.debug,
