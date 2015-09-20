@@ -965,10 +965,12 @@
       }
       clearInterval(updateTimeIntervalHandle);
       clearInterval(seekCheckIntervalHandle);
-      player.one('play', player.ima.setUpPlayerIntervals_);
+      if(player.el()) player.one('play', player.ima.setUpPlayerIntervals_);
     };
 
     var playerDisposedListener = function(){
+      contentEndedListeners, contentAndAdsEndedListeners = [], [];
+      contentComplete = true;
       player.off('ended', localContentEndedListener);
       if(updateTimeIntervalHandle){
         clearInterval(updateTimeIntervalHandle);
