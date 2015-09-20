@@ -1092,7 +1092,25 @@
       clearInterval(updateTimeIntervalHandle);
       clearInterval(seekCheckIntervalHandle);
       clearInterval(resizeCheckIntervalHandle);
-      player.one('play', player.ima.setUpPlayerIntervals_);
+      if(player.el()) player.one('play', player.ima.setUpPlayerIntervals_);
+    };
+
+    var playerDisposedListener = function(){
+      contentEndedListeners, contentAndAdsEndedListeners = [], [];
+      contentComplete = true;
+      player.off('ended', localContentEndedListener);
+      var intervalsToClear = [updateTimeIntervalHandle, seekCheckIntervalHandle,
+        adTrackingTimer, resizeCheckIntervalHandle];
+      for (var index in intervalsToClear) {
+        var interval = intervalsToClear[index];
+        if (interval) {
+          clearInterval(interval);
+        }
+      }
+      if (adsManager) {
+        adsManager.destroy();
+        adsManager = null;
+      }
     };
 
     settings = extend({}, ima_defaults, options || {});
@@ -1118,6 +1136,7 @@
     player.one('play', player.ima.setUpPlayerIntervals_);
 
     player.on('ended', localContentEndedListener);
+    player.on('dispose', playerDisposedListener);
 
     var contrib_ads_defaults = {
       debug: settings.debug,
