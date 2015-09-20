@@ -969,6 +969,7 @@
     };
 
     var playerDisposedListener = function(){
+      player.off('ended', localContentEndedListener);
       if(updateTimeIntervalHandle){
         clearInterval(updateTimeIntervalHandle);
       }
