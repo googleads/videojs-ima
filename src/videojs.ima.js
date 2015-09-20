@@ -589,12 +589,6 @@
       if (adsLoader && !contentComplete) {
         adsLoader.contentComplete();
       }
-      if(updateTimeIntervalHandle){
-        clearInterval(updateTimeIntervalHandle);
-      }
-      if(seekCheckIntervalHandle){
-        clearInterval(seekCheckIntervalHandle);
-      }
       contentComplete = false;
       allAdsCompleted = false;
     };
