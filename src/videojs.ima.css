@@ -20,6 +20,11 @@
   display: block;
 }
 
+/* Move overlay if user fast-clicks play button. */
+.video-js.vjs-playing .bumpable-ima-ad-container {
+  margin-top: -40px;
+}
+
 /* Move overlay when controls are active. */
 .video-js.vjs-user-inactive.vjs-playing .bumpable-ima-ad-container {
   margin-top: 0px;
