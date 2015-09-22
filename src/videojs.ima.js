@@ -181,6 +181,9 @@
           google.ima.AdErrorEvent.Type.AD_ERROR,
           player.ima.onAdError_);
       adsManager.addEventListener(
+          google.ima.AdEvent.Type.AD_BREAK_READY,
+          player.ima.onAdBreakReady_);
+      adsManager.addEventListener(
           google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
           player.ima.onContentPauseRequested_);
       adsManager.addEventListener(
@@ -206,6 +209,18 @@
           google.ima.AdEvent.Type.SKIPPED,
           player.ima.onAdComplete_);
 
+      if (!autoPlayAdBreaks) {
+        try {
+          adsManager.init(
+              player.width(),
+              player.height(),
+              google.ima.ViewMode.NORMAL);
+          adsManager.setVolume(player.muted() ? 0 : player.volume());
+        } catch (adError) {
+          player.ima.onAdError_(adError);
+        }
+      }
+
       player.trigger('adsready');
     };
 
@@ -214,15 +229,17 @@
      * pre-roll.
      */
     player.ima.start = function() {
-      try {
-        adsManager.init(
-            player.width(),
-            player.height(),
-            google.ima.ViewMode.NORMAL);
-        adsManager.setVolume(player.muted() ? 0 : player.volume());
-        adsManager.start();
-      } catch (adError) {
-         player.ima.onAdError_(adError);
+      if (autoPlayAdBreaks) {
+        try {
+          adsManager.init(
+              player.width(),
+              player.height(),
+              google.ima.ViewMode.NORMAL);
+          adsManager.setVolume(player.muted() ? 0 : player.volume());
+          adsManager.start();
+        } catch (adError) {
+          player.ima.onAdError_(adError);
+        }
       }
     };
 
@@ -253,6 +270,25 @@
       adContainerDiv.style.display = 'none';
       player.trigger('adserror');
     };
+
+    /**
+     * Listener for AD_BREAK_READY. Passes event on to publisher's listener.
+     * @param {google.ima.AdEvent} adEvent AdEvent thrown by the AdsManager.
+     * @private
+     */
+    player.ima.onAdBreakReady_ = function(adEvent) {
+      adBreakReadyListener(adEvent);
+    };
+
+    /**
+     * Called by publishers in manual ad break playback mode to start an ad
+     * break.
+     */
+    player.ima.playAdBreak = function() {
+      if (!autoPlayAdBreaks) {
+        adsManager.start();
+      }
+    }
 
     /**
      * Pauses the content video and displays the ad container so ads can play.
@@ -301,7 +337,7 @@
      * Records that ads have completed and calls contentAndAdsEndedListeners
      * if content is also complete.
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @ignore
+     * @private
      */
     player.ima.onAllAdsCompleted_ = function(adEvent) {
       allAdsCompleted = true;
@@ -657,11 +693,18 @@
     /**
      * Adds a listener that will be called when content and all ads have
      * finished playing.
-     * @param {function} listener The listener to be called when content and
-     *     ads complete.
+     * @param {function} listener The listener to be called when content and ads complete.
      */
     player.ima.addContentAndAdsEndedListener = function(listener) {
       contentAndAdsEndedListeners.push(listener);
+    }
+
+    /**
+     * Sets the listener to be called to trigger manual ad break playback.
+     * @param {function} listener The listener to be called to trigger manual ad break playback.
+     */
+    player.ima.setAdBreakReadyListener = function(listener) {
+      adBreakReadyListener = listener;
     }
 
     /**
@@ -756,6 +799,11 @@
      * Boolean flag to show or hide the ad countdown timer.
      */
     var showCountdown;
+
+    /**
+     * Boolena flag to enable manual ad break playback.
+     */
+    var autoPlayAdBreaks;
 
     /**
      * Video.js control bar.
@@ -947,6 +995,11 @@
      */
      var contentAndAdsEndedListeners = [];
 
+     /**
+      * Listener to be called to trigger manual ad break playback.
+      */
+    var adBreakReadyListener = undefined;
+
     /**
      * Local content ended listener for contentComplete.
      */
@@ -981,6 +1034,11 @@
     showCountdown = true;
     if (settings['showCountdown'] == false) {
       showCountdown = false;
+    }
+
+    autoPlayAdBreaks = true;
+    if (settings['autoPlayAdBreaks'] == false) {
+      autoPlayAdBreaks = false;
     }
 
     player.one('play', player.ima.setUpPlayerIntervals_);
@@ -1031,6 +1089,7 @@
 
     adsLoader.getSettings().setPlayerType('videojs-ima');
     adsLoader.getSettings().setPlayerVersion(VERSION);
+    adsLoader.getSettings().setAutoPlayAdBreaks(autoPlayAdBreaks);
 
     adsLoader.addEventListener(
       google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
