@@ -1111,8 +1111,10 @@ function ima(vjs) {
   vjs.plugin('ima', imaPlugin);
 }
 
-if (typeof (module) != 'undefined') {
-  module.exports = ima;
-} else {
+if (typeof videojs !== 'undefined') {
   ima(window.videojs);
+}
+
+if (typeof module !== 'undefined') {
+  module.export = ima;
 }
