@@ -1116,5 +1116,5 @@ if (typeof videojs !== 'undefined') {
 }
 
 if (typeof module !== 'undefined') {
-  module.export = ima;
+  module.exports = ima;
 }
