@@ -117,25 +117,24 @@
           'click',
           player.ima.onAdFullscreenClick_,
           false);
-      adContainerDiv.insertBefore(
-          controlsDiv,
-          adContainerDiv.childNodes[adContainerDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          countdownDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          seekBarDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          playPauseDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          muteDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          sliderDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          fullscreenDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      seekBarDiv.insertBefore(
-          progressDiv, seekBarDiv.childNodes[controlsDiv.childNodes.length]);
-      sliderDiv.insertBefore(
-          sliderLevelDiv, sliderDiv.childNodes[sliderDiv.childNodes.length]);
+      adContainerDiv.appendChild(
+          controlsDiv);
+      controlsDiv.appendChild(
+          countdownDiv);
+      controlsDiv.appendChild(
+          seekBarDiv);
+      controlsDiv.appendChild(
+          playPauseDiv);
+      controlsDiv.appendChild(
+          muteDiv);
+      controlsDiv.appendChild(
+          sliderDiv);
+      controlsDiv.appendChild(
+          fullscreenDiv);
+      seekBarDiv.appendChild(
+          progressDiv);
+      sliderDiv.appendChild(
+          sliderLevelDiv);
     };
 
     /**
