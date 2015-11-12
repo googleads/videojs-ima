@@ -652,6 +652,14 @@ function ima(vjs) {
     };
 
     /**
+     * Returns the instance of the AdsLoader.
+     * @return {google.ima.AdsLoader} The AdsLoader being used by the plugin.
+     */
+    player.ima.getAdsLoader = function() {
+      return adsLoader;
+    }
+
+    /**
      * Sets the content of the video player. You should use this method instead
      * of setting the content src directly to ensure the proper ad tag is
      * requested when the video content is loaded.
