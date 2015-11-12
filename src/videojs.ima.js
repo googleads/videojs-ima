@@ -117,25 +117,26 @@ function ima(vjs) {
           'click',
           player.ima.onAdFullscreenClick_,
           false);
+
       adContainerDiv.insertBefore(
           controlsDiv,
-          adContainerDiv.childNodes[adContainerDiv.childNodes.length]);
+          adContainerDiv.childNodes[adContainerDiv.childNodes.length] || null);
       controlsDiv.insertBefore(
-          countdownDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
+          countdownDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
       controlsDiv.insertBefore(
-          seekBarDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
+          seekBarDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
       controlsDiv.insertBefore(
-          playPauseDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
+          playPauseDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
       controlsDiv.insertBefore(
-          muteDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
+          muteDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
       controlsDiv.insertBefore(
-          sliderDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
+          sliderDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
       controlsDiv.insertBefore(
-          fullscreenDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
+          fullscreenDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
       seekBarDiv.insertBefore(
-          progressDiv, seekBarDiv.childNodes[controlsDiv.childNodes.length]);
+          progressDiv, seekBarDiv.childNodes[controlsDiv.childNodes.length] || null);
       sliderDiv.insertBefore(
-          sliderLevelDiv, sliderDiv.childNodes[sliderDiv.childNodes.length]);
+          sliderLevelDiv, sliderDiv.childNodes[sliderDiv.childNodes.length] || null);
     };
 
     /**
