@@ -1109,4 +1109,4 @@
   };
 
   vjs.plugin('ima', imaPlugin);
-}(window.videojs));
+}(videojs));
