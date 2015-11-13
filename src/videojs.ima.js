@@ -320,11 +320,18 @@ function ima(vjs) {
       adsActive = false;
       adPlaying = false;
       player.on('ended', localContentEndedListener);
-      if (currentAd && currentAd.isLinear()) {
+
+      if (adContainerDiv.style.display !== 'none') {
         adContainerDiv.style.display = 'none';
       }
       vjsControls.show();
       if (!currentAd) {
+        // TODO: This is a hack to get slot url, it might change
+        // later after google update their sdk. Need to find a
+        // better way to get this information
+        var adSlotUrl = adEvent.b.B
+        // TODO: Pass this information and handle it in vikilitics later
+
         // Something went wrong playing the ad
         player.ads.endLinearAdMode();
       } else if (!contentComplete &&
