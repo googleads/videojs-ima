@@ -120,10 +120,7 @@ The IMA SDK plugin for Video.js uses the IMA SDK, and as such is subject to the
 [IMA SDK Terms of Service](https://developers.google.com/interactive-media-ads/terms).
 
 ##Support
-If you have questions about the framework, you can ask them at //groups.google.com/d/forum/google-media-framework
+If you have questions about the framework, you can ask them at https://groups.google.com/d/forum/google-media-framework
 
 ##How do I contribute?
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-##Authors
-  - api.sbusolits@gmail.com (Shawn Busolits) Please direct questions or bug reports to the Github issues page.
