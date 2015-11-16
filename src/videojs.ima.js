@@ -37,7 +37,7 @@
   ima_defaults = {
     debug: false,
     timeout: 5000,
-    prerollTimeout: 100
+    prerollTimeout: 500
   },
 
   imaPlugin = function(options, readyCallback) {
