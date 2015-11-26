@@ -252,7 +252,12 @@ function ima(vjs) {
      * @private
      */
     player.ima.onAdsLoaderError_ = function(event) {
-      window.console.log('AdsLoader error: ' + event.getError());
+      var error = event
+      if (event.getError) {
+        error = event.getError()
+      }
+      window.console.log('AdsLoader error: ' + error);
+
       if (adsManager) {
         adsManager.destroy();
       }
@@ -266,7 +271,12 @@ function ima(vjs) {
      * @private
      */
     player.ima.onAdError_ = function(adErrorEvent) {
-      window.console.log('Ad error: ' + adErrorEvent.getError());
+      var error = adErrorEvent
+      if (error.getError) {
+        error = AdErrorEvent.getError()
+      }
+      window.console.log('Ad error: ' + error);
+
       vjsControls.show();
       adsManager.destroy();
       adContainerDiv.style.display = 'none';
