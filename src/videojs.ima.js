@@ -79,6 +79,7 @@
       controlsDiv = document.createElement('div');
       controlsDiv.id = 'ima-controls-div';
       controlsDiv.style.width = '100%';
+	  controlsDiv.style.zIndex = '2';
       countdownDiv = document.createElement('div');
       countdownDiv.id = 'ima-countdown-div';
       countdownDiv.innerHTML = 'Advertisement';
