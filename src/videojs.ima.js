@@ -69,6 +69,11 @@
       player.ima.createControls_();
       adDisplayContainer =
           new google.ima.AdDisplayContainer(adContainerDiv, contentPlayer);
+
+      player.el_.querySelector('video').addEventListener('webkitendfullscreen', function () {
+        //if video is paused when this event fires, pause the ad again iOS specific
+        player.paused() && player.ima.pauseAd();
+      });
     };
 
     /**
