@@ -56,8 +56,8 @@
               document.createElement('div'),
               vjsControls.el());
       adContainerDiv.id = 'ima-ad-container';
-      adContainerDiv.style.width = player.width() + 'px';
-      adContainerDiv.style.height = player.height() + 'px';
+      adContainerDiv.style.width = '100%';
+      adContainerDiv.style.height = '100%';
       adContainerDiv.addEventListener(
           'mouseover',
           player.ima.showAdControls_,
@@ -1046,7 +1046,9 @@
     var ads_plugin_settings =
         extend({}, contrib_ads_defaults, options['contribAdsSettings'] || {});
 
-    player.ads(ads_plugin_settings);
+		console.log(player.ads);
+
+		player.ads(ads_plugin_settings);
 
     adsRenderingSettings = new google.ima.AdsRenderingSettings();
     adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
