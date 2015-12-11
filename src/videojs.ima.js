@@ -202,7 +202,7 @@
 
       if (!autoPlayAdBreaks) {
         try {
-          adsManager.init(
+					adsManager.init(
               player.width(),
               player.height(),
               google.ima.ViewMode.NORMAL);
@@ -212,7 +212,7 @@
         }
       }
 
-      player.trigger('adsready');
+			player.trigger('adsready');
     };
 
     /**
@@ -222,7 +222,7 @@
     player.ima.start = function() {
       if (autoPlayAdBreaks) {
         try {
-          adsManager.init(
+					adsManager.init(
               player.width(),
               player.height(),
               google.ima.ViewMode.NORMAL);
@@ -1043,12 +1043,12 @@
       prerollTimeout: settings.prerollTimeout
     };
 
-    var ads_plugin_settings =
-        extend({}, contrib_ads_defaults, options['contribAdsSettings'] || {});
+		if("function" === typeof(player.ads)){
+			var ads_plugin_settings =
+       extend({}, contrib_ads_defaults, options['contribAdsSettings'] || {});
 
-		console.log(player.ads);
-
-		player.ads(ads_plugin_settings);
+			player.ads(ads_plugin_settings);
+		}
 
     adsRenderingSettings = new google.ima.AdsRenderingSettings();
     adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
