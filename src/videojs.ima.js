@@ -42,6 +42,10 @@
 
   imaPlugin = function(options, readyCallback) {
     var player = this;
+	
+	player.ima.reset = function(){
+		player.ima.resetIMA_();
+	}
 
     /**
      * Creates the ad container passed to the IMA SDK.
@@ -1048,6 +1052,8 @@
        extend({}, contrib_ads_defaults, options['contribAdsSettings'] || {});
 
 			player.ads(ads_plugin_settings);
+		}else{
+			player.ads.state = 'content-playback';
 		}
 
     adsRenderingSettings = new google.ima.AdsRenderingSettings();
