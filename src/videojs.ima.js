@@ -85,7 +85,7 @@
       countdownDiv.style.display = showCountdown ? 'block' : 'none';
       seekBarDiv = document.createElement('div');
       seekBarDiv.id = 'ima-seek-bar-div';
-      seekBarDiv.style.width = player.width() + 'px';
+      seekBarDiv.style.width = '100%';
       progressDiv = document.createElement('div');
       progressDiv.id = 'ima-progress-div';
       playPauseDiv = document.createElement('div');
