@@ -45,6 +45,7 @@
 	
 	player.ima.reset = function(){
 		player.ima.resetIMA_();
+    clearInterval(adTrackingTimer);
 	}
 
     /**
