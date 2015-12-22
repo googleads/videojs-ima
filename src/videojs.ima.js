@@ -37,11 +37,16 @@
   ima_defaults = {
     debug: false,
     timeout: 5000,
-    prerollTimeout: 100
+    prerollTimeout: 1000
   },
 
   imaPlugin = function(options, readyCallback) {
     var player = this;
+	
+	player.ima.reset = function(){
+		player.ima.resetIMA_();
+    clearInterval(adTrackingTimer);
+	}
 
     /**
      * Creates the ad container passed to the IMA SDK.
@@ -56,8 +61,8 @@
               document.createElement('div'),
               vjsControls.el());
       adContainerDiv.id = 'ima-ad-container';
-      adContainerDiv.style.width = player.width() + 'px';
-      adContainerDiv.style.height = player.height() + 'px';
+      adContainerDiv.style.width = '100%';
+      adContainerDiv.style.height = '100%';
       adContainerDiv.addEventListener(
           'mouseover',
           player.ima.showAdControls_,
@@ -79,6 +84,7 @@
       controlsDiv = document.createElement('div');
       controlsDiv.id = 'ima-controls-div';
       controlsDiv.style.width = '100%';
+	  controlsDiv.style.zIndex = '2';
       countdownDiv = document.createElement('div');
       countdownDiv.id = 'ima-countdown-div';
       countdownDiv.innerHTML = 'Advertisement';
@@ -117,25 +123,15 @@
           'click',
           player.ima.onAdFullscreenClick_,
           false);
-      adContainerDiv.insertBefore(
-          controlsDiv,
-          adContainerDiv.childNodes[adContainerDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          countdownDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          seekBarDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          playPauseDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          muteDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          sliderDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          fullscreenDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      seekBarDiv.insertBefore(
-          progressDiv, seekBarDiv.childNodes[controlsDiv.childNodes.length]);
-      sliderDiv.insertBefore(
-          sliderLevelDiv, sliderDiv.childNodes[sliderDiv.childNodes.length]);
+		adContainerDiv.appendChild(controlsDiv);
+		controlsDiv.appendChild(countdownDiv);
+		controlsDiv.appendChild(seekBarDiv);
+		controlsDiv.appendChild(playPauseDiv);
+		controlsDiv.appendChild(muteDiv);
+		controlsDiv.appendChild(sliderDiv);
+		controlsDiv.appendChild(fullscreenDiv);
+		seekBarDiv.appendChild(progressDiv);
+		sliderDiv.appendChild(sliderLevelDiv);
     };
 
     /**
@@ -211,7 +207,7 @@
 
       if (!autoPlayAdBreaks) {
         try {
-          adsManager.init(
+					adsManager.init(
               player.width(),
               player.height(),
               google.ima.ViewMode.NORMAL);
@@ -221,7 +217,7 @@
         }
       }
 
-      player.trigger('adsready');
+			player.trigger('adsready');
     };
 
     /**
@@ -231,7 +227,7 @@
     player.ima.start = function() {
       if (autoPlayAdBreaks) {
         try {
-          adsManager.init(
+					adsManager.init(
               player.width(),
               player.height(),
               google.ima.ViewMode.NORMAL);
@@ -1052,10 +1048,14 @@
       prerollTimeout: settings.prerollTimeout
     };
 
-    var ads_plugin_settings =
-        extend({}, contrib_ads_defaults, options['contribAdsSettings'] || {});
+		if("function" === typeof(player.ads)){
+			var ads_plugin_settings =
+       extend({}, contrib_ads_defaults, options['contribAdsSettings'] || {});
 
-    player.ads(ads_plugin_settings);
+			player.ads(ads_plugin_settings);
+		}else{
+			player.ads.state = 'content-playback';
+		}
 
     adsRenderingSettings = new google.ima.AdsRenderingSettings();
     adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
