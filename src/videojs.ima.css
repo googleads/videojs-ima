@@ -99,10 +99,10 @@
   left: 0px;
   position: absolute;
   color: #CCCCCC;
-  font-family: VideoJS;
   font-size: 1.5em;
   line-height: 2;
   text-align: center;
+  font-family: VideoJS;
 }
 
 #ima-mute-div {
@@ -131,11 +131,11 @@
 }
 
 .ima-playing:before {
-  content: "\e002";
+  content: "\00f103";
 }
 
 .ima-paused:before {
-  content: "\e001";
+  content: "\00f101";
 }
 
 .ima-playing:hover:before, .ima-paused:hover:before {
@@ -143,11 +143,11 @@
 }
 
 .ima-non-muted:before {
-  content: "\e006";
+  content: "\00f107";
 }
 
 .ima-muted:before {
-  content: "\e003";
+  content: "\00f104";
 }
 
 .ima-non-muted:hover:before, .ima-muted:hover:before {
@@ -155,11 +155,11 @@
 }
 
 .ima-non-fullscreen:before {
-  content: "\e000";
+  content: "\00f108";
 }
 
 .ima-fullscreen:before {
-  content: "\e00b";
+  content: "\00f109";
 }
 
 .ima-non-fullscreen:hover:before, .ima-fullscreen:hover:before {
