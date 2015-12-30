@@ -531,7 +531,7 @@ function ima(vjs) {
       document.removeEventListener('mouseup', player.ima.onMouseUp_);
     }
 
-    /* Utility function so set vvolume and associated UI
+    /* Utility function to set volume and associated UI
      * @private
      */
     player.ima.setVolumeSlider_ = function(event) {
@@ -604,6 +604,16 @@ function ima(vjs) {
       var newVolume = player.muted() ? 0 : player.volume();
       if (adsManager) {
         adsManager.setVolume(newVolume);
+      }
+      // Update UI
+      if (newVolume == 0) {
+        adMuted = true;
+        muteDiv.className = 'ima-muted';
+        sliderLevelDiv.style.width = '0%';
+      } else {
+        adMuted = false;
+        muteDiv.className = 'ima-non-muted';
+        sliderLevelDiv.style.width = newVolume * 100 + '%';
       }
     };
 
@@ -689,7 +699,7 @@ function ima(vjs) {
      *     false to only load the content but not start playback.
      */
     player.ima.setContent =
-        function( contentSrc, adTag, playOnLoad) {
+        function(contentSrc, adTag, playOnLoad) {
       player.ima.resetIMA_();
       settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
       //only try to pause the player when initialised with a source already
@@ -1135,7 +1145,7 @@ function ima(vjs) {
     player.on('volumechange', player.ima.onVolumeChange_);
   };
 
-  vjs.plugin('ima', imaPlugin);
+  videojs.plugin('ima', imaPlugin);
 }
 
 if (typeof videojs !== 'undefined') {
