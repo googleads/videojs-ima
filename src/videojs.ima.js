@@ -17,7 +17,7 @@
  * https://www.github.com/googleads/videojs-ima
  */
 
-function ima(vjs) {
+function ima(videojs) {
   'use strict';
   var extend = function(obj) {
     var arg;
