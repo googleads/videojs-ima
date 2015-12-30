@@ -678,6 +678,7 @@
       settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
       //only try to pause the player when initialised with a source already
       if (!!player.currentSrc()) {
+        player.currentTime(0);
         player.pause();
       }
       if (contentSrc) {
