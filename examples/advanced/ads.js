@@ -45,8 +45,7 @@ var Ads = function() {
   this.player.one(startEvent, this.bind(this, this.init));
 
   this.options = {
-    id: 'content_video',
-    debug: true
+    id: 'content_video'
   };
 
   this.events = [
