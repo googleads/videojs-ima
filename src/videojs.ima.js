@@ -305,7 +305,13 @@
         player.ads.startLinearAdMode();
       }
       adContainerDiv.style.display = 'block';
-      controlsDiv.style.display = 'block';
+      // Don't show ad controls for not video ads (like modal ads)
+      if (adEvent.getAd().getContentType().search(/video/i) !== 0) {
+        controlsDiv.style.display = 'none';
+      }
+      else {
+        controlsDiv.style.display = 'block';
+      }
       vjsControls.hide();
       player.pause();
     };
