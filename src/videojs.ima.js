@@ -629,6 +629,11 @@
      * @private
      */
     player.ima.resetIMA_ = function() {
+      if (adTrackingTimer) {
+        // If this is called while an ad is playing, stop trying to get that
+        // ad's current time.
+        clearInterval(adTrackingTimer);
+      }
       if (adsManager) {
         adsManager.destroy();
         adsManager = null;
