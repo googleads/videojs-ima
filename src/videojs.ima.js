@@ -618,6 +618,14 @@
      * @private
      */
     player.ima.resetIMA_ = function() {
+      adsActive = false;
+      adPlaying = false;
+      player.on('ended', localContentEndedListener);
+      if (currentAd && currentAd.isLinear()) {
+        adContainerDiv.style.display = 'none';
+      }
+      vjsControls.show();
+      player.ads.endLinearAdMode();
       if (adTrackingTimer) {
         // If this is called while an ad is playing, stop trying to get that
         // ad's current time.
