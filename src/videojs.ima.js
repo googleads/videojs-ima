@@ -148,10 +148,8 @@
 
       adsRequest.linearAdSlotWidth = player.width();
       adsRequest.linearAdSlotHeight = player.height();
-      adsRequest.nonLinearAdSlotWidth =
-          settings.nonLinearWidth || player.width();
-      adsRequest.nonLinearAdSlotHeight =
-          settings.nonLinearHeight || (player.height() / 3);
+      adsRequest.nonLinearAdSlotWidth = player.width();
+      adsRequest.nonLinearAdSlotHeight = player.height();
 
       adsLoader.requestAds(adsRequest);
     };
