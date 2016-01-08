@@ -1093,6 +1093,10 @@
       adsLoader.getSettings().setLocale(settings.locale);
     }
 
+    if (settings.numRedirects) {
+      adsLoader.getSettings().setNumRedirects(settings.numRedirects);
+    }
+
     adsLoader.getSettings().setPlayerType('videojs-ima');
     adsLoader.getSettings().setPlayerVersion(VERSION);
     adsLoader.getSettings().setAutoPlayAdBreaks(autoPlayAdBreaks);
