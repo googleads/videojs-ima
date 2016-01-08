@@ -77,16 +77,25 @@ The plugin accepts additional settings beyond the two required settings shown in
 {
   id: <string> REQUIRED The id of your video player
   adTagUrl: <string> REQUIRED A URL which returns a VAST response
-  adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK Docs(1).
-  autoPlayAdBreaks: <boolean> Whether or not to automatically play VMAP or ad rules ad breaks. Defaults to true.
-  contribAdsSettings: <Object> Additional settings to be passed to the contrib-ads plugin(2), used by this IMA plugin.
-  debug: <boolean> True to load the debug version of the plugin, false to load the non-debug version. Defaults to false.
-  locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2 (three-letter) code(3). Defaults to 'en'.
+  adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK
+      Docs(1).
+  autoPlayAdBreaks: <boolean> Whether or not to automatically play VMAP or ad rules ad breaks. Defaults
+      to true.
+  contribAdsSettings: <Object> Additional settings to be passed to the contrib-ads plugin(2), used by
+      this IMA plugin.
+  debug: <boolean> True to load the debug version of the plugin, false to load the non-debug version.
+      Defaults to false.
+  locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2
+      (three-letter) code(3). Defaults to 'en'.
   nonLinearWidth: <Number> Desired width of non-linear ads. Defaults to player width.
   nonLinearHeight: <Number> Desired height for non-linear ads. Defaults to 1/3 player height.
+  numRedirects: <Number> Maximum number of VAST redirects before the subsequent redirects will be denied,
+      and the ad load aborted. The number of redirects directly affects latency and thus user experience.
+      This applies to all VAST wrapper ads.
   showCountdown: <boolean> Whether or not to show the ad countdown timer. Defaults to true.
   vpaidAllowed: <boolean> (DEPRECATED, please use vpaidMode).
-  vpaidMode: <google.ima.ImaSdkSettings.VpaidMode(4)> VPAID Mode. Defaults to ENABLED. This setting overrides vpaidAllowed.
+  vpaidMode: <google.ima.ImaSdkSettings.VpaidMode(4)> VPAID Mode. Defaults to ENABLED. This setting
+      overrides vpaidAllowed.
 }
 ```
 (1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
