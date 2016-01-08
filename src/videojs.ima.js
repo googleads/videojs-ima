@@ -741,15 +741,16 @@
      */
     player.ima.setUpPlayerIntervals_ = function() {
       updateTimeIntervalHandle =
-          setInterval(player.ima.updateCurrentTime, seekCheckInterval);
+          setInterval(player.ima.updateCurrentTime_, seekCheckInterval);
       seekCheckIntervalHandle =
           setInterval(player.ima.checkForSeeking_, seekCheckInterval);
     };
 
     /**
      * Updates the current time of the video
+     * @private
      */
-    player.ima.updateCurrentTime = function() {
+    player.ima.updateCurrentTime_ = function() {
       if (!contentPlayheadTracker.seeking) {
         contentPlayheadTracker.currentTime = player.currentTime();
       }
