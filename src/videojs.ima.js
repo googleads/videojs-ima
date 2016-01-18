@@ -691,6 +691,9 @@
       if (contentSrc) {
         player.src(contentSrc);
       }
+      
+      player.ima.requestAds();
+      
       if (playOnLoad) {
         player.on('loadedmetadata', player.ima.playContentFromZero_);
       } else {
