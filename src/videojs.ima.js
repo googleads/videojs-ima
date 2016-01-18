@@ -52,9 +52,8 @@ function ima(videojs) {
       // the ads and ad controls.
       vjsControls = player.getChild('controlBar');
       adContainerDiv =
-          vjsControls.el().parentNode.insertBefore(
-              document.createElement('div'),
-              vjsControls.el());
+          vjsControls.el().parentNode.appendChild(
+              document.createElement('div'));
       adContainerDiv.id = 'ima-ad-container';
       adContainerDiv.style.width = player.width() + 'px';
       adContainerDiv.style.height = player.height() + 'px';
@@ -118,25 +117,15 @@ function ima(videojs) {
           player.ima.onAdFullscreenClick_,
           false);
 
-      adContainerDiv.insertBefore(
-          controlsDiv,
-          adContainerDiv.childNodes[adContainerDiv.childNodes.length] || null);
-      controlsDiv.insertBefore(
-          countdownDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
-      controlsDiv.insertBefore(
-          seekBarDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
-      controlsDiv.insertBefore(
-          playPauseDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
-      controlsDiv.insertBefore(
-          muteDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
-      controlsDiv.insertBefore(
-          sliderDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
-      controlsDiv.insertBefore(
-          fullscreenDiv, controlsDiv.childNodes[controlsDiv.childNodes.length] || null);
-      seekBarDiv.insertBefore(
-          progressDiv, seekBarDiv.childNodes[controlsDiv.childNodes.length] || null);
-      sliderDiv.insertBefore(
-          sliderLevelDiv, sliderDiv.childNodes[sliderDiv.childNodes.length] || null);
+      adContainerDiv.appendChild(controlsDiv);
+      controlsDiv.appendChild(countdownDiv);
+      controlsDiv.appendChild(seekBarDiv);
+      controlsDiv.appendChild(playPauseDiv);
+      controlsDiv.appendChild(muteDiv);
+      controlsDiv.appendChild(sliderDiv);
+      controlsDiv.appendChild(fullscreenDiv);
+      seekBarDiv.appendChild(progressDiv);
+      sliderDiv.appendChild(sliderLevelDiv);
     };
 
     /**
@@ -647,6 +636,19 @@ function ima(videojs) {
      * @private
      */
     player.ima.resetIMA_ = function() {
+      adsActive = false;
+      adPlaying = false;
+      player.on('ended', localContentEndedListener);
+      if (currentAd && currentAd.isLinear()) {
+        adContainerDiv.style.display = 'none';
+      }
+      vjsControls.show();
+      player.ads.endLinearAdMode();
+      if (adTrackingTimer) {
+        // If this is called while an ad is playing, stop trying to get that
+        // ad's current time.
+        clearInterval(adTrackingTimer);
+      }
       if (adsManager) {
         adsManager.destroy();
         adsManager = null;
@@ -704,6 +706,7 @@ function ima(videojs) {
       settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
       //only try to pause the player when initialised with a source already
       if (!!player.currentSrc()) {
+        player.currentTime(0);
         player.pause();
       }
       if (contentSrc) {
@@ -1122,6 +1125,10 @@ function ima(videojs) {
 
     if (settings.locale) {
       adsLoader.getSettings().setLocale(settings.locale);
+    }
+
+    if (settings.numRedirects) {
+      adsLoader.getSettings().setNumRedirects(settings.numRedirects);
     }
 
     adsLoader.getSettings().setPlayerType('videojs-ima');
