@@ -249,7 +249,7 @@
       if (adsManager) {
         adsManager.destroy();
       }
-      player.trigger('adserror');
+      player.trigger('adserror', event.getError());
     };
 
     /**
@@ -263,7 +263,7 @@
       vjsControls.show();
       adsManager.destroy();
       adContainerDiv.style.display = 'none';
-      player.trigger('adserror');
+      player.trigger('adserror', adErrorEvent.getError());
     };
 
     /**
@@ -691,9 +691,9 @@
       if (contentSrc) {
         player.src(contentSrc);
       }
-      
+
       player.ima.requestAds();
-      
+
       if (playOnLoad) {
         player.on('loadedmetadata', player.ima.playContentFromZero_);
       } else {
