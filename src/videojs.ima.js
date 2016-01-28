@@ -43,6 +43,14 @@
   imaPlugin = function(options, readyCallback) {
     var player = this;
 
+    var playerStyles = getComputedStyle(player.el())
+    player.ima.width = function() {
+      return parseInt(playerStyles.width, 10);
+    }
+    player.ima.height = function() {
+      return parseInt(playerStyles.height, 10);
+    }
+
     /**
      * Creates the ad container passed to the IMA SDK.
      * @private
@@ -55,8 +63,8 @@
           vjsControls.el().parentNode.appendChild(
               document.createElement('div'));
       adContainerDiv.id = 'ima-ad-container';
-      adContainerDiv.style.width = player.width() + 'px';
-      adContainerDiv.style.height = player.height() + 'px';
+      adContainerDiv.style.width = player.ima.width() + 'px';
+      adContainerDiv.style.height = player.ima.height() + 'px';
       adContainerDiv.addEventListener(
           'mouseover',
           player.ima.showAdControls_,
@@ -147,11 +155,11 @@
       adsRequest.adTagUrl = settings.adTagUrl;
 
       adsRequest.linearAdSlotWidth = player.width();
-      adsRequest.linearAdSlotHeight = player.height();
+      adsRequest.linearAdSlotHeight = player.ima.height();
       adsRequest.nonLinearAdSlotWidth =
-          settings.nonLinearWidth || player.width();
+          settings.nonLinearWidth || player.ima.width();
       adsRequest.nonLinearAdSlotHeight =
-          settings.nonLinearHeight || (player.height() / 3);
+          settings.nonLinearHeight || (player.ima.height() / 3);
 
       adsLoader.requestAds(adsRequest);
     };
@@ -201,8 +209,8 @@
       if (!autoPlayAdBreaks) {
         try {
           adsManager.init(
-              player.width(),
-              player.height(),
+              player.ima.width(),
+              player.ima.height(),
               google.ima.ViewMode.NORMAL);
           adsManager.setVolume(player.muted() ? 0 : player.volume());
         } catch (adError) {
@@ -221,8 +229,8 @@
       if (autoPlayAdBreaks) {
         try {
           adsManager.init(
-              player.width(),
-              player.height(),
+              player.ima.width(),
+              player.ima.height(),
               google.ima.ViewMode.NORMAL);
           adsManager.setVolume(player.muted() ? 0 : player.volume());
           adsManager.start();
@@ -558,8 +566,8 @@
         }
       } else {
         fullscreenDiv.className = 'ima-non-fullscreen';
-        adContainerDiv.style.width = player.width() + 'px';
-        adContainerDiv.style.height = player.height() + 'px';
+        adContainerDiv.style.width = player.ima.width() + 'px';
+        adContainerDiv.style.height = player.ima.height() + 'px';
         if (adsManager) {
           adsManager.resize(
               player.width(),
