@@ -1134,8 +1134,10 @@
       readyCallback = player.ima.start;
     }
     player.on('readyforpreroll', readyCallback);
-    player.on('fullscreenchange', player.ima.onFullscreenChange_);
-    player.on('volumechange', player.ima.onVolumeChange_);
+    player.ready(function() {
+      player.on('fullscreenchange', player.ima.onFullscreenChange_);
+      player.on('volumechange', player.ima.onVolumeChange_);
+    });
   };
 
   videojs.plugin('ima', imaPlugin);
