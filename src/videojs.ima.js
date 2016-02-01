@@ -153,6 +153,9 @@
       }
       var adsRequest = new google.ima.AdsRequest();
       adsRequest.adTagUrl = settings.adTagUrl;
+      if (settings.forceNonLinearFullSlot) {
+        adsRequest.forceNonLinearFullSlot = true;
+      }
 
       adsRequest.linearAdSlotWidth = player.width();
       adsRequest.linearAdSlotHeight = player.ima.height();

@@ -85,6 +85,9 @@ The plugin accepts additional settings beyond the two required settings shown in
       this IMA plugin.
   debug: <boolean> True to load the debug version of the plugin, false to load the non-debug version.
       Defaults to false.
+  forceNonLinearFullSlot: <boolean> True to force non-linear AdSense ads to render as linear fullslot.
+      If set, the content video will be paused and the non-linear text or image ad will be rendered as
+      fullslot. The content video will resume once the ad has been skipped or closed.
   locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2
       (three-letter) code(3). Defaults to 'en'.
   nonLinearWidth: <Number> Desired width of non-linear ads. Defaults to player width.
