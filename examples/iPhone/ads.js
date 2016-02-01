@@ -24,7 +24,6 @@ var Ads = function() {
         'iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&' +
         'gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&' +
         'cust_params=sample_ct%3Dlinear%26deployment%3Dgmf-js&correlator=',
-    debug: true,
     nativeControlsForTouch: false
   };
 
