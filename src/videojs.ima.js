@@ -43,6 +43,14 @@ function ima(videojs) {
   imaPlugin = function(options, readyCallback) {
     var player = this;
 
+    var playerStyles = getComputedStyle(player.el())
+    player.ima.width = function() {
+      return parseInt(playerStyles.width, 10);
+    }
+    player.ima.height = function() {
+      return parseInt(playerStyles.height, 10);
+    }
+
     /**
      * Creates the ad container passed to the IMA SDK.
      * @private
@@ -55,8 +63,8 @@ function ima(videojs) {
           vjsControls.el().parentNode.appendChild(
               document.createElement('div'));
       adContainerDiv.id = 'ima-ad-container';
-      adContainerDiv.style.width = player.width() + 'px';
-      adContainerDiv.style.height = player.height() + 'px';
+      adContainerDiv.style.width = player.ima.width() + 'px';
+      adContainerDiv.style.height = player.ima.height() + 'px';
       adContainerDiv.addEventListener(
           'mouseover',
           player.ima.showAdControls_,
@@ -148,11 +156,11 @@ function ima(videojs) {
       adsRequest.adTagUrl = settings.adTagUrl;
 
       adsRequest.linearAdSlotWidth = player.width();
-      adsRequest.linearAdSlotHeight = player.height();
+      adsRequest.linearAdSlotHeight = player.ima.height();
       adsRequest.nonLinearAdSlotWidth =
-          settings.nonLinearWidth || player.width();
+          settings.nonLinearWidth || player.ima.width();
       adsRequest.nonLinearAdSlotHeight =
-          settings.nonLinearHeight || (player.height() / 3);
+          settings.nonLinearHeight || (player.ima.height() / 3);
 
       adsLoader.requestAds(adsRequest);
     };
@@ -202,8 +210,8 @@ function ima(videojs) {
       if (!autoPlayAdBreaks) {
         try {
           adsManager.init(
-              player.width(),
-              player.height(),
+              player.ima.width(),
+              player.ima.height(),
               google.ima.ViewMode.NORMAL);
           adsManager.setVolume(player.muted() ? 0 : player.volume());
         } catch (adError) {
@@ -222,8 +230,8 @@ function ima(videojs) {
       if (autoPlayAdBreaks) {
         try {
           adsManager.init(
-              player.width(),
-              player.height(),
+              player.ima.width(),
+              player.ima.height(),
               google.ima.ViewMode.NORMAL);
           adsManager.setVolume(player.muted() ? 0 : player.volume());
           adsManager.start();
@@ -568,18 +576,22 @@ function ima(videojs) {
         fullscreenDiv.className = 'ima-fullscreen';
         adContainerDiv.style.width = window.screen.width + 'px';
         adContainerDiv.style.height = window.screen.height + 'px';
-        adsManager.resize(
-            window.screen.width,
-            window.screen.height,
-            google.ima.ViewMode.FULLSCREEN);
+        if (adsManager) {
+          adsManager.resize(
+              window.screen.width,
+              window.screen.height,
+              google.ima.ViewMode.FULLSCREEN);
+        }
       } else {
         fullscreenDiv.className = 'ima-non-fullscreen';
-        adContainerDiv.style.width = player.width() + 'px';
-        adContainerDiv.style.height = player.height() + 'px';
-        adsManager.resize(
-            player.width(),
-            player.height(),
-            google.ima.ViewMode.NORMAL);
+        adContainerDiv.style.width = player.ima.width() + 'px';
+        adContainerDiv.style.height = player.ima.height() + 'px';
+        if (adsManager) {
+          adsManager.resize(
+              player.width(),
+              player.height(),
+              google.ima.ViewMode.NORMAL);
+        }
       }
     };
 
@@ -1148,8 +1160,10 @@ function ima(videojs) {
       readyCallback = player.ima.start;
     }
     player.on('readyforpreroll', readyCallback);
-    player.on('fullscreenchange', player.ima.onFullscreenChange_);
-    player.on('volumechange', player.ima.onVolumeChange_);
+    player.ready(function() {
+      player.on('fullscreenchange', player.ima.onFullscreenChange_);
+      player.on('volumechange', player.ima.onVolumeChange_);
+    });
   };
 
   videojs.plugin('ima', imaPlugin);
