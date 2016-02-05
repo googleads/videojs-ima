@@ -43,14 +43,6 @@
   imaPlugin = function(options, readyCallback) {
     var player = this;
 
-    var playerStyles = getComputedStyle(player.el())
-    player.ima.width = function() {
-      return parseInt(playerStyles.width, 10);
-    }
-    player.ima.height = function() {
-      return parseInt(playerStyles.height, 10);
-    }
-
     /**
      * Creates the ad container passed to the IMA SDK.
      * @private
@@ -63,8 +55,6 @@
           vjsControls.el().parentNode.appendChild(
               document.createElement('div'));
       adContainerDiv.id = 'ima-ad-container';
-      adContainerDiv.style.width = player.ima.width() + 'px';
-      adContainerDiv.style.height = player.ima.height() + 'px';
       adContainerDiv.addEventListener(
           'mouseover',
           player.ima.showAdControls_,
@@ -157,12 +147,12 @@
         adsRequest.forceNonLinearFullSlot = true;
       }
 
-      adsRequest.linearAdSlotWidth = player.width();
-      adsRequest.linearAdSlotHeight = player.ima.height();
+      adsRequest.linearAdSlotWidth = player.ima.getPlayerWidth();
+      adsRequest.linearAdSlotHeight = player.ima.getPlayerHeight();
       adsRequest.nonLinearAdSlotWidth =
-          settings.nonLinearWidth || player.ima.width();
+          settings.nonLinearWidth || player.ima.getPlayerWidth();
       adsRequest.nonLinearAdSlotHeight =
-          settings.nonLinearHeight || (player.ima.height() / 3);
+          settings.nonLinearHeight || (player.ima.getPlayerHeight() / 3);
 
       adsLoader.requestAds(adsRequest);
     };
@@ -211,9 +201,13 @@
 
       if (!autoPlayAdBreaks) {
         try {
+          var initWidth = player.ima.getPlayerWidth();
+          var initHeight = player.ima.getPlayerHeight();
+          adsManagerDimensions.width = initWidth;
+          adsManagerDimensions.height = initHeight;
           adsManager.init(
-              player.ima.width(),
-              player.ima.height(),
+              initWidth,
+              initHeight,
               google.ima.ViewMode.NORMAL);
           adsManager.setVolume(player.muted() ? 0 : player.volume());
         } catch (adError) {
@@ -232,8 +226,8 @@
       if (autoPlayAdBreaks) {
         try {
           adsManager.init(
-              player.ima.width(),
-              player.ima.height(),
+              player.ima.getPlayerWidth(),
+              player.ima.getPlayerHeight(),
               google.ima.ViewMode.NORMAL);
           adsManager.setVolume(player.muted() ? 0 : player.volume());
           adsManager.start();
@@ -428,6 +422,18 @@
       progressDiv.style.width = playProgressPercent + '%';
     };
 
+    player.ima.getPlayerWidth = function() {
+      var retVal = parseInt(getComputedStyle(player.el()).width, 10) ||
+          player.width();
+      return retVal;
+    };
+
+    player.ima.getPlayerHeight = function() {
+      var retVal = parseInt(getComputedStyle(player.el()).height, 10) ||
+          player.height();
+      return retVal;
+    }
+
     /**
      * Hides the ad controls on mouseout.
      * @private
@@ -559,8 +565,6 @@
     player.ima.onFullscreenChange_ = function() {
       if (player.isFullscreen()) {
         fullscreenDiv.className = 'ima-fullscreen';
-        adContainerDiv.style.width = window.screen.width + 'px';
-        adContainerDiv.style.height = window.screen.height + 'px';
         if (adsManager) {
           adsManager.resize(
               window.screen.width,
@@ -569,12 +573,10 @@
         }
       } else {
         fullscreenDiv.className = 'ima-non-fullscreen';
-        adContainerDiv.style.width = player.ima.width() + 'px';
-        adContainerDiv.style.height = player.ima.height() + 'px';
         if (adsManager) {
           adsManager.resize(
-              player.width(),
-              player.height(),
+              player.ima.getPlayerWidth(),
+              player.ima.getPlayerHeight(),
               google.ima.ViewMode.NORMAL);
         }
       }
@@ -767,6 +769,8 @@
           setInterval(player.ima.updateCurrentTime_, seekCheckInterval);
       seekCheckIntervalHandle =
           setInterval(player.ima.checkForSeeking_, seekCheckInterval);
+      resizeCheckIntervalHandle =
+          setInterval(player.ima.checkForResize_, resizeCheckInterval);
     };
 
     /**
@@ -799,6 +803,23 @@
       }
       contentPlayheadTracker.previousTime = player.currentTime();
     };
+
+    /**
+     * Detects when the player is resized (for fluid support) and resizes the
+     * ads manager to match.
+     *
+     * @private
+     */
+    player.ima.checkForResize_ = function() {
+      var currentWidth = player.ima.getPlayerWidth();
+      var currentHeight = player.ima.getPlayerHeight();
+
+      if (adsManager && (currentWidth != adsManagerDimensions.width ||
+          currentHeight != adsManagerDimensions.height)) {
+        adsManager.resize(player.ima.getPlayerWidth(),
+            player.ima.getPlayerHeight(), google.ima.ViewMode.NORMAL);
+      }
+    }
 
     /**
      * Changes the flag to show or hide the ad countdown timer.
@@ -979,6 +1000,16 @@
     var seekCheckInterval = 1000;
 
     /**
+     * Handle to interval that repeatedly checks for player resize.
+     */
+    var resizeCheckIntervalHandle;
+
+    /**
+     * Interval (ms) to check for player resize for fluid support.
+     */
+    var resizeCheckInterval = 250;
+
+    /**
      * Threshold by which to judge user seeking. We check every 1000 ms to see
      * if the user is seeking. In order for us to decide that they are *not*
      * seeking, the content video playhead must only change by 900-1100 ms
@@ -1009,6 +1040,14 @@
     };
 
     /**
+     * Stores the dimensions for the ads manager.
+     */
+    var adsManagerDimensions = {
+      width: 0,
+      height: 0
+    };
+
+    /**
      * Content ended listeners passed by the publisher to the plugin. Publishers
      * should allow the plugin to handle content ended to ensure proper support
      * of custom ad playback.
@@ -1023,7 +1062,7 @@
      * playing, whereas the contentAndAdsEndedListeners will fire after the
      * post-roll completes.
      */
-     var contentAndAdsEndedListeners = [];
+    var contentAndAdsEndedListeners = [];
 
      /**
       * Listener to be called to trigger manual ad break playback.
@@ -1048,6 +1087,7 @@
       }
       clearInterval(updateTimeIntervalHandle);
       clearInterval(seekCheckIntervalHandle);
+      clearInterval(resizeCheckIntervalHandle);
       player.one('play', player.ima.setUpPlayerIntervals_);
     };
 
