@@ -573,8 +573,8 @@
         adContainerDiv.style.height = player.ima.height() + 'px';
         if (adsManager) {
           adsManager.resize(
-              player.width(),
-              player.height(),
+              player.ima.width(),
+              player.ima.height(),
               google.ima.ViewMode.NORMAL);
         }
       }
