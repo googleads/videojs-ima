@@ -85,7 +85,7 @@
       controlsDiv.style.width = '100%';
       countdownDiv = document.createElement('div');
       countdownDiv.id = 'ima-countdown-div';
-      countdownDiv.innerHTML = 'Advertisement';
+      countdownDiv.innerHTML = 'Annonce';
       countdownDiv.style.display = showCountdown ? 'block' : 'none';
       seekBarDiv = document.createElement('div');
       seekBarDiv.id = 'ima-seek-bar-div';
@@ -122,7 +122,7 @@
           player.ima.onAdFullscreenClick_,
           false);
       adContainerDiv.appendChild(controlsDiv);
-      controlsDiv.appendChild(countdownDiv);
+      adContainerDiv.appendChild(countdownDiv);
       controlsDiv.appendChild(seekBarDiv);
       controlsDiv.appendChild(playPauseDiv);
       controlsDiv.appendChild(muteDiv);
@@ -413,7 +413,7 @@
         podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
       }
       countdownDiv.innerHTML =
-          'Advertisement' + podCount +
+          'Annonce' + podCount +
           remainingMinutes + ':' + remainingSeconds;
 
       // Update UI
