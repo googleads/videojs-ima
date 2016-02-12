@@ -34,6 +34,10 @@
   margin-top: -40px;
 }
 
+.video-js.vjs-paused .bumpable-ima-ad-container {
+  margin-top: -40px;
+}
+
 #ima-controls-div {
   bottom:0px;
   height: 37px;
