@@ -1,6 +1,7 @@
 {
   "name": "videojs-ima",
   "version": "0.3.0",
+  "license": "Apache-2.0",
   "main": "./src/videojs.ima.js",
   "author": {
     "name": "Google Inc."
