@@ -302,6 +302,7 @@
       controlsDiv.style.display = 'block';
       vjsControls.hide();
       player.pause();
+      playPauseDiv.className = 'ima-playing';
     };
 
     /**
