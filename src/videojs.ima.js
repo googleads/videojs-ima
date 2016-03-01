@@ -249,6 +249,7 @@
       if (adsManager) {
         adsManager.destroy();
       }
+      adContainerDiv.style.display = 'none';
       player.trigger('adserror');
     };
 
