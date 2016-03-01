@@ -816,8 +816,9 @@
 
       if (adsManager && (currentWidth != adsManagerDimensions.width ||
           currentHeight != adsManagerDimensions.height)) {
-        adsManager.resize(player.ima.getPlayerWidth(),
-            player.ima.getPlayerHeight(), google.ima.ViewMode.NORMAL);
+        adsManagerDimensions.width = currentWidth;
+        adsManagerDimensions.height = currentHeight;
+        adsManager.resize(currentWidth, currentHeight, google.ima.ViewMode.NORMAL);
       }
     }
 
