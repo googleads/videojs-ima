@@ -685,23 +685,19 @@
      */
     player.ima.setContent =
         function(contentSrc, adTag, playOnLoad) {
-          
+      player.ima.resetIMA_();
+      settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
       //only try to pause the player when initialised with a source already
       if (!!player.currentSrc()) {
         player.currentTime(0);
         player.pause();
       }
-      
       if (contentSrc) {
         player.src(contentSrc);
       }
-      
-      if(adTag != undefined) {
-        player.ima.resetIMA_();
-        settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
-        player.ima.requestAds();
-      }
-      
+
+      player.ima.requestAds();
+
       if (playOnLoad) {
         player.on('loadedmetadata', player.ima.playContentFromZero_);
       } else {
