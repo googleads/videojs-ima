@@ -686,7 +686,7 @@
     player.ima.setContent =
         function(contentSrc, adTag, playOnLoad) {
       player.ima.resetIMA_();
-      settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
+      settings.adTagUrl = adTag;
       //only try to pause the player when initialised with a source already
       if (!!player.currentSrc()) {
         player.currentTime(0);
