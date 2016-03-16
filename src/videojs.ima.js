@@ -696,9 +696,8 @@
         player.src(contentSrc);
       }
       
-      player.ima.resetIMA_();
-      
       if(adTag != undefined) {
+        player.ima.resetIMA_();
         settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
         player.ima.requestAds();
       }
