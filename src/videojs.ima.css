@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-.ima-ad-container {
+#ima-ad-container {
   top: 0px;
   position: absolute;
   display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* Move overlay if user fast-clicks play button. */
@@ -31,6 +33,10 @@
 }
 
 .video-js.vjs-user-active.vjs-playing .bumpable-ima-ad-container {
+  margin-top: -40px;
+}
+
+.video-js.vjs-paused .bumpable-ima-ad-container {
   margin-top: -40px;
 }
 
