@@ -37,7 +37,8 @@
   ima_defaults = {
     debug: false,
     timeout: 5000,
-    prerollTimeout: 100
+    prerollTimeout: 100,
+    adLabel: 'Advertisement'
   },
 
   imaPlugin = function(options, readyCallback) {
@@ -78,7 +79,7 @@
       controlsDiv.style.width = '100%';
       countdownDiv = document.createElement('div');
       countdownDiv.id = 'ima-countdown-div';
-      countdownDiv.innerHTML = 'Advertisement';
+      countdownDiv.innerHTML = settings.adLabel;
       countdownDiv.style.display = showCountdown ? 'block' : 'none';
       seekBarDiv = document.createElement('div');
       seekBarDiv.id = 'ima-seek-bar-div';
@@ -413,7 +414,7 @@
         podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
       }
       countdownDiv.innerHTML =
-          'Advertisement' + podCount +
+          settings.adLabel + podCount +
           remainingMinutes + ':' + remainingSeconds;
 
       // Update UI

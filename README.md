@@ -77,6 +77,7 @@ The plugin accepts additional settings beyond the two required settings shown in
 {
   id: <string> REQUIRED The id of your video player
   adTagUrl: <string> REQUIRED A URL which returns a VAST response
+  adLabel: <string> Replaces the "Advertisement" text in the ad label. Added for multilingual UI support.
   adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK
       Docs(1).
   autoPlayAdBreaks: <boolean> Whether or not to automatically play VMAP or ad rules ad breaks. Defaults
