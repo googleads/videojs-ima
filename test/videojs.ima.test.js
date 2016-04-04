@@ -71,7 +71,7 @@ test('video continues after ad was skipped', function() {
   //addEventListener only works when the adManager is available, thus using it in the ready-callback
   var readyForPrerollCallback = function() {
     player.ima.addEventListener(google.ima.AdEvent.Type.SKIPPABLE_STATE_CHANGED, function() {
-      var adManger = this;
+      var adManager = this;
       adManager.skip();
     })
     //we overwrote the normal ready-callback, thus calling start now
