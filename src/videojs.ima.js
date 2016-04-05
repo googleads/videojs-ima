@@ -37,7 +37,8 @@
   ima_defaults = {
     debug: false,
     timeout: 5000,
-    prerollTimeout: 100
+    prerollTimeout: 100,
+    adLabel: 'Advertisement'
   },
 
   imaPlugin = function(options, readyCallback) {
@@ -52,12 +53,11 @@
       // the ads and ad controls.
       vjsControls = player.getChild('controlBar');
       adContainerDiv =
-          vjsControls.el().parentNode.insertBefore(
-              document.createElement('div'),
-              vjsControls.el());
+          vjsControls.el().parentNode.appendChild(
+              document.createElement('div'));
       adContainerDiv.id = 'ima-ad-container';
-      adContainerDiv.style.width = player.width() + 'px';
-      adContainerDiv.style.height = player.height() + 'px';
+      adContainerDiv.style.position = "absolute";
+      adContainerDiv.style.zIndex = 1111;
       adContainerDiv.addEventListener(
           'mouseover',
           player.ima.showAdControls_,
@@ -81,11 +81,11 @@
       controlsDiv.style.width = '100%';
       countdownDiv = document.createElement('div');
       countdownDiv.id = 'ima-countdown-div';
-      countdownDiv.innerHTML = 'Advertisement';
+      countdownDiv.innerHTML = settings.adLabel;
       countdownDiv.style.display = showCountdown ? 'block' : 'none';
       seekBarDiv = document.createElement('div');
       seekBarDiv.id = 'ima-seek-bar-div';
-      seekBarDiv.style.width = player.width() + 'px';
+      seekBarDiv.style.width = '100%';
       progressDiv = document.createElement('div');
       progressDiv.id = 'ima-progress-div';
       playPauseDiv = document.createElement('div');
@@ -117,25 +117,15 @@
           'click',
           player.ima.onAdFullscreenClick_,
           false);
-      adContainerDiv.insertBefore(
-          controlsDiv,
-          adContainerDiv.childNodes[adContainerDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          countdownDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          seekBarDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          playPauseDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          muteDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          sliderDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      controlsDiv.insertBefore(
-          fullscreenDiv, controlsDiv.childNodes[controlsDiv.childNodes.length]);
-      seekBarDiv.insertBefore(
-          progressDiv, seekBarDiv.childNodes[controlsDiv.childNodes.length]);
-      sliderDiv.insertBefore(
-          sliderLevelDiv, sliderDiv.childNodes[sliderDiv.childNodes.length]);
+      adContainerDiv.appendChild(controlsDiv);
+      controlsDiv.appendChild(countdownDiv);
+      controlsDiv.appendChild(seekBarDiv);
+      controlsDiv.appendChild(playPauseDiv);
+      controlsDiv.appendChild(muteDiv);
+      controlsDiv.appendChild(sliderDiv);
+      controlsDiv.appendChild(fullscreenDiv);
+      seekBarDiv.appendChild(progressDiv);
+      sliderDiv.appendChild(sliderLevelDiv);
     };
 
     /**
@@ -156,13 +146,16 @@
       }
       var adsRequest = new google.ima.AdsRequest();
       adsRequest.adTagUrl = settings.adTagUrl;
+      if (settings.forceNonLinearFullSlot) {
+        adsRequest.forceNonLinearFullSlot = true;
+      }
 
-      adsRequest.linearAdSlotWidth = player.width();
-      adsRequest.linearAdSlotHeight = player.height();
+      adsRequest.linearAdSlotWidth = player.ima.getPlayerWidth();
+      adsRequest.linearAdSlotHeight = player.ima.getPlayerHeight();
       adsRequest.nonLinearAdSlotWidth =
-          settings.nonLinearWidth || player.width();
+          settings.nonLinearWidth || player.ima.getPlayerWidth();
       adsRequest.nonLinearAdSlotHeight =
-          settings.nonLinearHeight || (player.height() / 3);
+          settings.nonLinearHeight || (player.ima.getPlayerHeight() / 3);
 
       adsLoader.requestAds(adsRequest);
     };
@@ -180,6 +173,9 @@
       adsManager.addEventListener(
           google.ima.AdErrorEvent.Type.AD_ERROR,
           player.ima.onAdError_);
+      adsManager.addEventListener(
+          google.ima.AdEvent.Type.AD_BREAK_READY,
+          player.ima.onAdBreakReady_);
       adsManager.addEventListener(
           google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
           player.ima.onContentPauseRequested_);
@@ -206,6 +202,22 @@
           google.ima.AdEvent.Type.SKIPPED,
           player.ima.onAdComplete_);
 
+      if (!autoPlayAdBreaks) {
+        try {
+          var initWidth = player.ima.getPlayerWidth();
+          var initHeight = player.ima.getPlayerHeight();
+          adsManagerDimensions.width = initWidth;
+          adsManagerDimensions.height = initHeight;
+          adsManager.init(
+              initWidth,
+              initHeight,
+              google.ima.ViewMode.NORMAL);
+          adsManager.setVolume(player.muted() ? 0 : player.volume());
+        } catch (adError) {
+          player.ima.onAdError_(adError);
+        }
+      }
+
       player.trigger('adsready');
     };
 
@@ -214,15 +226,17 @@
      * pre-roll.
      */
     player.ima.start = function() {
-      try {
-        adsManager.init(
-            player.width(),
-            player.height(),
-            google.ima.ViewMode.NORMAL);
-        adsManager.setVolume(player.muted() ? 0 : player.volume());
-        adsManager.start();
-      } catch (adError) {
-         player.ima.onAdError_(adError);
+      if (autoPlayAdBreaks) {
+        try {
+          adsManager.init(
+              player.ima.getPlayerWidth(),
+              player.ima.getPlayerHeight(),
+              google.ima.ViewMode.NORMAL);
+          adsManager.setVolume(player.muted() ? 0 : player.volume());
+          adsManager.start();
+        } catch (adError) {
+          player.ima.onAdError_(adError);
+        }
       }
     };
 
@@ -249,10 +263,30 @@
      */
     player.ima.onAdError_ = function(adErrorEvent) {
       window.console.log('Ad error: ' + adErrorEvent.getError());
+      vjsControls.show();
       adsManager.destroy();
       adContainerDiv.style.display = 'none';
       player.trigger('adserror');
     };
+
+    /**
+     * Listener for AD_BREAK_READY. Passes event on to publisher's listener.
+     * @param {google.ima.AdEvent} adEvent AdEvent thrown by the AdsManager.
+     * @private
+     */
+    player.ima.onAdBreakReady_ = function(adEvent) {
+      adBreakReadyListener(adEvent);
+    };
+
+    /**
+     * Called by publishers in manual ad break playback mode to start an ad
+     * break.
+     */
+    player.ima.playAdBreak = function() {
+      if (!autoPlayAdBreaks) {
+        adsManager.start();
+      }
+    }
 
     /**
      * Pauses the content video and displays the ad container so ads can play.
@@ -301,7 +335,7 @@
      * Records that ads have completed and calls contentAndAdsEndedListeners
      * if content is also complete.
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @ignore
+     * @private
      */
     player.ima.onAllAdsCompleted_ = function(adEvent) {
       allAdsCompleted = true;
@@ -382,7 +416,7 @@
         podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
       }
       countdownDiv.innerHTML =
-          'Advertisement' + podCount +
+          settings.adLabel + podCount +
           remainingMinutes + ':' + remainingSeconds;
 
       // Update UI
@@ -390,6 +424,18 @@
       var playProgressPercent = playProgressRatio * 100;
       progressDiv.style.width = playProgressPercent + '%';
     };
+
+    player.ima.getPlayerWidth = function() {
+      var retVal = parseInt(getComputedStyle(player.el()).width, 10) ||
+          player.width();
+      return retVal;
+    };
+
+    player.ima.getPlayerHeight = function() {
+      var retVal = parseInt(getComputedStyle(player.el()).height, 10) ||
+          player.height();
+      return retVal;
+    }
 
     /**
      * Hides the ad controls on mouseout.
@@ -476,7 +522,7 @@
       document.removeEventListener('mouseup', player.ima.onMouseUp_);
     }
 
-    /* Utility function so set vvolume and associated UI
+    /* Utility function to set volume and associated UI
      * @private
      */
     player.ima.setVolumeSlider_ = function(event) {
@@ -522,20 +568,20 @@
     player.ima.onFullscreenChange_ = function() {
       if (player.isFullscreen()) {
         fullscreenDiv.className = 'ima-fullscreen';
-        adContainerDiv.style.width = window.screen.width + 'px';
-        adContainerDiv.style.height = window.screen.height + 'px';
-        adsManager.resize(
-            window.screen.width,
-            window.screen.height,
-            google.ima.ViewMode.FULLSCREEN);
+        if (adsManager) {
+          adsManager.resize(
+              window.screen.width,
+              window.screen.height,
+              google.ima.ViewMode.FULLSCREEN);
+        }
       } else {
         fullscreenDiv.className = 'ima-non-fullscreen';
-        adContainerDiv.style.width = player.width() + 'px';
-        adContainerDiv.style.height = player.height() + 'px';
-        adsManager.resize(
-            player.width(),
-            player.height(),
-            google.ima.ViewMode.NORMAL);
+        if (adsManager) {
+          adsManager.resize(
+              player.ima.getPlayerWidth(),
+              player.ima.getPlayerHeight(),
+              google.ima.ViewMode.NORMAL);
+        }
       }
     };
 
@@ -549,6 +595,16 @@
       var newVolume = player.muted() ? 0 : player.volume();
       if (adsManager) {
         adsManager.setVolume(newVolume);
+      }
+      // Update UI
+      if (newVolume == 0) {
+        adMuted = true;
+        muteDiv.className = 'ima-muted';
+        sliderLevelDiv.style.width = '0%';
+      } else {
+        adMuted = false;
+        muteDiv.className = 'ima-non-muted';
+        sliderLevelDiv.style.width = newVolume * 100 + '%';
       }
     };
 
@@ -582,6 +638,19 @@
      * @private
      */
     player.ima.resetIMA_ = function() {
+      adsActive = false;
+      adPlaying = false;
+      player.on('ended', localContentEndedListener);
+      if (currentAd && currentAd.isLinear()) {
+        adContainerDiv.style.display = 'none';
+      }
+      vjsControls.show();
+      player.ads.endLinearAdMode();
+      if (adTrackingTimer) {
+        // If this is called while an ad is playing, stop trying to get that
+        // ad's current time.
+        clearInterval(adTrackingTimer);
+      }
       if (adsManager) {
         adsManager.destroy();
         adsManager = null;
@@ -626,11 +695,12 @@
      *     false to only load the content but not start playback.
      */
     player.ima.setContent =
-        function( contentSrc, adTag, playOnLoad) {
+        function(contentSrc, adTag, playOnLoad) {
       player.ima.resetIMA_();
       settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
       //only try to pause the player when initialised with a source already
       if (!!player.currentSrc()) {
+        player.currentTime(0);
         player.pause();
       }
       if (contentSrc) {
@@ -657,11 +727,18 @@
     /**
      * Adds a listener that will be called when content and all ads have
      * finished playing.
-     * @param {function} listener The listener to be called when content and
-     *     ads complete.
+     * @param {function} listener The listener to be called when content and ads complete.
      */
     player.ima.addContentAndAdsEndedListener = function(listener) {
       contentAndAdsEndedListeners.push(listener);
+    }
+
+    /**
+     * Sets the listener to be called to trigger manual ad break playback.
+     * @param {function} listener The listener to be called to trigger manual ad break playback.
+     */
+    player.ima.setAdBreakReadyListener = function(listener) {
+      adBreakReadyListener = listener;
     }
 
     /**
@@ -692,15 +769,18 @@
      */
     player.ima.setUpPlayerIntervals_ = function() {
       updateTimeIntervalHandle =
-          setInterval(player.ima.updateCurrentTime, seekCheckInterval);
+          setInterval(player.ima.updateCurrentTime_, seekCheckInterval);
       seekCheckIntervalHandle =
           setInterval(player.ima.checkForSeeking_, seekCheckInterval);
+      resizeCheckIntervalHandle =
+          setInterval(player.ima.checkForResize_, resizeCheckInterval);
     };
 
     /**
      * Updates the current time of the video
+     * @private
      */
-    player.ima.updateCurrentTime = function() {
+    player.ima.updateCurrentTime_ = function() {
       if (!contentPlayheadTracker.seeking) {
         contentPlayheadTracker.currentTime = player.currentTime();
       }
@@ -726,6 +806,24 @@
       }
       contentPlayheadTracker.previousTime = player.currentTime();
     };
+
+    /**
+     * Detects when the player is resized (for fluid support) and resizes the
+     * ads manager to match.
+     *
+     * @private
+     */
+    player.ima.checkForResize_ = function() {
+      var currentWidth = player.ima.getPlayerWidth();
+      var currentHeight = player.ima.getPlayerHeight();
+
+      if (adsManager && (currentWidth != adsManagerDimensions.width ||
+          currentHeight != adsManagerDimensions.height)) {
+        adsManagerDimensions.width = currentWidth;
+        adsManagerDimensions.height = currentHeight;
+        adsManager.resize(currentWidth, currentHeight, google.ima.ViewMode.NORMAL);
+      }
+    }
 
     /**
      * Changes the flag to show or hide the ad countdown timer.
@@ -756,6 +854,11 @@
      * Boolean flag to show or hide the ad countdown timer.
      */
     var showCountdown;
+
+    /**
+     * Boolena flag to enable manual ad break playback.
+     */
+    var autoPlayAdBreaks;
 
     /**
      * Video.js control bar.
@@ -901,6 +1004,16 @@
     var seekCheckInterval = 1000;
 
     /**
+     * Handle to interval that repeatedly checks for player resize.
+     */
+    var resizeCheckIntervalHandle;
+
+    /**
+     * Interval (ms) to check for player resize for fluid support.
+     */
+    var resizeCheckInterval = 250;
+
+    /**
      * Threshold by which to judge user seeking. We check every 1000 ms to see
      * if the user is seeking. In order for us to decide that they are *not*
      * seeking, the content video playhead must only change by 900-1100 ms
@@ -931,6 +1044,14 @@
     };
 
     /**
+     * Stores the dimensions for the ads manager.
+     */
+    var adsManagerDimensions = {
+      width: 0,
+      height: 0
+    };
+
+    /**
      * Content ended listeners passed by the publisher to the plugin. Publishers
      * should allow the plugin to handle content ended to ensure proper support
      * of custom ad playback.
@@ -945,7 +1066,12 @@
      * playing, whereas the contentAndAdsEndedListeners will fire after the
      * post-roll completes.
      */
-     var contentAndAdsEndedListeners = [];
+    var contentAndAdsEndedListeners = [];
+
+     /**
+      * Listener to be called to trigger manual ad break playback.
+      */
+    var adBreakReadyListener = undefined;
 
     /**
      * Local content ended listener for contentComplete.
@@ -965,6 +1091,7 @@
       }
       clearInterval(updateTimeIntervalHandle);
       clearInterval(seekCheckIntervalHandle);
+      clearInterval(resizeCheckIntervalHandle);
       player.one('play', player.ima.setUpPlayerIntervals_);
     };
 
@@ -981,6 +1108,11 @@
     showCountdown = true;
     if (settings['showCountdown'] == false) {
       showCountdown = false;
+    }
+
+    autoPlayAdBreaks = true;
+    if (settings['autoPlayAdBreaks'] == false) {
+      autoPlayAdBreaks = false;
     }
 
     player.one('play', player.ima.setUpPlayerIntervals_);
@@ -1029,8 +1161,13 @@
       adsLoader.getSettings().setLocale(settings.locale);
     }
 
+    if (settings.numRedirects) {
+      adsLoader.getSettings().setNumRedirects(settings.numRedirects);
+    }
+
     adsLoader.getSettings().setPlayerType('videojs-ima');
     adsLoader.getSettings().setPlayerVersion(VERSION);
+    adsLoader.getSettings().setAutoPlayAdBreaks(autoPlayAdBreaks);
 
     adsLoader.addEventListener(
       google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
@@ -1045,9 +1182,11 @@
       readyCallback = player.ima.start;
     }
     player.on('readyforpreroll', readyCallback);
-    player.on('fullscreenchange', player.ima.onFullscreenChange_);
-    player.on('volumechange', player.ima.onVolumeChange_);
+    player.ready(function() {
+      player.on('fullscreenchange', player.ima.onFullscreenChange_);
+      player.on('volumechange', player.ima.onVolumeChange_);
+    });
   };
 
-  vjs.plugin('ima', imaPlugin);
+  videojs.plugin('ima', imaPlugin);
 }(window.videojs));

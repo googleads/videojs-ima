@@ -77,15 +77,29 @@ The plugin accepts additional settings beyond the two required settings shown in
 {
   id: <string> REQUIRED The id of your video player
   adTagUrl: <string> REQUIRED A URL which returns a VAST response
-  adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK Docs(1).
-  contribAdsSettings: <Object> Additional settings to be passed to the contrib-ads plugin(2), used by this IMA plugin.
-  debug: <boolean> True to load the debug version of the plugin, false to load the non-debug version. Defaults to false.
-  locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2 (three-letter) code(3). Defaults to 'en'.
+  adLabel: <string> Replaces the "Advertisement" text in the ad label. Added for multilingual UI support.
+  adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK
+      Docs(1).
+  autoPlayAdBreaks: <boolean> Whether or not to automatically play VMAP or ad rules ad breaks. Defaults
+      to true.
+  contribAdsSettings: <Object> Additional settings to be passed to the contrib-ads plugin(2), used by
+      this IMA plugin.
+  debug: <boolean> True to load the debug version of the plugin, false to load the non-debug version.
+      Defaults to false.
+  forceNonLinearFullSlot: <boolean> True to force non-linear AdSense ads to render as linear fullslot.
+      If set, the content video will be paused and the non-linear text or image ad will be rendered as
+      fullslot. The content video will resume once the ad has been skipped or closed.
+  locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2
+      (three-letter) code(3). Defaults to 'en'.
   nonLinearWidth: <Number> Desired width of non-linear ads. Defaults to player width.
   nonLinearHeight: <Number> Desired height for non-linear ads. Defaults to 1/3 player height.
+  numRedirects: <Number> Maximum number of VAST redirects before the subsequent redirects will be denied,
+      and the ad load aborted. The number of redirects directly affects latency and thus user experience.
+      This applies to all VAST wrapper ads.
   showCountdown: <boolean> Whether or not to show the ad countdown timer. Defaults to true.
   vpaidAllowed: <boolean> (DEPRECATED, please use vpaidMode).
-  vpaidMode: <google.ima.ImaSdkSettings.VpaidMode(4)> VPAID Mode. Defaults to ENABLED. This setting overrides vpaidAllowed.
+  vpaidMode: <google.ima.ImaSdkSettings.VpaidMode(4)> VPAID Mode. Defaults to ENABLED. This setting
+      overrides vpaidAllowed.
 }
 ```
 (1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
@@ -95,6 +109,17 @@ The plugin accepts additional settings beyond the two required settings shown in
 (3) [Valid locale codes](http://www.loc.gov/standards/iso639-2/php/English_list.php)
 <br />
 (4) [google.ima.ImaSdkSettings.VpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.ImaSdkSettings.VpaidMode)
+
+## Disable automatic ad break playback
+In some circumstances you may want to prevent the SDK from playing ad breaks
+until you're ready for them. In this scenario, you can disable automatic
+playback of ad breaks in favor of letting the SDK know when you're ready for an
+ad break to play. To do so:
+
+1. Set ```autoPlayAdBreaks``` to false in the initial options.
+2. Provide an ad break ready listener via ```setAdBreakReadyListener```.
+3. Call ```player.ima.playAdBreak()``` in your ad break ready listener when
+   you're ready to play the ads.
 
 ## API Docs
 For a list of methods exposed by the plugin, see our full [API
@@ -108,10 +133,7 @@ The IMA SDK plugin for Video.js uses the IMA SDK, and as such is subject to the
 [IMA SDK Terms of Service](https://developers.google.com/interactive-media-ads/terms).
 
 ##Support
-If you have questions about the framework, you can ask them at //groups.google.com/d/forum/google-media-framework
+If you have questions about the framework, you can ask them at https://groups.google.com/d/forum/google-media-framework
 
 ##How do I contribute?
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-##Authors
-  - api.sbusolits@gmail.com (Shawn Busolits) Please direct questions or bug reports to the Github issues page.

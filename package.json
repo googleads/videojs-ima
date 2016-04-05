@@ -1,6 +1,7 @@
 {
   "name": "videojs-ima",
-  "version": "0.2.0",
+  "version": "0.4.0",
+  "license": "Apache-2.0",
   "main": "./src/videojs.ima.js",
   "author": {
     "name": "Google Inc."
@@ -12,8 +13,8 @@
     "test": "python -m SimpleHTTPServer"
   },
   "dependencies": {
-    "video.js": "~4.12",
-    "videojs-contrib-ads": "~1.1.0"
+    "video.js": "~5.3",
+    "videojs-contrib-ads": "~3.1.2"
   },
   "repository": {
     "type": "git",
