@@ -1092,7 +1092,7 @@
       clearInterval(updateTimeIntervalHandle);
       clearInterval(seekCheckIntervalHandle);
       clearInterval(resizeCheckIntervalHandle);
-      if(player.el()) player.one('play', player.ima.setUpPlayerIntervals_);
+      player.one('play', player.ima.setUpPlayerIntervals_);
     };
 
     var playerDisposedListener = function(){
