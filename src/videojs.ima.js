@@ -658,12 +658,6 @@
       if (adsLoader && !contentComplete) {
         adsLoader.contentComplete();
       }
-      if(updateTimeIntervalHandle){
-        clearInterval(updateTimeIntervalHandle);
-      }
-      if(seekCheckIntervalHandle){
-        clearInterval(seekCheckIntervalHandle);
-      }
       contentComplete = false;
       allAdsCompleted = false;
     };
@@ -1098,7 +1092,22 @@
       clearInterval(updateTimeIntervalHandle);
       clearInterval(seekCheckIntervalHandle);
       clearInterval(resizeCheckIntervalHandle);
-      player.one('play', player.ima.setUpPlayerIntervals_);
+      if(player.el()) player.one('play', player.ima.setUpPlayerIntervals_);
+    };
+
+    var playerDisposedListener = function(){
+      contentEndedListeners, contentAndAdsEndedListeners = [], [];
+      contentComplete = true;
+      player.off('ended', localContentEndedListener);
+      if(updateTimeIntervalHandle){
+        clearInterval(updateTimeIntervalHandle);
+      }
+      if(seekCheckIntervalHandle){
+        clearInterval(seekCheckIntervalHandle);
+      }
+      if(adTrackingTimer){
+        clearInterval(adTrackingTimer);
+      }
     };
 
     settings = extend({}, ima_defaults, options || {});
@@ -1124,6 +1133,7 @@
     player.one('play', player.ima.setUpPlayerIntervals_);
 
     player.on('ended', localContentEndedListener);
+    player.on('dispose', playerDisposedListener);
 
     var contrib_ads_defaults = {
       debug: settings.debug,
