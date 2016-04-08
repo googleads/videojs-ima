@@ -538,10 +538,10 @@
         onAdBreakReady);
       this.adsManager.addEventListener(
         google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
-        onContentPauseRequested);
+        this.onContentPauseRequested_);
       this.adsManager.addEventListener(
         google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED,
-        onContentResumeRequested);
+        this.onContentResumeRequested_);
       this.adsManager.addEventListener(
         google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
         onAllAdsCompleted);
@@ -557,10 +557,10 @@
         onAdPlayPauseClick);
       this.adsManager.addEventListener(
         google.ima.AdEvent.Type.COMPLETE,
-        onAdComplete);
+        this.onAdComplete_);
       this.adsManager.addEventListener(
         google.ima.AdEvent.Type.SKIPPED,
-        onAdComplete);
+        this.onAdComplete_);
 
       if (!this.autoPlayAdBreaks) {
         try {
@@ -586,7 +586,7 @@
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
      * @private
      */
-    var onContentPauseRequested = function(adEvent) {
+    this.onContentPauseRequested_ = function(adEvent) {
       this.adsActive = true;
       this.adPlaying = true;
       this.player.off('ended', this.localContentEndedListener_);
@@ -605,7 +605,7 @@
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
      * @private
      */
-    var onContentResumeRequested = function(adEvent) {
+    this.onContentResumeRequested_ = function(adEvent) {
       this.adsActive = false;
       this.adPlaying = false;
       this.player.on('ended', this.localContentEndedListener_);
@@ -674,7 +674,7 @@
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
      * @private
      */
-    var onAdComplete = function(adEvent) {
+    this.onAdComplete_ = function(adEvent) {
       if (this.currentAd.isLinear()) {
         clearInterval(this.adTrackingTimer);
       }
