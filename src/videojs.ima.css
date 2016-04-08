@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-.ima-ad-container {
-  top: 0px;
-  position: absolute;
-  display: block;
-}
-
 /* Move overlay if user fast-clicks play button. */
 .video-js.vjs-playing .bumpable-ima-ad-container {
   margin-top: -40px;
@@ -34,7 +28,7 @@
   margin-top: -40px;
 }
 
-#ima-controls-div {
+.ima-controls-div {
   bottom:0px;
   height: 37px;
   position: absolute;
@@ -69,30 +63,30 @@
     endColorstr='#07141E',GradientType=0 ); /* IE6-9 */
 }
 
-#ima-countdown-div {
+.ima-countdown-div {
   height: 11px;
   color: #FFFFFF;
   text-shadow: 0 0 0.2em #000;
 }
 
-#ima-seek-bar-div {
+.ima-seek-bar-div {
   top: 12px;
   height: 3px;
   position: absolute;
   background: rgba(255, 255, 255, .4);
 }
 
-#ima-progress-div {
+.ima-progress-div {
   width: 0px;
   height: 3px;
   background-color: #ECC546;
 }
 
-#ima-countdown-div {
+.ima-countdown-div {
   height: 10px;
 }
 
-#ima-play-pause-div, #ima-mute-div, #ima-slider-div, #ima-fullscreen-div {
+.ima-play-pause-div, .ima-mute-div, .ima-slider-div, .ima-fullscreen-div {
   width: 35px;
   height: 20px;
   top: 11px;
@@ -105,12 +99,12 @@
   font-family: VideoJS;
 }
 
-#ima-mute-div {
+.ima-mute-div {
   left: auto;
   right: 85px;
 }
 
-#ima-slider-div {
+.ima-slider-div {
   left: auto;
   right: 35px;
   width: 50px;
@@ -119,13 +113,13 @@
   background-color: #555555;
 }
 
-#ima-slider-level-div {
+.ima-slider-level-div {
   width: 100%;
   height: 10px;
   background-color: #ECC546;
 }
 
-#ima-fullscreen-div {
+.ima-fullscreen-div {
   left: auto;
   right: 0px;
 }
