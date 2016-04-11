@@ -532,7 +532,7 @@
 
       this.adsManager.addEventListener(
         google.ima.AdErrorEvent.Type.AD_ERROR,
-        onAdError);
+        this.onAdError_);
       this.adsManager.addEventListener(
         google.ima.AdEvent.Type.AD_BREAK_READY,
         onAdBreakReady);
@@ -574,7 +574,7 @@
             google.ima.ViewMode.NORMAL);
           this.adsManager.setVolume(this.player.muted() ? 0 : this.player.volume());
         } catch (adError) {
-          onAdError(adError);
+          this.onAdError_(adError);
         }
       }
 
@@ -739,7 +739,7 @@
      *     the AdsManager.
      * @private
      */
-    var onAdError = function(adErrorEvent) {
+    this.onAdError_ = function(adErrorEvent) {
       window.console.log('Ad error: ' + adErrorEvent.getError());
       this.vjsControls.show();
       this.adsManager.destroy();
@@ -1054,7 +1054,7 @@
         this.adsManager.setVolume(this.player.muted() ? 0 : this.player.volume());
         this.adsManager.start();
       } catch (adError) {
-        onAdError(adError);
+        this.onAdError_(adError);
       }
     }
   };
