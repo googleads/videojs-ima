@@ -740,7 +740,15 @@
      * @private
      */
     this.onAdError_ = function(adErrorEvent) {
-      window.console.log('Ad error: ' + adErrorEvent.getError());
+      var errorMessage;
+      if(adErrorEvent instanceof google.ima.AdErrorEvent) {
+        errorMessage = adErrorEvent.getError();
+      } else {
+        errorMessage = adErrorEvent.stack;
+      }
+      
+      window.console.log('Ad error: ' + errorMessage);
+      
       this.vjsControls.show();
       this.adsManager.destroy();
       this.adContainerDiv.style.display = 'none';
