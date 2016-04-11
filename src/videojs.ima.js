@@ -532,7 +532,7 @@
 
       this.adsManager.addEventListener(
         google.ima.AdErrorEvent.Type.AD_ERROR,
-        this.onAdError_);
+        this.onAdErrorEvent);
       this.adsManager.addEventListener(
         google.ima.AdEvent.Type.AD_BREAK_READY,
         onAdBreakReady);
@@ -739,8 +739,24 @@
      *     the AdsManager.
      * @private
      */
-    this.onAdError_ = function(adErrorEvent) {
+    this.onAdError_ = function(adError) {      
+      window.console.log('Ad error: ' + adError.stack);
+      
+      this.vjsControls.show();
+      this.adsManager.destroy();
+      this.adContainerDiv.style.display = 'none';
+      this.player.trigger('adserror');
+    }.bind(this);
+    
+    /**
+     * Listener for errors thrown by the AdsManager.
+     * @param {google.ima.AdErrorEvent} adErrorEvent The error event thrown by
+     *     the AdsManager.
+     * @private
+     */
+    var onAdErrorEvent = function(adErrorEvent) {
       window.console.log('Ad error: ' + adErrorEvent.getError());
+      
       this.vjsControls.show();
       this.adsManager.destroy();
       this.adContainerDiv.style.display = 'none';
