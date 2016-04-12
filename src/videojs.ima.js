@@ -532,7 +532,7 @@
 
       this.adsManager.addEventListener(
         google.ima.AdErrorEvent.Type.AD_ERROR,
-        this.onAdErrorEvent);
+        onAdErrorEvent);
       this.adsManager.addEventListener(
         google.ima.AdEvent.Type.AD_BREAK_READY,
         onAdBreakReady);
