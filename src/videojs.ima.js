@@ -34,6 +34,18 @@
     return obj;
   };
 
+  var translations = {
+    da : {
+      "Advertisement": "Annonce"
+    },
+    de : {
+      "Advertisement": "Werbung"
+    },
+    get: function(label, locale) {
+      return this[locale] && this[locale][label] || label;
+    }
+  };
+
   var ima_defaults = {
     debug: false,
     timeout: 5000,
@@ -377,7 +389,7 @@
       this.controlsDiv.style.width = '100%';
       this.countdownDiv = document.createElement('div');
       this.countdownDiv.className = 'ima-countdown-div';
-      this.countdownDiv.innerHTML = 'Advertisement';
+      this.countdownDiv.innerHTML = translations.get('Advertisement', this.settings.locale);
       this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
       this.seekBarDiv = document.createElement('div');
       this.seekBarDiv.className = 'ima-seek-bar-div';
@@ -466,7 +478,7 @@
       document.addEventListener('mouseup', onMouseUp, false);
       document.addEventListener('mousemove', onMouseMove, false);
     }.bind(this);
-    
+
     /* Mouse movement listener used for volume slider.
      * @private
      */
@@ -709,7 +721,7 @@
         podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
       }
       this.countdownDiv.innerHTML =
-        'Advertisement' + podCount +
+        translations.get('Advertisement', this.settings.locale) + podCount +
         remainingMinutes + ':' + remainingSeconds;
 
       // Update UI
@@ -739,15 +751,15 @@
      *     the AdsManager.
      * @private
      */
-    this.onAdError_ = function(adError) {      
+    this.onAdError_ = function(adError) {
       window.console.log('Ad error: ' + adError.stack);
-      
+
       this.vjsControls.show();
       this.adsManager.destroy();
       this.adContainerDiv.style.display = 'none';
       this.player.trigger('adserror');
     }.bind(this);
-    
+
     /**
      * Listener for errors thrown by the AdsManager.
      * @param {google.ima.AdErrorEvent} adErrorEvent The error event thrown by
@@ -756,7 +768,7 @@
      */
     var onAdErrorEvent = function(adErrorEvent) {
       window.console.log('Ad error: ' + adErrorEvent.getError());
-      
+
       this.vjsControls.show();
       this.adsManager.destroy();
       this.adContainerDiv.style.display = 'none';
