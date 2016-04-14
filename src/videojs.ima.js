@@ -235,6 +235,11 @@
      * Interval (ms) to check for player resize for fluid support.
      */
     this.resizeCheckInterval = 250;
+    
+    /**
+     * Check if on mobile
+     */
+    this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     /**
      * Threshold by which to judge user seeking. We check every 1000 ms to see
@@ -399,19 +404,19 @@
       this.playPauseDiv = document.createElement('div');
       this.playPauseDiv.className = 'ima-play-pause-div ima-playing';
       this.playPauseDiv.addEventListener(
-        'click',
+        this.isMobile ? 'touchend' : 'click',
         onAdPlayPauseClick,
         false);
       this.muteDiv = document.createElement('div');
       this.muteDiv.className = 'ima-mute-div ima-non-muted';
       this.muteDiv.addEventListener(
-        'click',
+        this.isMobile ? 'touchend' : 'click',
         onAdMuteClick,
         false);
       this.sliderDiv = document.createElement('div');
       this.sliderDiv.className = 'ima-slider-div';
       this.sliderDiv.addEventListener(
-        'mousedown',
+        this.isMobile ? 'touchstart' : 'mousedown',
         onAdVolumeSliderMouseDown,
         false);
       this.sliderLevelDiv = document.createElement('div');
@@ -419,7 +424,7 @@
       this.fullscreenDiv = document.createElement('div');
       this.fullscreenDiv.className = 'ima-fullscreen-div ima-non-fullscreen';
       this.fullscreenDiv.addEventListener(
-        'click',
+        this.isMobile ? 'touchend' : 'click',
         onAdFullscreenClick,
         false);
       this.adContainerDiv.appendChild(this.controlsDiv);
@@ -475,8 +480,8 @@
      * @private
      */
     var onAdVolumeSliderMouseDown = function() {
-      document.addEventListener('mouseup', onMouseUp, false);
-      document.addEventListener('mousemove', onMouseMove, false);
+      document.addEventListener(this.isMobile ? 'touchend' : 'mouseup', onMouseUp, false);
+      document.addEventListener(this.isMobile ? 'touchmove' : 'mousemove', onMouseMove, false);
     }.bind(this);
 
     /* Mouse movement listener used for volume slider.
@@ -491,8 +496,8 @@
      */
     var onMouseUp = function(event) {
       setVolumeSlider(event);
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener(this.isMobile ? 'touchmove' : 'mousemove', onMouseMove);
+      document.removeEventListener(this.isMobile ? 'touchend' : 'mouseup', onMouseUp);
     }.bind(this);
 
     /* Utility function to set volume and associated UI
