@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 /* Move overlay if user fast-clicks play button. */
 .video-js.vjs-playing .bumpable-ima-ad-container {
   margin-top: -40px;
@@ -24,6 +25,8 @@
   margin-top: 0px;
 }
 
+.video-js.vjs-paused .bumpable-ima-ad-container,
+.video-js.vjs-playing:hover .bumpable-ima-ad-container,
 .video-js.vjs-user-active.vjs-playing .bumpable-ima-ad-container {
   margin-top: -40px;
 }

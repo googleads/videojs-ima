@@ -77,6 +77,7 @@ The plugin accepts additional settings beyond the two required settings shown in
 {
   id: <string> REQUIRED The id of your video player
   adTagUrl: <string> REQUIRED A URL which returns a VAST response
+  adLabel: <string> Replaces the "Advertisement" text in the ad label. Added for multilingual UI support.
   adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK
       Docs(1).
   autoPlayAdBreaks: <boolean> Whether or not to automatically play VMAP or ad rules ad breaks. Defaults
@@ -85,6 +86,9 @@ The plugin accepts additional settings beyond the two required settings shown in
       this IMA plugin.
   debug: <boolean> True to load the debug version of the plugin, false to load the non-debug version.
       Defaults to false.
+  forceNonLinearFullSlot: <boolean> True to force non-linear AdSense ads to render as linear fullslot.
+      If set, the content video will be paused and the non-linear text or image ad will be rendered as
+      fullslot. The content video will resume once the ad has been skipped or closed.
   locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2
       (three-letter) code(3). Defaults to 'en'.
   nonLinearWidth: <Number> Desired width of non-linear ads. Defaults to player width.

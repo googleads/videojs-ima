@@ -34,22 +34,11 @@
     return obj;
   };
 
-  var translations = {
-    da : {
-      "Advertisement": "Annonce"
-    },
-    de : {
-      "Advertisement": "Werbung"
-    },
-    get: function(label, locale) {
-      return this[locale] && this[locale][label] || label;
-    }
-  };
-
   var ima_defaults = {
     debug: false,
     timeout: 5000,
-    prerollTimeout: 100
+    prerollTimeout: 100,
+    adLabel: 'Advertisement'
   };
 
   var init = function(options, readyCallback) {
@@ -61,7 +50,7 @@
     /**
      * Current plugin version.
      */
-    this.VERSION = '0.2.0';
+    this.VERSION = '0.4.0';
 
     /**
      * Stores user-provided settings.
@@ -142,6 +131,18 @@
      * IMA SDK AdDisplayContainer.
      */
     this.adDisplayContainer;
+
+    player.ima.getPlayerWidth = function() {
+      var retVal = parseInt(getComputedStyle(player.el()).width, 10) ||
+          player.width();
+      return retVal;
+    };
+
+    player.ima.getPlayerHeight = function() {
+      var retVal = parseInt(getComputedStyle(player.el()).height, 10) ||
+          player.height();
+      return retVal;
+    }
 
     /**
      * True if the AdDisplayContainer has been initialized. False otherwise.
@@ -394,7 +395,7 @@
       this.controlsDiv.style.width = '100%';
       this.countdownDiv = document.createElement('div');
       this.countdownDiv.className = 'ima-countdown-div';
-      this.countdownDiv.innerHTML = translations.get('Advertisement', this.settings.locale);
+      this.countdownDiv.innerHTML = this.settings.adLabel;
       this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
       this.seekBarDiv = document.createElement('div');
       this.seekBarDiv.className = 'ima-seek-bar-div';
@@ -726,7 +727,7 @@
         podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
       }
       this.countdownDiv.innerHTML =
-        translations.get('Advertisement', this.settings.locale) + podCount +
+        this.settings.adLabel + podCount +
         remainingMinutes + ':' + remainingSeconds;
 
       // Update UI
