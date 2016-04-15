@@ -1030,6 +1030,12 @@
     this.player.ready(function() {
       this.on('fullscreenchange', onFullscreenChange);
       this.on('volumechange', onVolumeChange);
+      //Set pause state when iphone exits fullscreen from navtive player.
+      this.tech_.el().addEventListener('webkitendfullscreen', function() {
+        self.playPauseDiv.className = 'ima-play-pause-div ima-paused';
+        self.adsManager.pause();
+        self.adPlaying = false;
+      });
     });
 
   }
