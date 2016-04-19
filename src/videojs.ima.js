@@ -1099,14 +1099,17 @@
       contentEndedListeners, contentAndAdsEndedListeners = [], [];
       contentComplete = true;
       player.off('ended', localContentEndedListener);
-      if(updateTimeIntervalHandle){
-        clearInterval(updateTimeIntervalHandle);
+      var intervalsToClear = [updateTimeIntervalHandle, seekCheckIntervalHandle,
+        adTrackingTimer, resizeCheckIntervalHandle];
+      for (var index in intervalsToClear) {
+        var interval = intervalsToClear[index];
+        if (interval) {
+          clearInterval(interval);
+        }
       }
-      if(seekCheckIntervalHandle){
-        clearInterval(seekCheckIntervalHandle);
-      }
-      if(adTrackingTimer){
-        clearInterval(adTrackingTimer);
+      if (adsManager) {
+        adsManager.destroy();
+        adsManager = null;
       }
     };
 
