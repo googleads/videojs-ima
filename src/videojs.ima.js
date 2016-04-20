@@ -249,6 +249,7 @@
      */
     player.ima.onAdsLoaderError_ = function(event) {
       window.console.log('AdsLoader error: ' + event.getError());
+      adContainerDiv.style.display = 'none';
       if (adsManager) {
         adsManager.destroy();
       }
