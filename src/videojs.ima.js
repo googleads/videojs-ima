@@ -252,7 +252,7 @@
       if (adsManager) {
         adsManager.destroy();
       }
-      player.trigger('adserror');
+      player.trigger({type: 'adserror', data: { AdError: event.getError(), AdErrorEvent: event }});
     };
 
     /**
@@ -266,7 +266,7 @@
       vjsControls.show();
       adsManager.destroy();
       adContainerDiv.style.display = 'none';
-      player.trigger('adserror');
+      player.trigger({ type: 'adserror', data: { AdError: adErrorEvent.getError(), AdErrorEvent: adErrorEvent }});
     };
 
     /**
