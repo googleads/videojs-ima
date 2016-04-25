@@ -1,15 +1,13 @@
 var video, player;
+var setup = function() {
+  video = document.createElement('video');
+  video.id = 'video';
+  document.getElementById('qunit-fixture').appendChild(video);
+  player = videojs(video);
+};
 
-module('Ad Framework', {
-  setup: function() {
-    video = document.createElement('video');
-    video.id = 'video';
-    document.getElementById('qunit-fixture').appendChild(video);
-    player = videojs(video);
-  },
-  teardown: function() {
-  }
-});
+
+module('Ad Framework', { setup: setup });
 
 test('the environment is sane', function() {
   ok(true, 'true is ok');
@@ -99,4 +97,61 @@ test('video continues after ad was skipped', function() {
     equal(adCompleteCount, 1 , 'adComplete was called');
     start();
   }, 6000);
+});
+
+
+module("Events", { setup: setup });
+
+test('onAdsLoaderError_ should trigger adserror with data from google.ima.AdError and google.ima.AdErrorEvent', function() {
+  var options = {
+    id: 'video',
+    adTagUrl: ''
+  };
+
+  player.on("adserror", function(event){
+    deepEqual(Object.keys(Object(event.data)), ["AdError", "AdErrorEvent"], "event.data should have AdError and AdErrorEvent");
+
+    if (event.data) {
+      ok(event.data.AdError, "AdError should be defined");
+      ok(event.data.AdErrorEvent, "AdErrorEvent should be defined");
+    }
+
+    start();
+  });
+
+  player.ima(options);
+  player.ima.requestAds();
+
+  stop();
+});
+
+test('onAdError_ should trigger adserror with data from google.ima.AdError and google.ima.AdErrorEvent', function() {
+  // stub view mode to throw on start
+  google.ima.ViewMode.NORMAL = "throw-on-ads-manager-init";
+
+  var options = {
+    id: 'video',
+    adTagUrl: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x360&' +
+        'iu=/6062/iab_vast_samples/skippable&ciu_szs=300x250,728x90&impl=s&' +
+        'gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&' +
+        'url=[referrer_url]&correlator=[timestamp]',
+    autoPlayAdBreaks: true,
+  };
+
+  player.on("adserror", function(event){
+    deepEqual(Object.keys(Object(event.data)), ["AdError", "AdErrorEvent"], "event.data should have AdError and AdErrorEvent");
+
+    if (event.data) {
+      ok(event.data.AdError, "AdError should be defined");
+      ok(event.data.AdErrorEvent, "AdErrorEvent should be defined");
+    }
+
+    start();
+  });
+
+  player.ima(options);
+  player.ima.requestAds();
+  player.play();
+
+  stop();
 });

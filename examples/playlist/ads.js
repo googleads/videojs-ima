@@ -114,7 +114,7 @@ Ads.prototype.onAdEvent = function(event) {
 
 Ads.prototype.onPlaylistItemClick = function(event) {
   if (!this.linearAdPlaying) {
-    this.player.ima.setContent(
+    this.player.ima.setContentWithAdTag(
         this.contents[event.target.id],
         null,
         true);
