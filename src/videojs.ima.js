@@ -145,7 +145,11 @@
         adDisplayContainer.initialize();
       }
       var adsRequest = new google.ima.AdsRequest();
-      adsRequest.adTagUrl = settings.adTagUrl;
+      if (settings.adTagUrl) {
+        adsRequest.adTagUrl = settings.adTagUrl;
+      } else {
+        adsRequest.adsResponse = adsResponse;
+      }
       if (settings.forceNonLinearFullSlot) {
         adsRequest.forceNonLinearFullSlot = true;
       }
@@ -684,6 +688,7 @@
     };
 
     /**
+     * DEPRECATED: Use setContentWithAdTag.
      * Sets the content of the video player. You should use this method instead
      * of setting the content src directly to ensure the proper ad tag is
      * requested when the video content is loaded.
@@ -694,11 +699,58 @@
      * @param {?boolean} playOnLoad True to play the content once it has loaded,
      *     false to only load the content but not start playback.
      */
-    player.ima.setContent =
-        function(contentSrc, adTag, playOnLoad) {
+    player.ima.setContent = function(contentSrc, adTag, playOnLoad) {
+      window.console.log(
+          'WARNING: player.ima.setContent is deprecated. Use ' +
+              'player.ima.setContentWithAdTag instead.');
+      player.ima.setContentWithAdTag(contentSrc, adTag, playOnLoad);
+    };
+
+    /**
+     * Sets the content of the video player. You should use this method instead
+     * of setting the content src directly to ensure the proper ad tag is
+     * requested when the video content is loaded.
+     * @param {?string} contentSrc The URI for the content to be played. Leave
+     *     blank to use the existing content.
+     * @param {?string} adTag The ad tag to be requested when the content loads.
+     *     Leave blank to use the existing ad tag.
+     * @param {?boolean} playOnLoad True to play the content once it has loaded,
+     *     false to only load the content but not start playback.
+     */
+    player.ima.setContentWithAdTag = function(contentSrc, adTag, playOnLoad) {
       player.ima.resetIMA_();
       settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
-      //only try to pause the player when initialised with a source already
+      player.ima.changeSource_(contentSrc, playOnLoad);
+    };
+
+    /**
+     * Sets the content of the video player. You should use this method instead
+     * of setting the content src directly to ensure the proper ads response is
+     * used when the video content is loaded.
+     * @param {?string} contentSrc The URI for the content to be played. Leave
+     *     blank to use the existing content.
+     * @param {?string} adsResponse The ads response to be requested when the
+     *     content loads. Leave blank to use the existing ads response.
+     * @param {?boolean} playOnLoad True to play the content once it has loaded,
+     *     false to only load the content but not start playback.
+     */
+    player.ima.setContentWithAdsResponse =
+        function(contentSrc, adsResponse, playOnLoad) {
+      player.ima.resetIMA_();
+      settings.adsResponse = adsResponse ? adsResponse : settings.adsResponse;
+      player.ima.changeSource_(contentSrc, playOnLoad);
+    };
+
+    /**
+     * Changes the player source.
+     * @param {?string} contentSrc The URI for the content to be played. Leave
+     *     blank to use the existing content.
+     * @param {?boolean} playOnLoad True to play the content once it has loaded,
+     *     false to only load the content but not start playback.
+     * @private
+     */
+    player.ima.changeSource_ = function(contentSrc, playOnLoad) {
+      // Only try to pause the player when initialised with a source already
       if (!!player.currentSrc()) {
         player.currentTime(0);
         player.pause();
@@ -944,6 +996,12 @@
      * Ad tag URL. Should return VAST, VMAP, or ad rules.
      */
     var adTagUrl;
+
+    /**
+     * VAST, VMAP, or ad rules response. Used in lieu of fetching a response
+     * from an ad tag URL.
+     */
+    var adsResponse;
 
     /**
      * Current IMA SDK Ad.
