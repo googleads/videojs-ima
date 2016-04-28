@@ -59,6 +59,7 @@ var options = {
   adTagUrl: 'YOUR_AD_TAG'
 };
 
+// This must be called before player.play() below.
 player.ima(options);
 player.ima.requestAds();
 // On mobile devices, you must call initializeAdDisplayContainer as the result
@@ -66,6 +67,8 @@ player.ima.requestAds();
 // will make it for you, but not as the result of a user action. For more info
 // see our examples, all of which are set up to work on mobile devices.
 // player.ima.initializeAdDisplayContainer();
+
+// This must be called after player.ima(...) above.
 player.play();
 ```
 
@@ -76,7 +79,11 @@ The plugin accepts additional settings beyond the two required settings shown in
 ```javascript
 {
   id: <string> REQUIRED The id of your video player
-  adTagUrl: <string> REQUIRED A URL which returns a VAST response
+  adTagUrl: <string> REQUIRED IF adsResponse IS NOT PROVIDED A URL which returns a VAST, VMAP or ad rules
+      response.
+  adsResponse: <string> REQUIRED IF adTagUrl IS NOT PROVIDED The VAST, VMAP, or ad rules response to use
+      in lieu of fetching one an ad tag.
+  adLabel: <string> Replaces the "Advertisement" text in the ad label. Added for multilingual UI support.
   adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK
       Docs(1).
   autoPlayAdBreaks: <boolean> Whether or not to automatically play VMAP or ad rules ad breaks. Defaults

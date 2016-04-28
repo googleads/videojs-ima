@@ -37,7 +37,8 @@ function ima(videojs) {
   ima_defaults = {
     debug: false,
     timeout: 5000,
-    prerollTimeout: 100
+    prerollTimeout: 100,
+    adLabel: 'Advertisement'
   },
 
   imaPlugin = function(options, readyCallback) {
@@ -55,6 +56,8 @@ function ima(videojs) {
           vjsControls.el().parentNode.appendChild(
               document.createElement('div'));
       adContainerDiv.id = 'ima-ad-container';
+      adContainerDiv.style.position = "absolute";
+      adContainerDiv.style.zIndex = 1111;
       adContainerDiv.addEventListener(
           'mouseover',
           player.ima.showAdControls_,
@@ -78,7 +81,7 @@ function ima(videojs) {
       controlsDiv.style.width = '100%';
       countdownDiv = document.createElement('div');
       countdownDiv.id = 'ima-countdown-div';
-      countdownDiv.innerHTML = 'Advertisement';
+      countdownDiv.innerHTML = settings.adLabel;
       countdownDiv.style.display = showCountdown ? 'block' : 'none';
       seekBarDiv = document.createElement('div');
       seekBarDiv.id = 'ima-seek-bar-div';
@@ -143,7 +146,11 @@ function ima(videojs) {
         adDisplayContainer.initialize();
       }
       var adsRequest = new google.ima.AdsRequest();
-      adsRequest.adTagUrl = settings.adTagUrl;
+      if (settings.adTagUrl) {
+        adsRequest.adTagUrl = settings.adTagUrl;
+      } else {
+        adsRequest.adsResponse = adsResponse;
+      }
       if (settings.forceNonLinearFullSlot) {
         adsRequest.forceNonLinearFullSlot = true;
       }
@@ -246,16 +253,12 @@ function ima(videojs) {
      * @private
      */
     player.ima.onAdsLoaderError_ = function(event) {
-      var error = event
-      if (event.getError) {
-        error = event.getError()
-      }
-      window.console.log('AdsLoader error: ' + error);
-
+      window.console.log('AdsLoader error: ' + event.getError());
+      adContainerDiv.style.display = 'none';
       if (adsManager) {
         adsManager.destroy();
       }
-      player.trigger('adserror');
+      player.trigger({type: 'adserror', data: { AdError: event.getError(), AdErrorEvent: event }});
     };
 
     /**
@@ -274,7 +277,7 @@ function ima(videojs) {
       vjsControls.show();
       adsManager.destroy();
       adContainerDiv.style.display = 'none';
-      player.trigger('adserror');
+      player.trigger({ type: 'adserror', data: { AdError: adErrorEvent.getError(), AdErrorEvent: adErrorEvent }});
     };
 
     /**
@@ -310,7 +313,13 @@ function ima(videojs) {
         player.ads.startLinearAdMode();
       }
       adContainerDiv.style.display = 'block';
-      controlsDiv.style.display = 'block';
+      // Don't show ad controls for not video ads (like modal ads)
+      if (adEvent.getAd().getContentType().search(/video/i) !== 0) {
+        controlsDiv.style.display = 'none';
+      }
+      else {
+        controlsDiv.style.display = 'block';
+      }
       vjsControls.hide();
       player.pause();
     };
@@ -431,7 +440,7 @@ function ima(videojs) {
         podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
       }
       countdownDiv.innerHTML =
-          'Advertisement' + podCount +
+          settings.adLabel + podCount +
           remainingMinutes + ':' + remainingSeconds;
 
       // Update UI
@@ -699,12 +708,23 @@ function ima(videojs) {
     };
 
     /**
-     * Returns the instance of the AdsLoader.
-     * @return {google.ima.AdsLoader} The AdsLoader being used by the plugin.
+     * DEPRECATED: Use setContentWithAdTag.
+     * Sets the content of the video player. You should use this method instead
+     * of setting the content src directly to ensure the proper ad tag is
+     * requested when the video content is loaded.
+     * @param {?string} contentSrc The URI for the content to be played. Leave
+     *     blank to use the existing content.
+     * @param {?string} adTag The ad tag to be requested when the content loads.
+     *     Leave blank to use the existing ad tag.
+     * @param {?boolean} playOnLoad True to play the content once it has loaded,
+     *     false to only load the content but not start playback.
      */
-    player.ima.getAdsLoader = function() {
-      return adsLoader;
-    }
+    player.ima.setContent = function(contentSrc, adTag, playOnLoad) {
+      window.console.log(
+          'WARNING: player.ima.setContent is deprecated. Use ' +
+              'player.ima.setContentWithAdTag instead.');
+      player.ima.setContentWithAdTag(contentSrc, adTag, playOnLoad);
+    };
 
     /**
      * Sets the content of the video player. You should use this method instead
@@ -717,11 +737,40 @@ function ima(videojs) {
      * @param {?boolean} playOnLoad True to play the content once it has loaded,
      *     false to only load the content but not start playback.
      */
-    player.ima.setContent =
-        function(contentSrc, adTag, playOnLoad) {
+    player.ima.setContentWithAdTag = function(contentSrc, adTag, playOnLoad) {
       player.ima.resetIMA_();
       settings.adTagUrl = adTag ? adTag : settings.adTagUrl;
-      //only try to pause the player when initialised with a source already
+      player.ima.changeSource_(contentSrc, playOnLoad);
+    };
+
+    /**
+     * Sets the content of the video player. You should use this method instead
+     * of setting the content src directly to ensure the proper ads response is
+     * used when the video content is loaded.
+     * @param {?string} contentSrc The URI for the content to be played. Leave
+     *     blank to use the existing content.
+     * @param {?string} adsResponse The ads response to be requested when the
+     *     content loads. Leave blank to use the existing ads response.
+     * @param {?boolean} playOnLoad True to play the content once it has loaded,
+     *     false to only load the content but not start playback.
+     */
+    player.ima.setContentWithAdsResponse =
+        function(contentSrc, adsResponse, playOnLoad) {
+      player.ima.resetIMA_();
+      settings.adsResponse = adsResponse ? adsResponse : settings.adsResponse;
+      player.ima.changeSource_(contentSrc, playOnLoad);
+    };
+
+    /**
+     * Changes the player source.
+     * @param {?string} contentSrc The URI for the content to be played. Leave
+     *     blank to use the existing content.
+     * @param {?boolean} playOnLoad True to play the content once it has loaded,
+     *     false to only load the content but not start playback.
+     * @private
+     */
+    player.ima.changeSource_ = function(contentSrc, playOnLoad) {
+      // Only try to pause the player when initialised with a source already
       if (!!player.currentSrc()) {
         player.currentTime(0);
         player.pause();
@@ -969,6 +1018,12 @@ function ima(videojs) {
     var adTagUrl;
 
     /**
+     * VAST, VMAP, or ad rules response. Used in lieu of fetching a response
+     * from an ad tag URL.
+     */
+    var adsResponse;
+
+    /**
      * Current IMA SDK Ad.
      */
     var currentAd;
@@ -1115,7 +1170,27 @@ function ima(videojs) {
       clearInterval(updateTimeIntervalHandle);
       clearInterval(seekCheckIntervalHandle);
       clearInterval(resizeCheckIntervalHandle);
-      player.one('play', player.ima.setUpPlayerIntervals_);
+      if(player.el()) {
+        player.one('play', player.ima.setUpPlayerIntervals_);
+      }
+    };
+
+    var playerDisposedListener = function(){
+      contentEndedListeners, contentAndAdsEndedListeners = [], [];
+      contentComplete = true;
+      player.off('ended', localContentEndedListener);
+      var intervalsToClear = [updateTimeIntervalHandle, seekCheckIntervalHandle,
+        adTrackingTimer, resizeCheckIntervalHandle];
+      for (var index in intervalsToClear) {
+        var interval = intervalsToClear[index];
+        if (interval) {
+          clearInterval(interval);
+        }
+      }
+      if (adsManager) {
+        adsManager.destroy();
+        adsManager = null;
+      }
     };
 
     settings = extend({}, ima_defaults, options || {});
@@ -1141,6 +1216,7 @@ function ima(videojs) {
     player.one('play', player.ima.setUpPlayerIntervals_);
 
     player.on('ended', localContentEndedListener);
+    player.on('dispose', playerDisposedListener);
 
     var contrib_ads_defaults = {
       debug: settings.debug,
