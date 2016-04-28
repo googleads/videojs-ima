@@ -741,8 +741,7 @@
      * @param {?boolean} playOnLoad True to play the content once it has loaded,
      *     false to only load the content but not start playback.
      */
-    player.ima.setContentWithAdsResponse =
-        function(contentSrc, adsResponse, playOnLoad) {
+    player.ima.setContentWithAdsResponse = function(contentSrc, adsResponse, playOnLoad) {
       player.ima.resetIMA_();
       settings.adsResponse = adsResponse ? adsResponse : settings.adsResponse;
       player.ima.changeSource_(contentSrc, playOnLoad);
