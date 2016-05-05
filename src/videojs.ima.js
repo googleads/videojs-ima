@@ -226,10 +226,26 @@
     };
 
     /**
+     * DEPRECATED: Use startFromReadyCallback
      * Start ad playback, or content video playback in the absence of a
      * pre-roll.
      */
     player.ima.start = function() {
+      window.console.log(
+          'WARNING: player.ima.start is deprecated. Use ' +
+              'player.ima.startFromReadyCallback instead.');
+    }
+
+    /**
+     * Start ad playback, or content video playback in the absence of a
+     * pre-roll. **NOTE**: This method only needs to be called if you provide
+     * your own readyCallback as the second parameter to player.ima(). If you
+     * only provide options and do not provide your own readyCallback,
+     * **DO NOT** call this method. If you do provide your own readyCallback,
+     * you should call this method in the last line of that callback. For more
+     * info, see this method's usage in our advanced and playlist examples.
+     */
+    player.ima.startFromReadyCallback = function() {
       if (autoPlayAdBreaks) {
         try {
           adsManager.init(
@@ -1264,7 +1280,7 @@
       false);
 
     if (!readyCallback) {
-      readyCallback = player.ima.start;
+      readyCallback = player.ima.startFromReadyCallback;
     }
     player.on('readyforpreroll', readyCallback);
     player.ready(function() {
