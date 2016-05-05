@@ -226,10 +226,26 @@
     };
 
     /**
+     * DEPRECATED: Use startFromReadyCallback
      * Start ad playback, or content video playback in the absence of a
      * pre-roll.
      */
     player.ima.start = function() {
+      window.console.log(
+          'WARNING: player.ima.start is deprecated. Use ' +
+              'player.ima.startFromReadyCallback instead.');
+    }
+
+    /**
+     * Start ad playback, or content video playback in the absence of a
+     * pre-roll. **NOTE**: This method only needs to be called if you provide
+     * your own readyCallback as the second parameter to player.ima(). If you
+     * only provide options and do not provide your own readyCallback,
+     * **DO NOT** call this method. If you do provide your own readyCallback,
+     * you should call this method in the last line of that callback. For more
+     * info, see this method's usage in our advanced and playlist examples.
+     */
+    player.ima.startFromReadyCallback = function() {
       if (autoPlayAdBreaks) {
         try {
           adsManager.init(
@@ -307,7 +323,13 @@
         player.ads.startLinearAdMode();
       }
       adContainerDiv.style.display = 'block';
-      controlsDiv.style.display = 'block';
+      // Don't show ad controls for not video ads (like modal ads)
+      if (adEvent.getAd().getContentType().search(/video/i) !== 0) {
+        controlsDiv.style.display = 'none';
+      }
+      else {
+        controlsDiv.style.display = 'block';
+      }
       vjsControls.hide();
       player.pause();
     };
@@ -735,8 +757,7 @@
      * @param {?boolean} playOnLoad True to play the content once it has loaded,
      *     false to only load the content but not start playback.
      */
-    player.ima.setContentWithAdsResponse =
-        function(contentSrc, adsResponse, playOnLoad) {
+    player.ima.setContentWithAdsResponse = function(contentSrc, adsResponse, playOnLoad) {
       player.ima.resetIMA_();
       settings.adsResponse = adsResponse ? adsResponse : settings.adsResponse;
       player.ima.changeSource_(contentSrc, playOnLoad);
@@ -1151,7 +1172,27 @@
       clearInterval(updateTimeIntervalHandle);
       clearInterval(seekCheckIntervalHandle);
       clearInterval(resizeCheckIntervalHandle);
-      player.one('play', player.ima.setUpPlayerIntervals_);
+      if(player.el()) {
+        player.one('play', player.ima.setUpPlayerIntervals_);
+      }
+    };
+
+    var playerDisposedListener = function(){
+      contentEndedListeners, contentAndAdsEndedListeners = [], [];
+      contentComplete = true;
+      player.off('ended', localContentEndedListener);
+      var intervalsToClear = [updateTimeIntervalHandle, seekCheckIntervalHandle,
+        adTrackingTimer, resizeCheckIntervalHandle];
+      for (var index in intervalsToClear) {
+        var interval = intervalsToClear[index];
+        if (interval) {
+          clearInterval(interval);
+        }
+      }
+      if (adsManager) {
+        adsManager.destroy();
+        adsManager = null;
+      }
     };
 
     settings = extend({}, ima_defaults, options || {});
@@ -1177,6 +1218,7 @@
     player.one('play', player.ima.setUpPlayerIntervals_);
 
     player.on('ended', localContentEndedListener);
+    player.on('dispose', playerDisposedListener);
 
     var contrib_ads_defaults = {
       debug: settings.debug,
@@ -1238,7 +1280,7 @@
       false);
 
     if (!readyCallback) {
-      readyCallback = player.ima.start;
+      readyCallback = player.ima.startFromReadyCallback;
     }
     player.on('readyforpreroll', readyCallback);
     player.ready(function() {
