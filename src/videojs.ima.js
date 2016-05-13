@@ -425,7 +425,8 @@
       var currentTime = duration - remainingTime;
       currentTime = currentTime > 0 ? currentTime : 0;
       var isPod = false;
-      var adPosition, totalAds;
+      var totalAds = 0;
+      var adPosition;
       if (currentAd.getAdPodInfo()) {
         isPod = true;
         adPosition = currentAd.getAdPodInfo().getAdPosition();
@@ -439,7 +440,7 @@
         remainingSeconds = '0' + remainingSeconds;
       }
       var podCount = ': ';
-      if (isPod) {
+      if (isPod && (totalAds > 1)) {
         podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
       }
       countdownDiv.innerHTML =
