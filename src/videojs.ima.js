@@ -323,8 +323,10 @@
         player.ads.startLinearAdMode();
       }
       adContainerDiv.style.display = 'block';
+      
       // Don't show ad controls for not video ads (like modal ads)
-      if (adEvent.getAd().getContentType().search(/video/i) !== 0) {
+      var contentType = adEvent.getAd().getContentType();
+      if ((contentType.search(/video/i) !== 0) && (contentType !== 'application/javascript')) {
         controlsDiv.style.display = 'none';
       }
       else {
