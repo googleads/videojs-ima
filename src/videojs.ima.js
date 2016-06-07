@@ -453,13 +453,13 @@
     };
 
     player.ima.getPlayerWidth = function() {
-      var retVal = parseInt(getComputedStyle(player.el()).width, 10) ||
+      var retVal = parseInt(player.el().offsetWidth, 10) ||
           player.width();
       return retVal;
     };
 
     player.ima.getPlayerHeight = function() {
-      var retVal = parseInt(getComputedStyle(player.el()).height, 10) ||
+      var retVal = parseInt(player.el().offsetHeight, 10) ||
           player.height();
       return retVal;
     }
