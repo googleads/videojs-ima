@@ -106,6 +106,7 @@ The plugin accepts additional settings beyond the two required settings shown in
   vpaidAllowed: <boolean> (DEPRECATED, please use vpaidMode).
   vpaidMode: <google.ima.ImaSdkSettings.VpaidMode(4)> VPAID Mode. Defaults to ENABLED. This setting
       overrides vpaidAllowed.
+  showControlsForJSAds: <boolean> Whether or not to show the control bar for VPAID JavaScript ads. Defaults to true.
 }
 ```
 (1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
