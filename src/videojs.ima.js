@@ -39,7 +39,7 @@
     timeout: 5000,
     prerollTimeout: 100,
     adLabel: 'Advertisement',
-    showControlsForJSAd: true
+    showControlsForJSAds: true
   },
 
   imaPlugin = function(options, readyCallback) {
