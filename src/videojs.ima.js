@@ -38,7 +38,8 @@
     debug: false,
     timeout: 5000,
     prerollTimeout: 100,
-    adLabel: 'Advertisement'
+    adLabel: 'Advertisement',
+    showControlsForJSAds: true
   },
 
   imaPlugin = function(options, readyCallback) {
@@ -323,13 +324,14 @@
         player.ads.startLinearAdMode();
       }
       adContainerDiv.style.display = 'block';
-      // Don't show ad controls for not video ads (like modal ads)
-      if (adEvent.getAd().getContentType().search(/video/i) !== 0) {
+
+      var contentType = adEvent.getAd().getContentType();
+      if ((contentType === 'application/javascript') && !settings.showControlsForJSAds) {
         controlsDiv.style.display = 'none';
-      }
-      else {
+      } else {
         controlsDiv.style.display = 'block';
       }
+
       vjsControls.hide();
       player.pause();
     };
