@@ -345,7 +345,11 @@
       adsActive = false;
       adPlaying = false;
       player.on('ended', localContentEndedListener);
-      if (currentAd && currentAd.isLinear()) {
+      if (currentAd == null ||
+          (currentAd && currentAd.isLinear())) {
+        // The first half of the conditional handles post-roll only playlists.
+        // The second half of the conditional handles the case where an ad
+        // transitions from non-linear to linear and back.
         adContainerDiv.style.display = 'none';
       }
       vjsControls.show();
