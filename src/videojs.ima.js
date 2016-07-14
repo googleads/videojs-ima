@@ -149,7 +149,7 @@
       if (settings.adTagUrl) {
         adsRequest.adTagUrl = settings.adTagUrl;
       } else {
-        adsRequest.adsResponse = adsResponse;
+        adsRequest.adsResponse = settings.adsResponse;
       }
       if (settings.forceNonLinearFullSlot) {
         adsRequest.forceNonLinearFullSlot = true;
