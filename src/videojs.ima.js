@@ -38,7 +38,8 @@
     debug: false,
     timeout: 5000,
     prerollTimeout: 100,
-    adLabel: 'Advertisement'
+    adLabel: 'Advertisement',
+    showControlsForJSAds: true
   },
 
   imaPlugin = function(options, readyCallback) {
@@ -148,7 +149,7 @@
       if (settings.adTagUrl) {
         adsRequest.adTagUrl = settings.adTagUrl;
       } else {
-        adsRequest.adsResponse = adsResponse;
+        adsRequest.adsResponse = settings.adsResponse;
       }
       if (settings.forceNonLinearFullSlot) {
         adsRequest.forceNonLinearFullSlot = true;
@@ -323,13 +324,14 @@
         player.ads.startLinearAdMode();
       }
       adContainerDiv.style.display = 'block';
-      // Don't show ad controls for not video ads (like modal ads)
-      if (adEvent.getAd().getContentType().search(/video/i) !== 0) {
+
+      var contentType = adEvent.getAd().getContentType();
+      if ((contentType === 'application/javascript') && !settings.showControlsForJSAds) {
         controlsDiv.style.display = 'none';
-      }
-      else {
+      } else {
         controlsDiv.style.display = 'block';
       }
+
       vjsControls.hide();
       player.pause();
     };
@@ -425,7 +427,8 @@
       var currentTime = duration - remainingTime;
       currentTime = currentTime > 0 ? currentTime : 0;
       var isPod = false;
-      var adPosition, totalAds;
+      var totalAds = 0;
+      var adPosition;
       if (currentAd.getAdPodInfo()) {
         isPod = true;
         adPosition = currentAd.getAdPodInfo().getAdPosition();
@@ -439,7 +442,7 @@
         remainingSeconds = '0' + remainingSeconds;
       }
       var podCount = ': ';
-      if (isPod) {
+      if (isPod && (totalAds > 1)) {
         podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
       }
       countdownDiv.innerHTML =

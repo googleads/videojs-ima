@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         src: ['src/videojs.ima.js'],
         dest: 'docs/api',
         options: {
-          baseURL: 'https://github.com/googleads/videojs-ima/blob/master'
+          baseURL: 'https://github.com/googleads/videojs-ima/blob/master/'
         }
       }
     }

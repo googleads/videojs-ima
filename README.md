@@ -102,6 +102,7 @@ The plugin accepts additional settings beyond the two required settings shown in
   numRedirects: <Number> Maximum number of VAST redirects before the subsequent redirects will be denied,
       and the ad load aborted. The number of redirects directly affects latency and thus user experience.
       This applies to all VAST wrapper ads.
+  showControlsForJSAds: <boolean> Whether or not to show the control bar for VPAID JavaScript ads. Defaults to true.
   showCountdown: <boolean> Whether or not to show the ad countdown timer. Defaults to true.
   vpaidAllowed: <boolean> (DEPRECATED, please use vpaidMode).
   vpaidMode: <google.ima.ImaSdkSettings.VpaidMode(4)> VPAID Mode. Defaults to ENABLED. This setting
