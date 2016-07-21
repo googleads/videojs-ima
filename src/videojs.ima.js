@@ -60,11 +60,11 @@
       adContainerDiv.style.position = "absolute";
       adContainerDiv.style.zIndex = 1111;
       adContainerDiv.addEventListener(
-          'mouseover',
+          'mouseenter',
           player.ima.showAdControls_,
           false);
       adContainerDiv.addEventListener(
-          'mouseout',
+          'mouseleave',
           player.ima.hideAdControls_,
           false);
       player.ima.createControls_();
