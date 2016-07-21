@@ -58,7 +58,6 @@ function ima(videojs) {
               document.createElement('div'));
       adContainerDiv.id = 'ima-ad-container';
       adContainerDiv.style.position = "absolute";
-      adContainerDiv.style.zIndex = 1111;
       adContainerDiv.addEventListener(
           'mouseover',
           player.ima.showAdControls_,
