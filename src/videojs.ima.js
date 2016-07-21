@@ -473,10 +473,11 @@
      * @private
      */
     player.ima.hideAdControls_ = function() {
+      controlsDiv.style.height = '14px';
       playPauseDiv.style.display = 'none';
       muteDiv.style.display = 'none';
+      sliderDiv.style.display = 'none';
       fullscreenDiv.style.display = 'none';
-      controlsDiv.style.height = '14px';
     };
 
     /**
