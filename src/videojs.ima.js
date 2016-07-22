@@ -60,11 +60,11 @@
       adContainerDiv.style.position = "absolute";
       adContainerDiv.style.zIndex = 1111;
       adContainerDiv.addEventListener(
-          'mouseover',
+          'mouseenter',
           player.ima.showAdControls_,
           false);
       adContainerDiv.addEventListener(
-          'mouseout',
+          'mouseleave',
           player.ima.hideAdControls_,
           false);
       player.ima.createControls_();
@@ -473,10 +473,11 @@
      * @private
      */
     player.ima.hideAdControls_ = function() {
+      controlsDiv.style.height = '14px';
       playPauseDiv.style.display = 'none';
       muteDiv.style.display = 'none';
+      sliderDiv.style.display = 'none';
       fullscreenDiv.style.display = 'none';
-      controlsDiv.style.height = '14px';
     };
 
     /**
