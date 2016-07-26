@@ -33,7 +33,7 @@ var Ads = function() {
   if (navigator.userAgent.match(/iPhone/i) ||
       navigator.userAgent.match(/iPad/i) ||
       navigator.userAgent.match(/Android/i)) {
-    startEvent = 'tap';
+    startEvent = 'touchend';
   }
   this.player.one(startEvent, this.bind(this, this.init));
 
