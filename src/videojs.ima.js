@@ -59,11 +59,11 @@ function ima(videojs) {
       adContainerDiv.id = 'ima-ad-container';
       adContainerDiv.style.position = "absolute";
       adContainerDiv.addEventListener(
-          'mouseover',
+          'mouseenter',
           player.ima.showAdControls_,
           false);
       adContainerDiv.addEventListener(
-          'mouseout',
+          'mouseleave',
           player.ima.hideAdControls_,
           false);
       player.ima.createControls_();
@@ -350,8 +350,8 @@ function ima(videojs) {
       adsActive = false;
       adPlaying = false;
       player.on('ended', localContentEndedListener);
-
-      if (adContainerDiv.style.display !== 'none') {
+      if (currentAd == null || // hide for post-roll only playlist
+          currentAd.isLinear()) { // don't hide for non-linear ads
         adContainerDiv.style.display = 'none';
       }
       vjsControls.show();
@@ -484,10 +484,11 @@ function ima(videojs) {
      * @private
      */
     player.ima.hideAdControls_ = function() {
+      controlsDiv.style.height = '14px';
       playPauseDiv.style.display = 'none';
       muteDiv.style.display = 'none';
+      sliderDiv.style.display = 'none';
       fullscreenDiv.style.display = 'none';
-      controlsDiv.style.height = '14px';
     };
 
     /**

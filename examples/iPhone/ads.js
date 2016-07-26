@@ -78,7 +78,7 @@ Ads.prototype.adsManagerLoadedCallback = function() {
         this.events[index],
         this.bind(this, this.onAdEvent));
   }
-  this.player.ima.start();
+  this.player.ima.startFromReadyCallback();
 };
 
 Ads.prototype.onAdEvent = function(event) {
