@@ -34,6 +34,22 @@ test('video plays on bad ad tag', function() {
   }, 5000);
 });
 
+test('controls prefixed with id', function(){
+  var options = {
+    id: 'video',
+    adTagUrl: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x360&' +
+    'iu=/6062/iab_vast_samples/skippable&ciu_szs=300x250,728x90&impl=s&' +
+    'gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&' +
+    'url=[referrer_url]&correlator=[timestamp]'
+  };
+  player.ima(options);
+  player.ima.initializeAdDisplayContainer();
+  player.ima.requestAds();
+
+  ok(document.getElementById(options.id+'_ima-controls-div'), 'Controls should be generated with ID prefix');
+  strictEqual(document.getElementById('ima-controls-div'), null, 'Controls without ID prefix should not be generated');
+});
+
 test('ad plays on good ad tag', function() {
   var options = {
     id: 'video',
