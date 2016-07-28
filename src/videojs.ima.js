@@ -66,7 +66,21 @@ function ima(videojs) {
           'mouseleave',
           player.ima.hideAdControls_,
           false);
-      player.ima.createControls_();
+      if (options.adsControl) {
+        var controls = options.adsControl();
+        controlsDiv = controls.div;
+        countdownDiv = controls.countdown;
+        seekBarDiv = controls.seekbar;
+        progressDiv = controls.progress;
+        playPauseDiv = controls.playPause;
+        muteDiv = controls.mute;
+        sliderDiv = controls.slider;
+        sliderLevelDiv = controls.sliderLevel;
+        fullscreenDiv = controls.fullscreen;
+        adContainerDiv.appendChild(controlsDiv);
+      } else {
+        player.ima.createControls_();
+      }
       adDisplayContainer =
           new google.ima.AdDisplayContainer(adContainerDiv, contentPlayer);
     };
