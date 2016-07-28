@@ -1234,6 +1234,13 @@
         adsLoader.contentComplete();
         contentComplete = true;
       }
+      /**
+       * if player changed a source we have to set contentComplete to false,
+       * or ads will block player and break autoplay
+      */
+      player.on("contentupdate",function(){
+        contentComplete = false;
+      });
       for (var index in contentEndedListeners) {
         contentEndedListeners[index]();
       }
