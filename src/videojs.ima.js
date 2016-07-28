@@ -56,10 +56,22 @@
       element.className = controlPrefix + controlName + ' ' + controlName;
     };
 
+    /**
+     * Returns a regular expression to test a string for the given className
+     * @param className
+     * @returns {RegExp}
+     * @private
+     */
     player.ima.getClassRegexp_ = function(className){
       return new RegExp('\\b' + className + '\\b', 'gi');
     };
 
+    /**
+     * Adds a class to the given element if it doesn't already have the class
+     * @param element
+     * @param classToAdd
+     * @private
+     */
     player.ima.addClass_ = function(element, classToAdd){
       if(player.ima.getClassRegexp_(classToAdd).test(element.className)){
         return element;
@@ -68,6 +80,12 @@
       return element.className = element.className.trim() + ' ' + classToAdd;
     };
 
+    /**
+     * Removes a class from the given element if it has the given class
+     * @param element
+     * @param classToRemove
+     * @private
+     */
     player.ima.removeClass_ = function(element, classToRemove){
       var classRegexp = player.ima.getClassRegexp_(classToRemove);
 
