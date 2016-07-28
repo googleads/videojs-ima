@@ -36,7 +36,7 @@
 ##### PARAMETERS: 
 * __listener__ `function` The listener to be called when content and ads complete.
 
-_defined in_: [src/videojs.ima.js#L806](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L806)
+_defined in_: [src/videojs.ima.js#L857](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L857)
 
 ---
 
@@ -49,7 +49,7 @@ _defined in_: [src/videojs.ima.js#L806](https://github.com/googleads/videojs-ima
 ##### PARAMETERS: 
 * __listener__ `function` The listener to be called when content completes.
 
-_defined in_: [src/videojs.ima.js#L797](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L797)
+_defined in_: [src/videojs.ima.js#L848](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L848)
 
 ---
 
@@ -62,7 +62,7 @@ _defined in_: [src/videojs.ima.js#L797](https://github.com/googleads/videojs-ima
 * __event__ `google.ima.AdEvent.Type` The AdEvent.Type for which to listen.
 * __callback__ `function` The method to call when the event is fired.
 
-_defined in_: [src/videojs.ima.js#L699](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L699)
+_defined in_: [src/videojs.ima.js#L750](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L750)
 
 ---
 
@@ -72,7 +72,7 @@ _defined in_: [src/videojs.ima.js#L699](https://github.com/googleads/videojs-ima
 ##### RETURNS: 
 * `google.ima.AdsManager` The AdsManager being used by the plugin.
 
-_defined in_: [src/videojs.ima.js#L709](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L709)
+_defined in_: [src/videojs.ima.js#L760](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L760)
 
 ---
 
@@ -80,14 +80,14 @@ _defined in_: [src/videojs.ima.js#L709](https://github.com/googleads/videojs-ima
 > Initializes the AdDisplayContainer. On mobile, this must be done as a
 > result of user action.
 
-_defined in_: [src/videojs.ima.js#L135](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L135)
+_defined in_: [src/videojs.ima.js#L171](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L171)
 
 ---
 
 ### pauseAd()
 > Pauses the ad.
 
-_defined in_: [src/videojs.ima.js#L821](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L821)
+_defined in_: [src/videojs.ima.js#L872](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L872)
 
 ---
 
@@ -95,21 +95,21 @@ _defined in_: [src/videojs.ima.js#L821](https://github.com/googleads/videojs-ima
 > Called by publishers in manual ad break playback mode to start an ad
 > break.
 
-_defined in_: [src/videojs.ima.js#L306](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L306)
+_defined in_: [src/videojs.ima.js#L342](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L342)
 
 ---
 
 ### requestAds()
 > Creates the AdsRequest and request ads through the AdsLoader.
 
-_defined in_: [src/videojs.ima.js#L143](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L143)
+_defined in_: [src/videojs.ima.js#L179](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L179)
 
 ---
 
 ### resumeAd()
 > Resumes the ad.
 
-_defined in_: [src/videojs.ima.js#L832](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L832)
+_defined in_: [src/videojs.ima.js#L884](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L884)
 
 ---
 
@@ -119,7 +119,7 @@ _defined in_: [src/videojs.ima.js#L832](https://github.com/googleads/videojs-ima
 ##### PARAMETERS: 
 * __listener__ `function` The listener to be called to trigger manual ad break playback.
 
-_defined in_: [src/videojs.ima.js#L814](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L814)
+_defined in_: [src/videojs.ima.js#L865](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L865)
 
 ---
 
@@ -134,7 +134,7 @@ _defined in_: [src/videojs.ima.js#L814](https://github.com/googleads/videojs-ima
 * __adTag__ `?string` The ad tag to be requested when the content loads.
 * __playOnLoad__ `?boolean` True to play the content once it has loaded,
 
-_defined in_: [src/videojs.ima.js#L725](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L725)
+_defined in_: [src/videojs.ima.js#L776](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L776)
 
 ---
 
@@ -148,7 +148,7 @@ _defined in_: [src/videojs.ima.js#L725](https://github.com/googleads/videojs-ima
 * __adTag__ `?string` The ad tag to be requested when the content loads.
 * __playOnLoad__ `?boolean` True to play the content once it has loaded,
 
-_defined in_: [src/videojs.ima.js#L743](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L743)
+_defined in_: [src/videojs.ima.js#L794](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L794)
 
 ---
 
@@ -162,7 +162,7 @@ _defined in_: [src/videojs.ima.js#L743](https://github.com/googleads/videojs-ima
 * __adsResponse__ `?string` The ads response to be requested when the
 * __playOnLoad__ `?boolean` True to play the content once it has loaded,
 
-_defined in_: [src/videojs.ima.js#L760](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L760)
+_defined in_: [src/videojs.ima.js#L811](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L811)
 
 ---
 
@@ -172,7 +172,7 @@ _defined in_: [src/videojs.ima.js#L760](https://github.com/googleads/videojs-ima
 ##### PARAMETERS: 
 * __showCountdownIn__ `boolean` Show or hide the countdown timer.
 
-_defined in_: [src/videojs.ima.js#L907](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L907)
+_defined in_: [src/videojs.ima.js#L960](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L960)
 
 ---
 
@@ -181,7 +181,7 @@ _defined in_: [src/videojs.ima.js#L907](https://github.com/googleads/videojs-ima
 > Start ad playback, or content video playback in the absence of a
 > pre-roll.
 
-_defined in_: [src/videojs.ima.js#L233](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L233)
+_defined in_: [src/videojs.ima.js#L269](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L269)
 
 ---
 
@@ -194,7 +194,7 @@ _defined in_: [src/videojs.ima.js#L233](https://github.com/googleads/videojs-ima
 > you should call this method in the last line of that callback. For more
 > info, see this method's usage in our advanced and playlist examples.
 
-_defined in_: [src/videojs.ima.js#L248](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L248)
+_defined in_: [src/videojs.ima.js#L284](https://github.com/googleads/videojs-ima/blob/master/src/videojs.ima.js#L284)
 
 ---
 
