@@ -58,16 +58,8 @@ function ima(videojs) {
               document.createElement('div'));
       adContainerDiv.id = 'ima-ad-container';
       adContainerDiv.style.position = "absolute";
-      adContainerDiv.addEventListener(
-          'mouseenter',
-          player.ima.showAdControls_,
-          false);
-      adContainerDiv.addEventListener(
-          'mouseleave',
-          player.ima.hideAdControls_,
-          false);
       if (options.adsControl) {
-        var controls = options.adsControl();
+        var controls = options.adsControl(adContainerDiv);
         controlsDiv = controls.div;
         countdownDiv = controls.countdown;
         seekBarDiv = controls.seekbar;
@@ -78,7 +70,31 @@ function ima(videojs) {
         sliderLevelDiv = controls.sliderLevel;
         fullscreenDiv = controls.fullscreen;
         adContainerDiv.appendChild(controlsDiv);
+        playPauseDiv.addEventListener(
+          'click',
+          player.ima.onAdPlayPauseClick_,
+          false);
+        muteDiv.addEventListener(
+          'click',
+          player.ima.onAdMuteClick_,
+          false);
+        sliderDiv.addEventListener(
+          'mousedown',
+          player.ima.onAdVolumeSliderMouseDown_,
+          false);
+        fullscreenDiv.addEventListener(
+          'click',
+          player.ima.onAdFullscreenClick_,
+          false);
       } else {
+        adContainerDiv.addEventListener(
+            'mouseenter',
+            player.ima.showAdControls_,
+            false);
+        adContainerDiv.addEventListener(
+            'mouseleave',
+            player.ima.hideAdControls_,
+            false);
         player.ima.createControls_();
       }
       adDisplayContainer =
@@ -370,12 +386,6 @@ function ima(videojs) {
       }
       vjsControls.show();
       if (!currentAd) {
-        // TODO: This is a hack to get slot url, it might change
-        // later after google update their sdk. Need to find a
-        // better way to get this information
-        var adSlotUrl = adEvent.b.B
-        // TODO: Pass this information and handle it in vikilitics later
-
         // Something went wrong playing the ad
         player.ads.endLinearAdMode();
       } else if (!contentComplete &&
