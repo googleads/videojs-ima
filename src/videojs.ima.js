@@ -59,7 +59,7 @@ function ima(videojs) {
       adContainerDiv.id = 'ima-ad-container';
       adContainerDiv.style.position = "absolute";
       if (options.adsControl) {
-        var controls = options.adsControl(adContainerDiv);
+        var controls = options.adsControl(adContainerDiv, player.ima);
         controlsDiv = controls.div;
         countdownDiv = controls.countdown;
         seekBarDiv = controls.seekbar;
@@ -432,7 +432,7 @@ function ima(videojs) {
       currentAd = adEvent.getAd();
       if (currentAd.isLinear()) {
         adTrackingTimer = setInterval(
-            player.ima.onAdPlayheadTrackerInterval_, 250);
+            player.ima.onAdPlayheadTrackerInterval_.bind(this, adsManager, currentAd), 250);
         // Don't bump container when controls are shown
         adContainerDiv.className = '';
       } else {
@@ -457,7 +457,7 @@ function ima(videojs) {
      * update the ad UI.
      * @private
      */
-    player.ima.onAdPlayheadTrackerInterval_ = function() {
+    player.ima.onAdPlayheadTrackerInterval_ = function(adsManager, currentAd) {
       var remainingTime = adsManager.getRemainingTime();
       var duration =  currentAd.getDuration();
       var currentTime = duration - remainingTime;
