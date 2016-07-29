@@ -435,6 +435,7 @@ function ima(videojs) {
             player.ima.onAdPlayheadTrackerInterval_.bind(this, adsManager, currentAd), 250);
         // Don't bump container when controls are shown
         adContainerDiv.className = '';
+        if (options.onAdStarted) options.onAdStarted(adsManager, currentAd);
       } else {
         // Bump container when controls are shown
         adContainerDiv.className = 'bumpable-ima-ad-container';
