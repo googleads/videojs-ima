@@ -595,6 +595,7 @@ function ima(videojs) {
         adsManager.resume();
         adPlaying = true;
       }
+      if (options.onAdPlayPauseClicked) options.onAdPlayPauseClicked(adPlaying);
     };
 
     /**
