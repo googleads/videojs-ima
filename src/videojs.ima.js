@@ -46,6 +46,57 @@
     var player = this;
 
     /**
+     * Assigns the unique id and class names to the given element as well as the style class
+     * @param element
+     * @param controlName
+     * @private
+     */
+    player.ima.assignControlAttributes_ = function(element, controlName) {
+      element.id = controlPrefix + controlName;
+      element.className = controlPrefix + controlName + ' ' + controlName;
+    };
+
+    /**
+     * Returns a regular expression to test a string for the given className
+     * @param className
+     * @returns {RegExp}
+     * @private
+     */
+    player.ima.getClassRegexp_ = function(className){
+      return new RegExp('\\b' + className + '\\b', 'gi');
+    };
+
+    /**
+     * Adds a class to the given element if it doesn't already have the class
+     * @param element
+     * @param classToAdd
+     * @private
+     */
+    player.ima.addClass_ = function(element, classToAdd){
+      if(player.ima.getClassRegexp_(classToAdd).test(element.className)){
+        return element;
+      }
+
+      return element.className = element.className.trim() + ' ' + classToAdd;
+    };
+
+    /**
+     * Removes a class from the given element if it has the given class
+     * @param element
+     * @param classToRemove
+     * @private
+     */
+    player.ima.removeClass_ = function(element, classToRemove){
+      var classRegexp = player.ima.getClassRegexp_(classToRemove);
+
+      if(!classRegexp.test(element.className)){
+        return element;
+      }
+
+      return element.className = element.className.trim().replace(classRegexp, '');
+    };
+
+    /**
      * Creates the ad container passed to the IMA SDK.
      * @private
      */
@@ -56,15 +107,15 @@
       adContainerDiv =
           vjsControls.el().parentNode.appendChild(
               document.createElement('div'));
-      adContainerDiv.id = 'ima-ad-container';
+      player.ima.assignControlAttributes_(adContainerDiv, 'ima-ad-container');
       adContainerDiv.style.position = "absolute";
       adContainerDiv.style.zIndex = 1111;
       adContainerDiv.addEventListener(
-          'mouseover',
+          'mouseenter',
           player.ima.showAdControls_,
           false);
       adContainerDiv.addEventListener(
-          'mouseout',
+          'mouseleave',
           player.ima.hideAdControls_,
           false);
       player.ima.createControls_();
@@ -78,42 +129,42 @@
      */
     player.ima.createControls_ = function() {
       controlsDiv = document.createElement('div');
-      controlsDiv.id = 'ima-controls-div';
+      player.ima.assignControlAttributes_(controlsDiv, 'ima-controls-div');
       controlsDiv.style.width = '100%';
       countdownDiv = document.createElement('div');
-      countdownDiv.id = 'ima-countdown-div';
+      player.ima.assignControlAttributes_(countdownDiv, 'ima-countdown-div');
       countdownDiv.innerHTML = settings.adLabel;
       countdownDiv.style.display = showCountdown ? 'block' : 'none';
       seekBarDiv = document.createElement('div');
-      seekBarDiv.id = 'ima-seek-bar-div';
+      player.ima.assignControlAttributes_(seekBarDiv, 'ima-seek-bar-div');
       seekBarDiv.style.width = '100%';
       progressDiv = document.createElement('div');
-      progressDiv.id = 'ima-progress-div';
+      player.ima.assignControlAttributes_(progressDiv, 'ima-progress-div');
       playPauseDiv = document.createElement('div');
-      playPauseDiv.id = 'ima-play-pause-div';
-      playPauseDiv.className = 'ima-playing';
+      player.ima.assignControlAttributes_(playPauseDiv, 'ima-play-pause-div');
+      player.ima.addClass_(playPauseDiv, 'ima-playing');
       playPauseDiv.addEventListener(
           'click',
           player.ima.onAdPlayPauseClick_,
           false);
       muteDiv = document.createElement('div');
-      muteDiv.id = 'ima-mute-div';
-      muteDiv.className = 'ima-non-muted';
+      player.ima.assignControlAttributes_(muteDiv, 'ima-mute-div');
+      player.ima.addClass_(muteDiv, 'ima-non-muted');
       muteDiv.addEventListener(
           'click',
           player.ima.onAdMuteClick_,
           false);
       sliderDiv = document.createElement('div');
-      sliderDiv.id = 'ima-slider-div';
+      player.ima.assignControlAttributes_(sliderDiv, 'ima-slider-div');
       sliderDiv.addEventListener(
           'mousedown',
           player.ima.onAdVolumeSliderMouseDown_,
           false);
       sliderLevelDiv = document.createElement('div');
-      sliderLevelDiv.id = 'ima-slider-level-div';
+      player.ima.assignControlAttributes_(sliderLevelDiv, 'ima-slider-level-div');
       fullscreenDiv = document.createElement('div');
-      fullscreenDiv.id = 'ima-fullscreen-div';
-      fullscreenDiv.className = 'ima-non-fullscreen';
+      player.ima.assignControlAttributes_(fullscreenDiv, 'ima-fullscreen-div');
+      player.ima.addClass_(fullscreenDiv, 'ima-non-fullscreen');
       fullscreenDiv.addEventListener(
           'click',
           player.ima.onAdFullscreenClick_,
@@ -308,7 +359,7 @@
       if (!autoPlayAdBreaks) {
         adsManager.start();
       }
-    }
+    };
 
     /**
      * Pauses the content video and displays the ad container so ads can play.
@@ -345,7 +396,8 @@
       adsActive = false;
       adPlaying = false;
       player.on('ended', localContentEndedListener);
-      if (currentAd && currentAd.isLinear()) {
+      if (currentAd == null || // hide for post-roll only playlist
+          currentAd.isLinear()) { // don't hide for non-linear ads
         adContainerDiv.style.display = 'none';
       }
       vjsControls.show();
@@ -398,10 +450,10 @@
         adTrackingTimer = setInterval(
             player.ima.onAdPlayheadTrackerInterval_, 250);
         // Don't bump container when controls are shown
-        adContainerDiv.className = '';
+        player.ima.removeClass_(adContainerDiv, 'bumpable-ima-ad-container');
       } else {
         // Bump container when controls are shown
-        adContainerDiv.className = 'bumpable-ima-ad-container';
+        player.ima.addClass_(adContainerDiv, 'bumpable-ima-ad-container');
       }
     };
 
@@ -472,10 +524,11 @@
      * @private
      */
     player.ima.hideAdControls_ = function() {
+      controlsDiv.style.height = '14px';
       playPauseDiv.style.display = 'none';
       muteDiv.style.display = 'none';
+      sliderDiv.style.display = 'none';
       fullscreenDiv.style.display = 'none';
-      controlsDiv.style.height = '14px';
     };
 
     /**
@@ -496,11 +549,13 @@
      */
     player.ima.onAdPlayPauseClick_ = function() {
       if (adPlaying) {
-        playPauseDiv.className = 'ima-paused';
+        player.ima.addClass_(playPauseDiv, 'ima-paused');
+        player.ima.removeClass_(playPauseDiv, 'ima-playing');
         adsManager.pause();
         adPlaying = false;
       } else {
-        playPauseDiv.className = 'ima-playing';
+        player.ima.addClass_(playPauseDiv, 'ima-playing');
+        player.ima.removeClass_(playPauseDiv, 'ima-paused');
         adsManager.resume();
         adPlaying = true;
       }
@@ -512,14 +567,16 @@
      */
     player.ima.onAdMuteClick_ = function() {
       if (adMuted) {
-        muteDiv.className = 'ima-non-muted';
+        player.ima.addClass_(muteDiv, 'ima-non-muted');
+        player.ima.removeClass_(muteDiv, 'ima-muted');
         adsManager.setVolume(1);
         // Bubble down to content player
         player.muted(false);
         adMuted = false;
         sliderLevelDiv.style.width = player.volume() * 100 + "%";
       } else {
-        muteDiv.className = 'ima-muted';
+        player.ima.addClass_(muteDiv, 'ima-muted');
+        player.ima.removeClass_(muteDiv, 'ima-non-muted');
         adsManager.setVolume(0);
         // Bubble down to content player
         player.muted(true);
@@ -566,13 +623,15 @@
       player.volume(percent / 100); //0-1
       adsManager.setVolume(percent / 100);
       if (player.volume() == 0) {
-        muteDiv.className = 'ima-muted';
+        player.ima.addClass_(muteDiv, 'ima-muted');
+        player.ima.removeClass_(muteDiv, 'ima-non-muted');
         player.muted(true);
         adMuted = true;
       }
       else
       {
-        muteDiv.className = 'ima-non-muted';
+        player.ima.addClass_(muteDiv, 'ima-non-muted');
+        player.ima.removeClass_(muteDiv, 'ima-muted');
         player.muted(false);
         adMuted = false;
       }
@@ -597,7 +656,8 @@
      */
     player.ima.onFullscreenChange_ = function() {
       if (player.isFullscreen()) {
-        fullscreenDiv.className = 'ima-fullscreen';
+        player.ima.addClass_(fullscreenDiv, 'ima-fullscreen');
+        player.ima.removeClass_(fullscreenDiv, 'ima-non-fullscreen');
         if (adsManager) {
           adsManager.resize(
               window.screen.width,
@@ -605,7 +665,8 @@
               google.ima.ViewMode.FULLSCREEN);
         }
       } else {
-        fullscreenDiv.className = 'ima-non-fullscreen';
+        player.ima.addClass_(fullscreenDiv, 'ima-non-fullscreen');
+        player.ima.removeClass_(fullscreenDiv, 'ima-fullscreen');
         if (adsManager) {
           adsManager.resize(
               player.ima.getPlayerWidth(),
@@ -629,11 +690,13 @@
       // Update UI
       if (newVolume == 0) {
         adMuted = true;
-        muteDiv.className = 'ima-muted';
+        player.ima.addClass_(muteDiv, 'ima-muted');
+        player.ima.removeClass_(muteDiv, 'ima-non-muted');
         sliderLevelDiv.style.width = '0%';
       } else {
         adMuted = false;
-        muteDiv.className = 'ima-non-muted';
+        player.ima.addClass_(muteDiv, 'ima-non-muted');
+        player.ima.removeClass_(muteDiv, 'ima-muted');
         sliderLevelDiv.style.width = newVolume * 100 + '%';
       }
     };
@@ -823,7 +886,8 @@
      */
     player.ima.pauseAd = function() {
       if (adsActive && adPlaying) {
-        playPauseDiv.className = 'ima-paused';
+        player.ima.addClass_(playPauseDiv, 'ima-paused');
+        player.ima.removeClass_(playPauseDiv, 'ima-playing');
         adsManager.pause();
         adPlaying = false;
       }
@@ -834,7 +898,8 @@
      */
     player.ima.resumeAd = function() {
       if (adsActive && !adPlaying) {
-        playPauseDiv.className = 'ima-playing';
+        player.ima.addClass_(playPauseDiv, 'ima-playing');
+        player.ima.removeClass_(playPauseDiv, 'ima-paused');
         adsManager.resume();
         adPlaying = true;
       }
@@ -921,6 +986,11 @@
      * Stores user-provided settings.
      */
     var settings;
+
+    /**
+     * Used to prefix videojs ima
+     */
+    var controlPrefix;
 
     /**
      * Video element playing content.
@@ -1206,6 +1276,9 @@
       window.console.log('Error: must provide id of video.js div');
       return;
     }
+
+    controlPrefix = (settings.id + '_') || '';
+
     contentPlayer = document.getElementById(settings['id'] + '_html5_api');
     // Default showing countdown timer to true.
     showCountdown = true;
@@ -1248,7 +1321,6 @@
     }
 
     player.ima.createAdContainer_();
-
     adsLoader = new google.ima.AdsLoader(adDisplayContainer);
 
     adsLoader.getSettings().setVpaidMode(
@@ -1292,5 +1364,5 @@
     });
   };
 
-  videojs.plugin('ima', imaPlugin);
+  vjs.plugin('ima', imaPlugin);
 }(window.videojs));
