@@ -359,7 +359,7 @@
      * Called by publishers in manual ad break playback mode to start an ad
      * break.
      */
-    var playAdBreak = function() {
+    this.playAdBreak = function() {
       if (!this.autoPlayAdBreaks) {
         this.adsManager.start();
       }
@@ -738,7 +738,7 @@
       this.adsActive = false;
       this.adPlaying = false;
       this.player.on('ended', this.localContentEndedListener);
-      if (cthis.urrentAd && this.currentAd.isLinear()) {
+      if (this.currentAd && this.currentAd.isLinear()) {
         this.adContainerDiv.style.display = 'none';
       }
       this.vjsControls.show();
@@ -811,9 +811,9 @@
      *     false to only load the content but not start playback.
      */
     this.setContentWithAdTag = function(contentSrc, adTag, playOnLoad) {
-      this.resetIMA_();
+      resetIMA_();
       this.settings.adTagUrl = adTag ? adTag : this.settings.adTagUrl;
-      this.changeSource_(contentSrc, playOnLoad);
+      changeSource_(contentSrc, playOnLoad);
     }.bind(this);
 
     /**
@@ -828,9 +828,9 @@
      *     false to only load the content but not start playback.
      */
     this.setContentWithAdsResponse = function(contentSrc, adsResponse, playOnLoad) {
-      this.resetIMA_();
+      resetIMA_();
       this.settings.adsResponse = adsResponse ? adsResponse : this.settings.adsResponse;
-      this.changeSource_(contentSrc, playOnLoad);
+      changeSource_(contentSrc, playOnLoad);
     }.bind(this);
 
     /**
