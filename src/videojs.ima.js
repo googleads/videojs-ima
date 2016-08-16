@@ -111,49 +111,49 @@ function ima(videojs) {
       this.adContainerDiv =
           this.vjsControls.el().parentNode.appendChild(
               document.createElement('div'));
-      assignControlAttributes_(adContainerDiv, 'ima-ad-container');
-      adContainerDiv.style.position = "absolute";
+      assignControlAttributes_(this.adContainerDiv, 'ima-ad-container');
+      this.adContainerDiv.style.position = "absolute";
       if (options.adsControl) {
-        var controls = options.adsControl(adContainerDiv, player.ima);
-        controlsDiv = controls.div;
-        countdownDiv = controls.countdown;
-        seekBarDiv = controls.seekbar;
-        progressDiv = controls.progress;
-        playPauseDiv = controls.playPause;
-        muteDiv = controls.mute;
-        sliderDiv = controls.slider;
-        sliderLevelDiv = controls.sliderLevel;
-        fullscreenDiv = controls.fullscreen;
-        adContainerDiv.appendChild(controlsDiv);
-        playPauseDiv.addEventListener(
+        var controls = options.adsControl(this.adContainerDiv, this);
+        this.controlsDiv = controls.div;
+        this.countdownDiv = controls.countdown;
+        this.seekBarDiv = controls.seekbar;
+        this.progressDiv = controls.progress;
+        this.playPauseDiv = controls.playPause;
+        this.muteDiv = controls.mute;
+        this.sliderDiv = controls.slider;
+        this.sliderLevelDiv = controls.sliderLevel;
+        this.fullscreenDiv = controls.fullscreen;
+        this.adContainerDiv.appendChild(this.controlsDiv);
+        this.playPauseDiv.addEventListener(
           'click',
-          this.onAdPlayPauseClick_,
+          onAdPlayPauseClick_,
           false);
-        muteDiv.addEventListener(
+        this.muteDiv.addEventListener(
           'click',
-          this.onAdMuteClick_,
+          onAdMuteClick_,
           false);
-        sliderDiv.addEventListener(
+        this.sliderDiv.addEventListener(
           'mousedown',
-          this.onAdVolumeSliderMouseDown_,
+          onAdVolumeSliderMouseDown_,
           false);
-        fullscreenDiv.addEventListener(
+        this.fullscreenDiv.addEventListener(
           'click',
-          this.onAdFullscreenClick_,
+          onAdFullscreenClick_,
           false);
       } else {
-        adContainerDiv.addEventListener(
+        this.adContainerDiv.addEventListener(
             'mouseenter',
-            this.showAdControls_,
+            showAdControls_,
             false);
-        adContainerDiv.addEventListener(
+        this.adContainerDiv.addEventListener(
             'mouseleave',
-            this.hideAdControls_,
+            hideAdControls_,
             false);
-        this.createControls_();
+        createControls_();
       }
-      adDisplayContainer =
-          new google.ima.AdDisplayContainer(adContainerDiv, contentPlayer);
+      this.adDisplayContainer =
+          new google.ima.AdDisplayContainer(this.adContainerDiv, this.contentPlayer);
     }.bind(this);
 
     /**
@@ -485,8 +485,12 @@ function ima(videojs) {
     var onAdStarted_ = function(adEvent) {
       this.currentAd = adEvent.getAd();
       if (this.currentAd.isLinear()) {
+        var adPlayheadTrackerHandler = onAdPlayheadTrackerInterval_;
+        if (options.onAdPlayheadTrackerInterval) {
+          adPlayheadTrackerHandler = options.onAdPlayheadTrackerInterval;
+        }
         this.adTrackingTimer = setInterval(
-            onAdPlayheadTrackerInterval_.bind(this, this.adsManager, this.currentAd), 250);
+            adPlayheadTrackerHandler.bind(this, this.adsManager, this.currentAd), 250);
         // Don't bump container when controls are shown
         removeClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
         if (options.onAdStarted) options.onAdStarted(this.adsManager, this.currentAd);
@@ -598,7 +602,7 @@ function ima(videojs) {
         this.adsManager.resume();
         this.adPlaying = true;
       }
-      if (options.onAdPlayPauseClicked) options.onAdPlayPauseClicked(adPlaying);
+      if (options.onAdPlayPauseClicked) options.onAdPlayPauseClicked(this.adPlaying);
     }.bind(this);
 
     /**
