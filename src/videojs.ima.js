@@ -1249,8 +1249,8 @@
       clearInterval(this.updateTimeIntervalHandle);
       clearInterval(this.seekCheckIntervalHandle);
       clearInterval(this.resizeCheckIntervalHandle);
-      if(this.el()) {
-        this.one('play', setUpPlayerIntervals_);
+      if(this.player.el()) {
+        this.player.one('play', setUpPlayerIntervals_);
       }
     }.bind(this);
 
