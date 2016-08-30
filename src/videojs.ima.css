@@ -42,6 +42,7 @@
   bottom:0px;
   height: 37px;
   position: absolute;
+  overflow: hidden;
   display: none;
   opacity: 1;
   background-color: rgba(7, 20, 30, .7);
