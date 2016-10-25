@@ -67,7 +67,11 @@
      * @private
      */
     var getClassRegexp_ = function(className){
-      return new RegExp('\\b' + className + '\\b', 'gi');
+      // Matches on
+      // (beginning of string OR NOT word char)
+      // classname
+      // (negative lookahead word char OR end of string)
+      return new RegExp('(^|[^A-Za-z-])' + className + '((?![A-Za-z-])|$)', 'gi');
     };
 
     /**
@@ -692,7 +696,7 @@
         this.adsManager.setVolume(newVolume);
       }
       // Update UI
-      if (this.newVolume == 0) {
+      if (newVolume == 0) {
         this.adMuted = true;
         addClass_(this.muteDiv, 'ima-muted');
         removeClass_(this.muteDiv, 'ima-non-muted');
