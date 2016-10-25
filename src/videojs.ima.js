@@ -696,7 +696,7 @@
         this.adsManager.setVolume(newVolume);
       }
       // Update UI
-      if (this.newVolume == 0) {
+      if (newVolume == 0) {
         this.adMuted = true;
         addClass_(this.muteDiv, 'ima-muted');
         removeClass_(this.muteDiv, 'ima-non-muted');
