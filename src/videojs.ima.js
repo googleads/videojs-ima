@@ -376,6 +376,7 @@
      */
     this.onContentPauseRequested_ = function(adEvent) {
       this.adsActive = true;
+      this.resumeAd();
       this.adPlaying = true;
       this.player.off('ended', this.localContentEndedListener);
       if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
