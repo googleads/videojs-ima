@@ -376,7 +376,6 @@
      */
     this.onContentPauseRequested_ = function(adEvent) {
       this.adsActive = true;
-      this.resumeAd();
       this.adPlaying = true;
       this.player.off('ended', this.localContentEndedListener);
       if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
@@ -393,6 +392,7 @@
       }
 
       this.vjsControls.hide();
+      showPlayButton();
       this.player.pause();
     }.bind(this);
 
@@ -553,18 +553,32 @@
     }.bind(this);
 
     /**
+     * Show pause and hide play button
+     */
+    var showPauseButton = function() {
+      addClass_(this.playPauseDiv, 'ima-paused');
+      removeClass_(this.playPauseDiv, 'ima-playing');
+    }.bind(this);
+
+    /**
+     * Show play and hide pause button
+     */
+    var showPlayButton = function() {
+      addClass_(this.playPauseDiv, 'ima-playing');
+      removeClass_(this.playPauseDiv, 'ima-paused');
+    }.bind(this);
+
+    /**
      * Listener for clicks on the play/pause button during ad playback.
      * @private
      */
     var onAdPlayPauseClick_ = function() {
       if (this.adPlaying) {
-        addClass_(this.playPauseDiv, 'ima-paused');
-        removeClass_(this.playPauseDiv, 'ima-playing');
+        showPauseButton();
         this.adsManager.pause();
         this.adPlaying = false;
       } else {
-        addClass_(this.playPauseDiv, 'ima-playing');
-        removeClass_(this.playPauseDiv, 'ima-paused');
+        showPlayButton();
         this.adsManager.resume();
         this.adPlaying = true;
       }
@@ -895,8 +909,7 @@
      */
     this.pauseAd = function() {
       if (this.adsActive && this.adPlaying) {
-        addClass_(this.playPauseDiv, 'ima-paused');
-        removeClass_(this.playPauseDiv, 'ima-playing');
+        showPauseButton();
         this.adsManager.pause();
         this.adPlaying = false;
       }
@@ -907,8 +920,7 @@
      */
     this.resumeAd = function() {
       if (this.adsActive && !this.adPlaying) {
-        addClass_(this.playPauseDiv, 'ima-playing');
-        removeClass_(this.playPauseDiv, 'ima-paused');
+        showPlayButton();
         this.adsManager.resume();
         this.adPlaying = true;
       }
