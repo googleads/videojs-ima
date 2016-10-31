@@ -21,9 +21,9 @@
   if (typeof define === 'function' && define['amd']) {
     define(['video.js', 'videojs-contrib-ads'], function(videojs){ factory(window, document, videojs) });
   } else if (typeof exports === 'object' && typeof module === 'object') {
-    var videojs = require('video.js');
+    var vjs = require('video.js');
     require('videojs-contrib-ads');
-    factory(window, document, videojs);
+    factory(window, document, vjs);
   } else {
     factory(window, document, videojs);
   }
