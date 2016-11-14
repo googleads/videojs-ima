@@ -1287,6 +1287,12 @@
       this.contentEndedListeners, this.contentAndAdsEndedListeners = [], [];
       this.contentComplete = true;
       this.player.off('ended', this.localContentEndedListener);
+
+      // Bug fix: https://github.com/googleads/videojs-ima/issues/306
+      if (this.player.ads.adTimeoutTimeout) {
+        clearTimeout(this.player.ads.adTimeoutTimeout);
+      }
+
       var intervalsToClear = [this.updateTimeIntervalHandle, this.seekCheckIntervalHandle,
         this.adTrackingTimer, this.resizeCheckIntervalHandle];
       for (var index in intervalsToClear) {
