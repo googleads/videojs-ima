@@ -441,6 +441,7 @@
      */
     var onAllAdsCompleted_ = function(adEvent) {
       this.allAdsCompleted = true;
+      this.adContainerDiv.style.display = 'none';
       if (this.contentComplete == true) {
         for (var index in this.contentAndAdsEndedListeners) {
           this.contentAndAdsEndedListeners[index]();
