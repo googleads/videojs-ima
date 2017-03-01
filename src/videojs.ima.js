@@ -755,13 +755,18 @@
     /**
      * Seeks content to 00:00:00 and starts playback. This is used as an event
      * handler for the loadedmetadata event, since seeking is not possible until
-     * that event has fired.
+     * that event has fired.  It's important to wait here for the ad to complete
+     * because when using in a playlist, the loadedmetadata event can fire
+     * before the ad completes.
      * @private
      */
     var playContentFromZero_ = function() {
       this.player.off('loadedmetadata', playContentFromZero_);
-      this.player.currentTime(0);
-      this.player.play();
+      this.player.ima.addEventListener('complete',function() {
+        this.player.currentTime(0);
+        this.player.play();
+        this.player.removeClass('vjs-ad-playing');
+      }.bind(this));
     }.bind(this);
 
     /**
