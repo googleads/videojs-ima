@@ -17,8 +17,19 @@
  * https://www.github.com/googleads/videojs-ima
  */
 
-(function(vjs) {
-  'use strict';
+(function(factory) {
+  if (typeof define === 'function' && define['amd']) {
+    define(['video.js', 'videojs-contrib-ads'], function(videojs){ factory(window, document, videojs) });
+  } else if (typeof exports === 'object' && typeof module === 'object') {
+    var vjs = require('video.js');
+    require('videojs-contrib-ads');
+    factory(window, document, vjs);
+  } else {
+    factory(window, document, videojs);
+  }
+})(function(window, document, videojs) {
+  "use strict";
+
   var extend = function(obj) {
     var arg;
     var index;
@@ -315,7 +326,7 @@
           this.adsManager.setVolume(this.player.muted() ? 0 : this.player.volume());
           this.adsManager.start();
         } catch (adError) {
-          this.onAdError_(adError);
+          onAdError_(adError);
         }
       }
     }.bind(this);
@@ -343,11 +354,12 @@
      * @private
      */
     var onAdError_ = function(adErrorEvent) {
-      window.console.log('Ad error: ' + adErrorEvent.getError());
+      var errorMessage = adErrorEvent.getError !== undefined ? adErrorEvent.getError() : adErrorEvent.stack;
+      window.console.log('Ad error: ' + errorMessage);
       this.vjsControls.show();
       this.adsManager.destroy();
       this.adContainerDiv.style.display = 'none';
-      this.player.trigger({ type: 'adserror', data: { AdError: adErrorEvent.getError(), AdErrorEvent: adErrorEvent }});
+      this.player.trigger({ type: 'adserror', data: { AdError: errorMessage, AdErrorEvent: adErrorEvent }});
     }.bind(this);
 
     /**
@@ -377,6 +389,7 @@
     this.onContentPauseRequested_ = function(adEvent) {
       this.adsActive = true;
       this.adPlaying = true;
+      this.contentSource = this.player.currentSrc();
       this.player.off('ended', this.localContentEndedListener);
       if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
         // Skip this call for post-roll ads
@@ -392,6 +405,7 @@
       }
 
       this.vjsControls.hide();
+      showPlayButton();
       this.player.pause();
     }.bind(this);
 
@@ -428,7 +442,11 @@
      */
     var onAllAdsCompleted_ = function(adEvent) {
       this.allAdsCompleted = true;
+      this.adContainerDiv.style.display = 'none';
       if (this.contentComplete == true) {
+        if (this.contentPlayer.src != this.contentSource) {
+          this.player.src(this.contentSource);
+        }
         for (var index in this.contentAndAdsEndedListeners) {
           this.contentAndAdsEndedListeners[index]();
         }
@@ -552,18 +570,32 @@
     }.bind(this);
 
     /**
+     * Show pause and hide play button
+     */
+    var showPauseButton = function() {
+      addClass_(this.playPauseDiv, 'ima-paused');
+      removeClass_(this.playPauseDiv, 'ima-playing');
+    }.bind(this);
+
+    /**
+     * Show play and hide pause button
+     */
+    var showPlayButton = function() {
+      addClass_(this.playPauseDiv, 'ima-playing');
+      removeClass_(this.playPauseDiv, 'ima-paused');
+    }.bind(this);
+
+    /**
      * Listener for clicks on the play/pause button during ad playback.
      * @private
      */
     var onAdPlayPauseClick_ = function() {
       if (this.adPlaying) {
-        addClass_(this.playPauseDiv, 'ima-paused');
-        removeClass_(this.playPauseDiv, 'ima-playing');
+        showPauseButton();
         this.adsManager.pause();
         this.adPlaying = false;
       } else {
-        addClass_(this.playPauseDiv, 'ima-playing');
-        removeClass_(this.playPauseDiv, 'ima-paused');
+        showPlayButton();
         this.adsManager.resume();
         this.adPlaying = true;
       }
@@ -894,8 +926,7 @@
      */
     this.pauseAd = function() {
       if (this.adsActive && this.adPlaying) {
-        addClass_(this.playPauseDiv, 'ima-paused');
-        removeClass_(this.playPauseDiv, 'ima-playing');
+        showPauseButton();
         this.adsManager.pause();
         this.adPlaying = false;
       }
@@ -906,8 +937,7 @@
      */
     this.resumeAd = function() {
       if (this.adsActive && !this.adPlaying) {
-        addClass_(this.playPauseDiv, 'ima-playing');
-        removeClass_(this.playPauseDiv, 'ima-paused');
+        showPlayButton();
         this.adsManager.resume();
         this.adPlaying = true;
       }
@@ -1235,6 +1265,12 @@
     this.adBreakReadyListener = undefined;
 
     /**
+     * Stores the content source so we can re-populate it manually after a
+     * post-roll on iOS.
+     */
+    this.contentSource = '';
+
+    /**
      * Local content ended listener for contentComplete.
      */
     this.localContentEndedListener = function() {
@@ -1262,6 +1298,12 @@
       this.contentEndedListeners, this.contentAndAdsEndedListeners = [], [];
       this.contentComplete = true;
       this.player.off('ended', this.localContentEndedListener);
+
+      // Bug fix: https://github.com/googleads/videojs-ima/issues/306
+      if (this.player.ads.adTimeoutTimeout) {
+        clearTimeout(this.player.ads.adTimeoutTimeout);
+      }
+
       var intervalsToClear = [this.updateTimeIntervalHandle, this.seekCheckIntervalHandle,
         this.adTrackingTimer, this.resizeCheckIntervalHandle];
       for (var index in intervalsToClear) {
@@ -1372,5 +1414,6 @@
     });
   };
 
-  vjs.plugin('ima', init);
-}(window.videojs));
+  videojs.plugin('ima', init);
+});
+
