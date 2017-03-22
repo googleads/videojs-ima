@@ -883,7 +883,7 @@
     this.changeAdTag = function(adTag) {
       resetIMA_();
       this.settings.adTagUrl = adTag;
-    }
+    }.bind(this);
 
     /**
      * Changes the player source.
