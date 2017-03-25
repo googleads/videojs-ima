@@ -1,20 +1,20 @@
-#IMA SDK Plugin for Video.js
+# IMA SDK Plugin for Video.js
 
-##Introduction
+## Introduction
 The IMA SDK Plugin for Video.js provides a quick and easy IMA SDK integration for the Video.js player.
 
 The framework is currently in beta, allowing interested developers to try it out and send feedback before we finalize the APIs and features.
 
 To see the plugin in action, check out our [samples](//googleads.github.io/videojs-ima/).
 
-##Features
+## Features
 - Easily integrate the Google IMA SDK into Video.js to enable advertising on your video content.
 
-##Requirements
+## Requirements
   - Your favorite text editor
   - A JavaScript enabled browser
 
-##Getting started
+## Getting started
 The easiest way to get started is by using [npm](//www.npmjs.org/).
 
 ```
@@ -76,39 +76,29 @@ That's all there is to it!
 
 ## Additional settings
 The plugin accepts additional settings beyond the two required settings shown in the previous snippet. A summary of all settings follows:
-```javascript
-{
-  id: <string> REQUIRED The id of your video player
-  adTagUrl: <string> REQUIRED IF adsResponse IS NOT PROVIDED A URL which returns a VAST, VMAP or ad rules
-      response.
-  adsResponse: <string> REQUIRED IF adTagUrl IS NOT PROVIDED The VAST, VMAP, or ad rules response to use
-      in lieu of fetching one an ad tag.
-  adLabel: <string> Replaces the "Advertisement" text in the ad label. Added for multilingual UI support.
-  adsRenderingSettings: <Object> JSON object with ads rendering settings as defined in the IMA SDK
-      Docs(1).
-  autoPlayAdBreaks: <boolean> Whether or not to automatically play VMAP or ad rules ad breaks. Defaults
-      to true.
-  contribAdsSettings: <Object> Additional settings to be passed to the contrib-ads plugin(2), used by
-      this IMA plugin.
-  debug: <boolean> True to load the debug version of the plugin, false to load the non-debug version.
-      Defaults to false.
-  forceNonLinearFullSlot: <boolean> True to force non-linear AdSense ads to render as linear fullslot.
-      If set, the content video will be paused and the non-linear text or image ad will be rendered as
-      fullslot. The content video will resume once the ad has been skipped or closed.
-  locale: <string> Locale for ad localization. This may be any  ISO 639-1 (two-letter) or ISO 639-2
-      (three-letter) code(3). Defaults to 'en'.
-  nonLinearWidth: <Number> Desired width of non-linear ads. Defaults to player width.
-  nonLinearHeight: <Number> Desired height for non-linear ads. Defaults to 1/3 player height.
-  numRedirects: <Number> Maximum number of VAST redirects before the subsequent redirects will be denied,
-      and the ad load aborted. The number of redirects directly affects latency and thus user experience.
-      This applies to all VAST wrapper ads.
-  showControlsForJSAds: <boolean> Whether or not to show the control bar for VPAID JavaScript ads. Defaults to true.
-  showCountdown: <boolean> Whether or not to show the ad countdown timer. Defaults to true.
-  vpaidAllowed: <boolean> (DEPRECATED, please use vpaidMode).
-  vpaidMode: <google.ima.ImaSdkSettings.VpaidMode(4)> VPAID Mode. Defaults to ENABLED. This setting
-      overrides vpaidAllowed.
-}
-```
+
+
+| Settings               | Type         | Description                                                                                                                                                                                                                                         |
+|------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| id                     | string       | REQUIRED The id of your video player                                                                                                                                                                                                                |
+| adTagUrl               | string       | REQUIRED IF adsResponse IS NOT PROVIDED A URL which returns a VAST, VMAP or ad rules,response.                                                                                                                                                      |
+| adsResponse            | string       | REQUIRED IF adTagUrl IS NOT PROVIDED The VAST, VMAP, or ad rules response to use,in lieu of fetching one an ad tag.                                                                                                                                 |
+| adLabel                | string       | Replaces the "Advertisement" text in the ad label. Added for multilingual UI support.                                                                                                                                                               |
+| adsRenderingSettings   | object       | JSON object with ads rendering settings as defined in the IMA SDK,Docs(1).                                                                                                                                                                          |
+| autoPlayAdBreaks       | boolean      | Whether or not to automatically play VMAP or ad rules ad breaks. Defaults,to true.                                                                                                                                                                  |
+| contribAdsSettings     | object       | Additional settings to be passed to the contrib-ads plugin(2), used by,this IMA plugin.                                                                                                                                                             |
+| debug                  | boolean      | True to load the debug version of the plugin, false to load the non-debug version.,Defaults to false.                                                                                                                                               |
+| forceNonLinearFullSlot | boolean      | True to force non-linear AdSense ads to render as linear fullslot.,If set, the content video will be paused and the non-linear text or image ad will be rendered as,fullslot. The content video will resume once the ad has been skipped or closed. |
+| locale                 | string       | Locale for ad localization. This may be any,ISO 639-1 (two-letter) or ISO 639-2,(three-letter) code(3). Defaults to 'en'.                                                                                                                           |
+| nonLinearWidth         | number       | Desired width of non-linear ads. Defaults to player width.                                                                                                                                                                                          |
+| nonLinearHeight        | number       | Desired height for non-linear ads. Defaults to 1/3 player height.                                                                                                                                                                                   |
+| numRedirects           | number       | Maximum number of VAST redirects before the subsequent redirects will be denied,,and the ad load aborted. The number of redirects directly affects latency and thus user experience.,This applies to all VAST wrapper ads.                          |
+| showControlsForJSAds   | boolean      | Whether or not to show the control bar for VPAID JavaScript ads. Defaults to true.                                                                                                                                                                  |
+| showCountdown          | boolean      | Whether or not to show the ad countdown timer. Defaults to true.                                                                                                                                                                                    |
+| vpaidAllowed           | boolean      | (DEPRECATED, please use vpaidMode).                                                                                                                                                                                                                 |
+| vpaidMode              | VpaidMode(4) | VPAID Mode. Defaults to ENABLED. This setting,overrides vpaidAllowed.                                                                                                                                                                               |
+
+
 (1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
 <br />
 (2) [contrib-ads plugin](//github.com/videojs/videojs-contrib-ads)
@@ -132,15 +122,15 @@ ad break to play. To do so:
 For a list of methods exposed by the plugin, see our full [API
 Docs](https://github.com/googleads/videojs-ima/wiki/API-Docs).
 
-##Where do I report issues?
+## Where do I report issues?
 Please report issues on the [issues page](../../issues).
 
-##Terms of Service
+## Terms of Service
 The IMA SDK plugin for Video.js uses the IMA SDK, and as such is subject to the
 [IMA SDK Terms of Service](https://developers.google.com/interactive-media-ads/terms).
 
-##Support
+## Support
 If you have questions about the framework, you can ask them at https://groups.google.com/d/forum/google-media-framework
 
-##How do I contribute?
+## How do I contribute?
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
