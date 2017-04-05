@@ -431,6 +431,9 @@
           this.currentAd.getAdPodInfo().getPodIndex() != -1 ) {
         this.player.ads.endLinearAdMode();
       }
+      // Hide controls in case of future non-linear ads. They'll be unhidden in
+      // content_pause_requested.
+      this.controlsDiv.style.display = 'none';
       this.countdownDiv.innerHTML = '';
     }.bind(this);
 
@@ -481,6 +484,8 @@
         // Bump container when controls are shown
        addClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
       }
+      // For non-linear ads that show after a linear ad.
+      this.adContainerDiv.style.display = 'block';
     }.bind(this);
 
     /**
@@ -867,6 +872,17 @@
       resetIMA_();
       this.settings.adsResponse = adsResponse ? adsResponse : this.settings.adsResponse;
       changeSource_(contentSrc, playOnLoad);
+    }.bind(this);
+
+    /**
+     * Changes the ad tag. You will need to call requestAds after this method
+     * for the new ads to be requested.
+     * @param {?string} adTag The ad tag to be requested the next time requestAds
+     *     is called.
+     */
+    this.changeAdTag = function(adTag) {
+      resetIMA_();
+      this.settings.adTagUrl = adTag;
     }.bind(this);
 
     /**
