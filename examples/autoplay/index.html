@@ -1,0 +1,39 @@
+<!--
+  Copyright 2014 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<html>
+  <head>
+    <title>Video.js Test</title>
+    <link href="//vjs.zencdn.net/5.3/video-js.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../third_party/videojs-ads/videojs.ads.css" />
+    <link rel="stylesheet" href="../../src/videojs.ima.css" />
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+
+  <body>
+    <video id="content_video" class="video-js vjs-default-skin"
+        poster = "../posters/android.png" controls preload="auto" width="640"
+        height="360" autoplay muted playsinline>
+      <source src="http://rmcdn.2mdn.net/Demo/vast_inspector/android.mp4"
+          type="video/mp4" ></source>
+    </video>
+    <script src="//vjs.zencdn.net/5.3/video.min.js"></script>
+    <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+    <script src="../../third_party/videojs-ads/videojs.ads.js"></script>
+    <script src="../../src/videojs.ima.js"></script>
+    <script src="ads.js"></script>
+  </body>
+</html>
