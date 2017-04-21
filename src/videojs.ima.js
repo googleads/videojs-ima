@@ -232,6 +232,8 @@
       adsRequest.nonLinearAdSlotHeight =
           this.settings.nonLinearHeight || (this.getPlayerHeight() / 3);
 
+      adsRequest.setAdWillAutoPlay(this.settings.adWillAutoPlay);
+
       this.adsLoader.requestAds(adsRequest);
     }.bind(this);
 
@@ -1346,6 +1348,12 @@
     this.controlPrefix = (this.settings.id + '_') || '';
 
     this.contentPlayer = document.getElementById(this.settings['id'] + '_html5_api');
+
+    // Detect inline options
+    if(this.contentPlayer.hasAttribute('autoplay')){
+      this.settings['adWillAutoPlay'] = this.settings['adWillAutoPlay'] || true;
+    }
+
     // Default showing countdown timer to true.
     this.showCountdown = true;
     if (this.settings['showCountdown'] == false) {

@@ -115,6 +115,28 @@ test('video continues after ad was skipped', function() {
   }, 10000);
 });
 
+test('autoplay attribute is automatically copied as a setting from video element', function() {
+  var autoplayVideo, autoplayPlayer;
+  var options = {
+    id: 'autoplay-player',
+    adTagUrl: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x360&' +
+    'iu=/6062/iab_vast_samples/skippable&ciu_szs=300x250,728x90&impl=s&' +
+    'gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&' +
+    'url=[referrer_url]&correlator=[timestamp]'
+  };
+  autoplayVideo = document.createElement('video');
+  autoplayVideo.setAttribute('autoplay', 'autoplay');
+  autoplayVideo.setAttribute('id', 'autoplay-player');
+
+  document.getElementById('qunit-fixture').appendChild(autoplayVideo);
+  autoplayPlayer = videojs(autoplayVideo);
+
+
+  autoplayPlayer.ima(options);
+  autoplayPlayer.ima.initializeAdDisplayContainer();
+  equal(autoplayPlayer.ima.settings.adWillAutoPlay, true, 'autoplay attribute copied to settings')
+})
+
 
 module("Events", { setup: setup });
 
