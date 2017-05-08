@@ -1433,6 +1433,7 @@
     }
     player.on('readyforpreroll', readyCallback);
     player.ready(function() {
+      onVolumeChange_();
       player.on('fullscreenchange', onFullscreenChange_);
       player.on('volumechange', onVolumeChange_);
     });
