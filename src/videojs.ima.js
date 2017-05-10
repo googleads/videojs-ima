@@ -541,15 +541,15 @@
     }.bind(this);
 
     this.getPlayerWidth = function() {
-      var retVal = parseInt(getComputedStyle(this.player.el()).width, 10) ||
-          this.player.width();
-      return retVal;
+      var computedStyle = getComputedStyle(this.player.el()) || {};
+
+      return parseInt(computedStyle.width, 10) || this.player.width();
     }.bind(this);
 
     this.getPlayerHeight = function() {
-      var retVal = parseInt(getComputedStyle(this.player.el()).height, 10) ||
-          this.player.height();
-      return retVal;
+      var computedStyle = getComputedStyle(this.player.el()) || {};
+
+      return parseInt(computedStyle.height, 10) || this.player.height();
     }.bind(this);
 
     /**
