@@ -788,6 +788,11 @@
         // ad's current time.
         clearInterval(this.adTrackingTimer);
       }
+      // Reset the content time we give the SDK. Fixes an issue where requesting
+      // VMAP followed by VMAP would play the second mid-rolls as pre-rolls if
+      // the first playthrough of the video passed the second response's
+      // mid-roll time.
+      this.contentPlayheadTracker.currentTime = 0;
       if (this.adsManager) {
         this.adsManager.destroy();
         this.adsManager = null;
