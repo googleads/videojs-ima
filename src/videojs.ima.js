@@ -781,9 +781,6 @@
       this.adsActive = false;
       this.adPlaying = false;
       this.player.on('ended', this.localContentEndedListener);
-      if (this.currentAd && this.currentAd.isLinear()) {
-        this.adContainerDiv.style.display = 'none';
-      }
       this.vjsControls.show();
       this.player.ads.endLinearAdMode();
       if (this.adTrackingTimer) {
