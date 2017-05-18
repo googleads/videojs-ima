@@ -1,6 +1,6 @@
-#How to become a contributor and submit patches
+# How to become a contributor and submit patches
 
-##Contributor License Agreements
+## Contributor License Agreements
 
 We'd love to accept your code patches! However, before we can take them, we have to clear a couple of legal hurdles.
 
@@ -11,13 +11,13 @@ Please fill out either the individual or corporate Contributor License Agreement
 
 Follow either of the two links above to access the appropriate CLA and instructions for how to sign and return it. Once we receive it, we'll add you to the official list of contributors and be able to accept your patches.
 
-##Submitting Patches
+## Submitting Patches
 
 - Sign a Contributor License Agreement (see above).
 - Join the [Google Media Framework discussion group](http://groups.google.com/d/forum/google-media-framework).
 - Fork the library, make the changes and send a [pull request](https://help.github.com/articles/using-pull-requests).
 - We will review your patch and add comments if any changes are required. Once any issues are resolved, we'll merge your request!
 
-#If you can't become a contributor
+# If you can't become a contributor
 
 If you can't become a contributor, but wish to share some code that illustrates an issue / shows how an issue may be fixed, then you can attach your changes on the issues page. We will use this code to troubleshoot the issue and fix it, but will not use this code in the library unless the steps to submit patches are done.

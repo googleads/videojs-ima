@@ -1,20 +1,20 @@
-#IMA SDK Plugin for Video.js
+# IMA SDK Plugin for Video.js
 
-##Introduction
+## Introduction
 The IMA SDK Plugin for Video.js provides a quick and easy IMA SDK integration for the Video.js player.
 
 The framework is currently in beta, allowing interested developers to try it out and send feedback before we finalize the APIs and features.
 
 To see the plugin in action, check out our [samples](//googleads.github.io/videojs-ima/).
 
-##Features
+## Features
 - Easily integrate the Google IMA SDK into Video.js to enable advertising on your video content.
 
-##Requirements
+## Requirements
   - Your favorite text editor
   - A JavaScript enabled browser
 
-##Getting started
+## Getting started
 The easiest way to get started is by using [npm](//www.npmjs.org/).
 
 ```
@@ -132,15 +132,15 @@ ad break to play. To do so:
 For a list of methods exposed by the plugin, see our full [API
 Docs](https://github.com/googleads/videojs-ima/wiki/API-Docs).
 
-##Where do I report issues?
+## Where do I report issues?
 Please report issues on the [issues page](../../issues).
 
-##Terms of Service
+## Terms of Service
 The IMA SDK plugin for Video.js uses the IMA SDK, and as such is subject to the
 [IMA SDK Terms of Service](https://developers.google.com/interactive-media-ads/terms).
 
-##Support
+## Support
 If you have questions about the framework, you can ask them at https://groups.google.com/d/forum/google-media-framework
 
-##How do I contribute?
+## How do I contribute?
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
