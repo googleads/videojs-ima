@@ -541,15 +541,15 @@
     }.bind(this);
 
     this.getPlayerWidth = function() {
-      var retVal = parseInt(getComputedStyle(this.player.el()).width, 10) ||
-          this.player.width();
-      return retVal;
+      var computedStyle = getComputedStyle(this.player.el()) || {};
+
+      return parseInt(computedStyle.width, 10) || this.player.width();
     }.bind(this);
 
     this.getPlayerHeight = function() {
-      var retVal = parseInt(getComputedStyle(this.player.el()).height, 10) ||
-          this.player.height();
-      return retVal;
+      var computedStyle = getComputedStyle(this.player.el()) || {};
+
+      return parseInt(computedStyle.height, 10) || this.player.height();
     }.bind(this);
 
     /**
@@ -781,9 +781,6 @@
       this.adsActive = false;
       this.adPlaying = false;
       this.player.on('ended', this.localContentEndedListener);
-      if (this.currentAd && this.currentAd.isLinear()) {
-        this.adContainerDiv.style.display = 'none';
-      }
       this.vjsControls.show();
       this.player.ads.endLinearAdMode();
       if (this.adTrackingTimer) {
@@ -791,6 +788,11 @@
         // ad's current time.
         clearInterval(this.adTrackingTimer);
       }
+      // Reset the content time we give the SDK. Fixes an issue where requesting
+      // VMAP followed by VMAP would play the second mid-rolls as pre-rolls if
+      // the first playthrough of the video passed the second response's
+      // mid-roll time.
+      this.contentPlayheadTracker.currentTime = 0;
       if (this.adsManager) {
         this.adsManager.destroy();
         this.adsManager = null;
@@ -1433,6 +1435,7 @@
     }
     player.on('readyforpreroll', readyCallback);
     player.ready(function() {
+      onVolumeChange_();
       player.on('fullscreenchange', onFullscreenChange_);
       player.on('volumechange', onVolumeChange_);
     });
