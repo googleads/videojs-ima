@@ -1038,7 +1038,7 @@
     /**
      * Current plugin version.
      */
-    this.VERSION = '0.2.0';
+    this.VERSION = '0.6.0';
 
     /**
      * Stores user-provided settings.
