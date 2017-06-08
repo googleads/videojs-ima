@@ -1396,6 +1396,10 @@
       google.ima.settings.setLocale(this.settings['locale']);
     }
 
+    if (this.settings['disableFlashAds']) {
+      google.ima.settings.setDisableFlashAds(this.settings['disableFlashAds']);
+    }
+
     createAdContainer_();
     this.adsLoader = new google.ima.AdsLoader(this.adDisplayContainer);
 
