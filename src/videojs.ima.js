@@ -964,6 +964,13 @@
     }.bind(this);
 
     /**
+     * Set the volume for the ad.
+     */
+    this.setAdVolume = function(volume){
+      this.adsManager.setVolume(volume);
+    }.bind(this);
+
+    /**
      * Set up intervals to check for seeking and update current video time.
      * @private
      */
