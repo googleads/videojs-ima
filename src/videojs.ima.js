@@ -449,9 +449,12 @@
       this.allAdsCompleted = true;
       this.adContainerDiv.style.display = 'none';
       if (this.contentComplete == true) {
-        if (this.contentPlayer.src != this.contentSource) {
-          this.player.src(this.contentSource);
+
+        //To prevent the error if contentSource is empty
+        if (typeof this.contentSource == 'string' && this.contentSource.length > 0 && this.contentPlayer.src != this.contentSource) {
+            this.player.src(this.contentSource);
         }
+
         for (var index in this.contentAndAdsEndedListeners) {
           this.contentAndAdsEndedListeners[index]();
         }
