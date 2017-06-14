@@ -1400,6 +1400,10 @@
       google.ima.settings.setDisableFlashAds(this.settings['disableFlashAds']);
     }
 
+    if (this.settings['disableCustomPlaybackForIOS10Plus']) {
+      google.ima.settings.setDisableCustomPlaybackForIOS10Plus(this.settings['disableCustomPlaybackForIOS10Plus']);
+    }
+
     createAdContainer_();
     this.adsLoader = new google.ima.AdsLoader(this.adDisplayContainer);
 
@@ -1449,4 +1453,3 @@
   var registerPlugin = videojs.registerPlugin || videojs.plugin;
   registerPlugin('ima', init);
 });
-
