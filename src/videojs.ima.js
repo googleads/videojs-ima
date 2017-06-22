@@ -1038,7 +1038,7 @@
     /**
      * Current plugin version.
      */
-    this.VERSION = '0.2.0';
+    this.VERSION = '0.6.0';
 
     /**
      * Stores user-provided settings.
@@ -1396,6 +1396,14 @@
       google.ima.settings.setLocale(this.settings['locale']);
     }
 
+    if (this.settings['disableFlashAds']) {
+      google.ima.settings.setDisableFlashAds(this.settings['disableFlashAds']);
+    }
+
+    if (this.settings['disableCustomPlaybackForIOS10Plus']) {
+      google.ima.settings.setDisableCustomPlaybackForIOS10Plus(this.settings['disableCustomPlaybackForIOS10Plus']);
+    }
+
     createAdContainer_();
     this.adsLoader = new google.ima.AdsLoader(this.adDisplayContainer);
 
@@ -1441,6 +1449,7 @@
     });
   };
 
-  videojs.plugin('ima', init);
+  // Cross-compatibility for Video.js 5 and 6.
+  var registerPlugin = videojs.registerPlugin || videojs.plugin;
+  registerPlugin('ima', init);
 });
-
