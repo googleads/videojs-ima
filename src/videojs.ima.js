@@ -488,6 +488,7 @@
       }
       // For non-linear ads that show after a linear ad.
       this.adContainerDiv.style.display = 'block';
+      this.player.trigger('ads-ad-started');
     }.bind(this);
 
     /**
