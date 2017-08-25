@@ -1316,7 +1316,8 @@
     }.bind(this);
 
     this.playerDisposedListener = function(){
-      this.contentEndedListeners, this.contentAndAdsEndedListeners = [], [];
+      this.contentEndedListeners = [];
+      this.contentAndAdsEndedListeners = [];
       this.contentComplete = true;
       this.player.off('ended', this.localContentEndedListener);
 
