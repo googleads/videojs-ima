@@ -1072,7 +1072,7 @@
     /**
      * Current plugin version.
      */
-    this.VERSION = '0.6.0';
+    this.VERSION = '0.7.0';
 
     /**
      * Stores user-provided settings.
