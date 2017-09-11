@@ -24,6 +24,6 @@
     "videojs-doc-generator": "0.0.1"
   },
   "peerDependencies": {
-    "video.js": "*"
+    "video.js": ">=5.3.0"
   }
 }
