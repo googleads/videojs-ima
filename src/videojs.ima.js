@@ -279,6 +279,16 @@
           google.ima.AdEvent.Type.SKIPPED,
           this.onAdComplete_);
 
+      if (this.isMobile) {
+        // Show/hide controls on pause and resume (triggered by tap).
+        this.adsManager.addEventListener(
+            google.ima.AdEvent.Type.PAUSED,
+            onAdPaused_);
+        this.adsManager.addEventListener(
+            google.ima.AdEvent.Type.RESUMED,
+            onAdResumed_);
+      }
+
       if (!this.autoPlayAdBreaks) {
         try {
           var initWidth = this.getPlayerWidth();
@@ -409,6 +419,7 @@
       this.vjsControls.hide();
       showPlayButton();
       this.player.pause();
+      hideAdControls_();
     }.bind(this);
 
     /**
@@ -492,6 +503,28 @@
     }.bind(this);
 
     /**
+     * Syncs controls when an ad pauses.
+     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+     * @private
+     */
+    var onAdPaused_ = function(adEvent) {
+      showPauseButton();
+      showAdControls_();
+      this.adPlaying = false;
+    }.bind(this);
+
+    /**
+     * Syncs controls when an ad resumes.
+     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+     * @private
+     */
+    var onAdResumed_ = function(adEvent) {
+      showPlayButton();
+      hideAdControls_();
+      this.adPlaying = true;
+    }.bind(this);
+
+    /**
      * Clears the interval timer for current ad time when an ad completes.
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
      * @private
@@ -554,7 +587,7 @@
     }.bind(this);
 
     /**
-     * Hides the ad controls on mouseout.
+     * Hide the ad controls.
      * @private
      */
     var hideAdControls_ = function() {
@@ -1233,6 +1266,13 @@
      * through the video.
      */
     this.seekThreshold = 100;
+
+    /**
+     * Whether or not we are running on a mobile platform.
+     */
+    this.isMobile = (navigator.userAgent.match(/iPhone/i) ||
+        navigator.userAgent.match(/iPad/i) ||
+        navigator.userAgent.match(/Android/i));
 
     /**
      * Stores data for the content playhead tracker.
