@@ -30,6 +30,9 @@
 })(function(window, document, videojs) {
   "use strict";
 
+  // support es6 style import
+  videojs = videojs.default || videojs;
+
   var extend = function(obj) {
     var arg;
     var index;
