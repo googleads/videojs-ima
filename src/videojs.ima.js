@@ -30,6 +30,9 @@
 })(function(window, document, videojs) {
   "use strict";
 
+  // support es6 style import
+  videojs = videojs.default || videojs;
+
   var extend = function(obj) {
     var arg;
     var index;
@@ -575,15 +578,15 @@
     }.bind(this);
 
     this.getPlayerWidth = function() {
-      var computedStyle = getComputedStyle(this.player.el()) || {};
+      var boundingRect = this.player.el().getBoundingClientRect() || {};
 
-      return parseInt(computedStyle.width, 10) || this.player.width();
+      return parseInt(boundingRect.width, 10) || this.player.width();
     }.bind(this);
 
     this.getPlayerHeight = function() {
-      var computedStyle = getComputedStyle(this.player.el()) || {};
+      var boundingRect = this.player.el().getBoundingClientRect() || {};
 
-      return parseInt(computedStyle.height, 10) || this.player.height();
+      return parseInt(boundingRect.height, 10) || this.player.height();
     }.bind(this);
 
     /**
@@ -1072,7 +1075,7 @@
     /**
      * Current plugin version.
      */
-    this.VERSION = '0.6.0';
+    this.VERSION = '0.7.0';
 
     /**
      * Stores user-provided settings.
