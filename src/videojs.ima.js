@@ -405,6 +405,7 @@
       this.adsActive = true;
       this.adPlaying = true;
       this.contentSource = this.player.currentSrc();
+      this.contentSourceType = this.player.currentType();
       this.player.off('ended', this.localContentEndedListener);
       if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
         // Skip this call for post-roll ads
@@ -464,7 +465,10 @@
       this.adContainerDiv.style.display = 'none';
       if (this.contentComplete == true) {
         if (this.contentPlayer.src != this.contentSource) {
-          this.player.src(this.contentSource);
+          this.player.src({
+            src: this.contentSource,
+            type: this.contentSourceType
+          });
         }
         for (var index in this.contentAndAdsEndedListeners) {
           this.contentAndAdsEndedListeners[index]();
@@ -1333,6 +1337,7 @@
      * post-roll on iOS.
      */
     this.contentSource = '';
+    this.contentSourceType = '';
 
     /**
      * Local content ended listener for contentComplete.
