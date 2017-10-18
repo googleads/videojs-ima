@@ -1337,6 +1337,11 @@
      * post-roll on iOS.
      */
     this.contentSource = '';
+
+    /**
+     * Stores the content source type so we can re-populate it manually after a
+     * post-roll.
+     */
     this.contentSourceType = '';
 
     /**
