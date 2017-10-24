@@ -464,7 +464,9 @@
       this.allAdsCompleted = true;
       this.adContainerDiv.style.display = 'none';
       if (this.contentComplete == true) {
-        if (this.contentPlayer.src != this.contentSource) {
+        if (this.contentPlayer.src != this.contentSource) {          
+          // Avoid setted autoplay after the post-roll
+          this.player.autoplay(false);
           this.player.src({
             src: this.contentSource,
             type: this.contentSourceType
