@@ -52,7 +52,7 @@
   var ima_defaults = {
     debug: false,
     timeout: 5000,
-    prerollTimeout: 100,
+    prerollTimeout: 1000,
     adLabel: 'Advertisement',
     showControlsForJSAds: true
   };
@@ -166,7 +166,7 @@
       // so to avoid implementation problems with later updates I'm requiring
       // it.
       if (!this.settings['id']) {
-        window.console.log('Error: must provide id of video.js div');
+        window.console.error('Error: must provide id of video.js div');
         return;
       }
 
@@ -827,6 +827,10 @@
       }
 
       this.player.trigger('adsready');
+
+      if (this.settings['adsManagerLoadedCallback']) {
+        this.settings['adsManagerLoadedCallback']();
+      }
     }.bind(this);
 
     /**
@@ -869,7 +873,7 @@
      * @private
      */
     var onAdsLoaderError_ = function(event) {
-      window.console.log('AdsLoader error: ' + event.getError());
+      window.console.warn('AdsLoader error: ' + event.getError());
       this.adContainerDiv.style.display = 'none';
       if (this.adsManager) {
         this.adsManager.destroy();
@@ -890,7 +894,7 @@
       var errorMessage =
           adErrorEvent.getError !== undefined ?
               adErrorEvent.getError() : adErrorEvent.stack;
-      window.console.log('Ad error: ' + errorMessage);
+      window.console.warn('Ad error: ' + errorMessage);
       this.vjsControls.show();
       this.adsManager.destroy();
       this.adContainerDiv.style.display = 'none';
@@ -1532,12 +1536,15 @@
     setUpAdsLoader_();
 
     player.one('play', setUpPlayerIntervals_);
-
     player.on('ended', this.localContentEndedListener);
     player.on('dispose', this.playerDisposedListener);
 
     if (!readyCallback) {
       readyCallback = this.startFromReadyCallback;
+    } else {
+      console.warn('videojs-ima\'s readyCallback parameter is deprecated. ' +
+        'This has historically been used as a cue for adsManagerLoaded. You '+
+        'should provide the adsManagerLoadedCallback setting instead.');
     }
     player.on('readyforpreroll', readyCallback);
     player.ready(function() {

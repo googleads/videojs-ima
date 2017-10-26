@@ -79,7 +79,7 @@ Ads.prototype.init = function() {
     this.log('Error: please fill in an ad tag');
   } else {
     this.player.ima.initializeAdDisplayContainer();
-    this.player.ima.setContentWithAdTag(null, this.adTagInput.value, true);
+    this.player.ima.setContentWithAdTag(null, this.adTagInput.value, false);
     this.player.ima.requestAds();
   }
 };

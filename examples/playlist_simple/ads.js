@@ -15,27 +15,7 @@
  */
 
 var Ads = function() {
-
   this.player = videojs('content_video');
-
-  // Remove controls from the player on iPad to stop native controls from stealing
-  // our click
-  var contentPlayer =  document.getElementById('content_video_html5_api');
-  if ((navigator.userAgent.match(/iPad/i) ||
-          navigator.userAgent.match(/Android/i)) &&
-      contentPlayer.hasAttribute('controls')) {
-    contentPlayer.removeAttribute('controls');
-  }
-
-  // Start ads when the video player is clicked, but only the first time it's
-  // clicked.
-  var startEvent = 'click';
-  if (navigator.userAgent.match(/iPhone/i) ||
-      navigator.userAgent.match(/iPad/i) ||
-      navigator.userAgent.match(/Android/i)) {
-    startEvent = 'touchend';
-  }
-  this.player.one(startEvent, this.bind(this, this.initFromStart));
 
   this.options = {
     id: 'content_video',
@@ -53,21 +33,7 @@ var Ads = function() {
   this.posters = ['../posters/android.png', '../posters/dfp.png'];
   this.currentContent = 0;
 
-  this.events = [google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
-                google.ima.AdEvent.Type.CLICK,
-                google.ima.AdEvent.Type.COMPLETE,
-                google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
-                google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED,
-                google.ima.AdEvent.Type.FIRST_QUARTILE,
-                google.ima.AdEvent.Type.LOADED,
-                google.ima.AdEvent.Type.MIDPOINT,
-                google.ima.AdEvent.Type.PAUSED,
-                google.ima.AdEvent.Type.STARTED,
-                google.ima.AdEvent.Type.THIRD_QUARTILE];
-
-  this.console = document.getElementById('ima-sample-console');
   this.linearAdPlaying = false;
-  this.initialized = false;
   this.playlistItemClicked = false;
 
   this.playlistDiv = document.getElementById('ima-sample-playlistDiv');
@@ -77,7 +43,7 @@ var Ads = function() {
       if (this.playlistItems[index].tagName == 'DIV') {
         this.playlistItems[index].addEventListener(
             'click',
-            this.bind(this, this.onPlaylistItemClick),
+            this.onPlaylistItemClick.bind(this),
             false);
       }
     }
@@ -86,46 +52,16 @@ var Ads = function() {
 
 }
 
-Ads.prototype.initFromStart = function() {
-  if (!this.initialized) {
-    this.init();
-  }
-}
-
-Ads.prototype.init = function() {
-  this.initialized = true;
-  this.player.ima.initializeAdDisplayContainer();
-};
-
 Ads.prototype.adsManagerLoadedCallback = function() {
-  for (var index = 0; index < this.events.length; index++) {
-    this.player.ima.addEventListener(
-        this.events[index],
-        this.bind(this, this.onAdEvent));
-  }
-
   // When the page first loads, don't autoplay. After that, when the user
   // clicks a playlist item to switch videos, autoplay.
   if (this.playlistItemClicked) {
+    console.log('Calling player.play()');
     this.player.play();
   }
 };
 
-Ads.prototype.onAdEvent = function(event) {
-  if (event.type == 'contentPauseRequested') {
-    this.linearAdPlaying = true;
-  } else if (event.type == 'contentResumeRequested') {
-    this.linearAdPlaying = false;
-  } else {
-    this.console.innerHTML =
-        this.console.innerHTML + '<br/>Ad event: ' + event.type;
-  }
-};
-
 Ads.prototype.onPlaylistItemClick = function(event) {
-  if (!this.initialized) {
-    this.init();
-  }
   if (!this.linearAdPlaying) {
     this.player.ima.setContentWithAdTag(
         this.contents[event.target.id],
@@ -135,10 +71,4 @@ Ads.prototype.onPlaylistItemClick = function(event) {
     this.player.ima.requestAds();
   }
   this.playlistItemClicked = true;
-};
-
-Ads.prototype.bind = function(thisObj, fn) {
-  return function() {
-    fn.apply(thisObj, arguments);
-  };
 };
