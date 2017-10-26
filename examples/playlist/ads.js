@@ -88,7 +88,6 @@ var Ads = function() {
 Ads.prototype.initFromStart = function() {
   if (!this.initialized) {
     this.init();
-    this.requestAdsAndPlay();
   }
 }
 
@@ -96,11 +95,6 @@ Ads.prototype.init = function() {
   this.initialized = true;
   this.player.ima.initializeAdDisplayContainer();
 };
-
-Ads.prototype.requestAdsAndPlay = function() {
-  this.player.ima.requestAds();
-  this.player.play();
-}
 
 Ads.prototype.adsManagerLoadedCallback = function() {
   for (var index = 0; index < this.events.length; index++) {

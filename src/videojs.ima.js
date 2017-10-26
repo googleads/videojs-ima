@@ -19,7 +19,8 @@
 
 (function(factory) {
   if (typeof define === 'function' && define['amd']) {
-    define(['video.js', 'videojs-contrib-ads'], function(videojs){ factory(window, document, videojs) });
+    define(['video.js', 'videojs-contrib-ads'],
+        function(videojs){ factory(window, document, videojs) });
   } else if (typeof exports === 'object' && typeof module === 'object') {
     var vjs = require('video.js');
     require('videojs-contrib-ads');
@@ -63,8 +64,150 @@
   var ImaPlugin = function(player, options, readyCallback) {
     this.player = player;
 
+    /*************************
+     ****** Core Plugin ******
+     *************************/
+
     /**
-     * Assigns the unique id and class names to the given element as well as the style class
+     * Seeks content to 00:00:00. This is used as an event handler for the
+     * loadedmetadata event, since seeking is not possible until that event has
+     * fired.
+     * @private
+     */
+    var seekContentToZero_ = function() {
+      this.player.off('loadedmetadata', seekContentToZero_);
+      this.player.currentTime(0);
+    }.bind(this);
+
+    /**
+     * Seeks content to 00:00:00 and starts playback. This is used as an event
+     * handler for the loadedmetadata event, since seeking is not possible until
+     * that event has fired.
+     * @private
+     */
+    var playContentFromZero_ = function() {
+      this.player.off('loadedmetadata', playContentFromZero_);
+      this.player.currentTime(0);
+      this.player.play();
+    }.bind(this);
+
+    /**
+     * Adds a listener for the 'ended' event of the video player. This should be
+     * used instead of setting an 'ended' listener directly to ensure that the
+     * ima can do proper cleanup of the SDK before other event listeners
+     * are called.
+     * @param {function} listener The listener to be called when content
+     *     completes.
+     */
+    this.addContentEndedListener = function(listener) {
+      this.contentEndedListeners.push(listener);
+    }.bind(this);
+
+    /**
+     * Adds a listener that will be called when content and all ads have
+     * finished playing.
+     * @param {function} listener The listener to be called when content and ads
+     *     complete.
+     */
+    this.addContentAndAdsEndedListener = function(listener) {
+      this.contentAndAdsEndedListeners.push(listener);
+    }.bind(this);
+
+    /**
+     * Set up intervals to check for seeking and update current video time.
+     * @private
+     */
+    var setUpPlayerIntervals_ = function() {
+      this.updateTimeIntervalHandle =
+          setInterval(updateCurrentTime_, this.seekCheckInterval);
+      this.seekCheckIntervalHandle =
+          setInterval(checkForSeeking_, this.seekCheckInterval);
+      this.resizeCheckIntervalHandle =
+          setInterval(checkForResize_, this.resizeCheckInterval);
+    }.bind(this);
+
+    /**
+     * Detects when the video.js player has been disposed.
+     */
+    this.playerDisposedListener = function(){
+      this.contentEndedListeners = [];
+      this.contentAndAdsEndedListeners = [];
+      this.contentComplete = true;
+      this.player.off('ended', this.localContentEndedListener);
+
+      // Bug fix: https://github.com/googleads/videojs-ima/issues/306
+      if (this.player.ads.adTimeoutTimeout) {
+        clearTimeout(this.player.ads.adTimeoutTimeout);
+      }
+
+      var intervalsToClear = [this.updateTimeIntervalHandle,
+        this.seekCheckIntervalHandle,
+        this.adTrackingTimer, this.resizeCheckIntervalHandle];
+      for (var index in intervalsToClear) {
+        var interval = intervalsToClear[index];
+        if (interval) {
+          clearInterval(interval);
+        }
+      }
+      if (this.adsManager) {
+        this.adsManager.destroy();
+        this.adsManager = null;
+      }
+    }.bind(this);
+
+    /**
+     * Extends the settings to include user-provided settings.
+     * @private
+     */
+    var initWithSettings_ = function() {
+      this.settings = extend({}, ima_defaults, options || {});
+
+      // Currently this isn't used but I can see it being needed in the future,
+      // so to avoid implementation problems with later updates I'm requiring
+      // it.
+      if (!this.settings['id']) {
+        window.console.log('Error: must provide id of video.js div');
+        return;
+      }
+
+      this.contentPlayer =
+          document.getElementById(this.settings['id'] + '_html5_api');
+
+      // Detect inline options
+      if(this.contentPlayer.hasAttribute('autoplay')){
+        this.settings['adWillAutoPlay'] =
+            this.settings['adWillAutoPlay'] || true;
+      }
+      // Default showing countdown timer to true.
+      this.showCountdown = true;
+      if (this.settings['showCountdown'] == false) {
+        this.showCountdown = false;
+      }
+      this.autoPlayAdBreaks = true;
+      if (this.settings['autoPlayAdBreaks'] == false) {
+        this.autoPlayAdBreaks = false;
+      }
+      if (this.settings['locale']) {
+        google.ima.settings.setLocale(this.settings['locale']);
+      }
+      if (this.settings['disableFlashAds']) {
+        google.ima.settings.setDisableFlashAds(
+            this.settings['disableFlashAds']);
+      }
+      if (this.settings['disableCustomPlaybackForIOS10Plus']) {
+        google.ima.settings.setDisableCustomPlaybackForIOS10Plus(
+            this.settings['disableCustomPlaybackForIOS10Plus']);
+      }
+
+    }.bind(this);
+
+     /*************************
+     *********** UI ***********
+     *************************/
+
+    /**
+     * Assigns the unique id and class names to the given element as well as the
+     * style class.
      * @param element
      * @param controlName
      * @private
@@ -75,7 +218,7 @@
     }.bind(this);
 
     /**
-     * Returns a regular expression to test a string for the given className
+     * Returns a regular expression to test a string for the given className.
      * @param className
      * @returns {RegExp}
      * @private
@@ -85,8 +228,22 @@
       // (beginning of string OR NOT word char)
       // classname
       // (negative lookahead word char OR end of string)
-      return new RegExp('(^|[^A-Za-z-])' + className + '((?![A-Za-z-])|$)', 'gi');
+      return new RegExp('(^|[^A-Za-z-])' + className +
+          '((?![A-Za-z-])|$)', 'gi');
     };
+
+    /**
+     * Returns whether or not the provided element has the provied class in its
+     * className.
+     * @param element
+     * @param className
+     * @return {boolean}
+     * @private
+     */
+    var elementHasClass_ = function(element, className) {
+      var classRegexp = getClassRegexp_(className);
+      return classRegexp.test(element.className);
+    } 
 
     /**
      * Adds a class to the given element if it doesn't already have the class
@@ -95,7 +252,7 @@
      * @private
      */
     var addClass_ = function(element, classToAdd){
-      if(getClassRegexp_(classToAdd).test(element.className)){
+      if(elementHasClass_(element, classToAdd)){
         return element;
       }
 
@@ -109,13 +266,13 @@
      * @private
      */
     var removeClass_ = function(element, classToRemove){
-      var classRegexp = getClassRegexp_(classToRemove);
-
-      if(!classRegexp.test(element.className)){
+      if(!elementHasClass_(element, classToRemove)){
         return element;
       }
 
-      return element.className = element.className.trim().replace(classRegexp, '');
+      var classRegexp = getClassRegexp_(classToRemove);
+      return element.className =
+          element.className.trim().replace(classRegexp, '');
     };
 
     /**
@@ -142,7 +299,8 @@
           false);
       createControls_();
       this.adDisplayContainer =
-          new google.ima.AdDisplayContainer(this.adContainerDiv, this.contentPlayer);
+          new google.ima.AdDisplayContainer(this.adContainerDiv,
+              this.contentPlayer);
     }.bind(this);
 
     /**
@@ -203,315 +361,12 @@
     }.bind(this);
 
     /**
-     * Initializes the AdDisplayContainer. On mobile, this must be done as a
-     * result of user action.
-     */
-    this.initializeAdDisplayContainer = function() {
-      this.adDisplayContainerInitialized = true;
-      this.adDisplayContainer.initialize();
-    }.bind(this);
-
-    /**
-     * Creates the AdsRequest and request ads through the AdsLoader.
-     */
-    this.requestAds = function() {
-      if (!this.adDisplayContainerInitialized) {
-        this.adDisplayContainer.initialize();
-      }
-      var adsRequest = new google.ima.AdsRequest();
-      if (this.settings.adTagUrl) {
-        adsRequest.adTagUrl = this.settings.adTagUrl;
-      } else {
-        adsRequest.adsResponse = this.settings.adsResponse;
-      }
-      if (this.settings.forceNonLinearFullSlot) {
-        adsRequest.forceNonLinearFullSlot = true;
-      }
-
-      adsRequest.linearAdSlotWidth = this.getPlayerWidth();
-      adsRequest.linearAdSlotHeight = this.getPlayerHeight();
-      adsRequest.nonLinearAdSlotWidth =
-          this.settings.nonLinearWidth || this.getPlayerWidth();
-      adsRequest.nonLinearAdSlotHeight =
-          this.settings.nonLinearHeight || (this.getPlayerHeight() / 3);
-
-      adsRequest.setAdWillAutoPlay(this.settings.adWillAutoPlay);
-
-      this.adsLoader.requestAds(adsRequest);
-    }.bind(this);
-
-    /**
-     * Listener for the ADS_MANAGER_LOADED event. Creates the AdsManager,
-     * sets up event listeners, and triggers the 'adsready' event for
-     * videojs-ads-contrib.
-     * @private
-     */
-    var onAdsManagerLoaded_ = function(adsManagerLoadedEvent) {
-      this.adsManager = adsManagerLoadedEvent.getAdsManager(
-          this.contentPlayheadTracker, this.adsRenderingSettings);
-
-      this.adsManager.addEventListener(
-          google.ima.AdErrorEvent.Type.AD_ERROR,
-          onAdError_);
-      this.adsManager.addEventListener(
-          google.ima.AdEvent.Type.AD_BREAK_READY,
-          onAdBreakReady_);
-      this.adsManager.addEventListener(
-          google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
-          this.onContentPauseRequested_);
-      this.adsManager.addEventListener(
-          google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED,
-          this.onContentResumeRequested_);
-      this.adsManager.addEventListener(
-          google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
-          onAllAdsCompleted_);
-
-      this.adsManager.addEventListener(
-          google.ima.AdEvent.Type.LOADED,
-          onAdLoaded_);
-      this.adsManager.addEventListener(
-          google.ima.AdEvent.Type.STARTED,
-          onAdStarted_);
-      this.adsManager.addEventListener(
-          google.ima.AdEvent.Type.CLICK,
-          onAdPlayPauseClick_);
-      this.adsManager.addEventListener(
-          google.ima.AdEvent.Type.COMPLETE,
-          this.onAdComplete_);
-      this.adsManager.addEventListener(
-          google.ima.AdEvent.Type.SKIPPED,
-          this.onAdComplete_);
-
-      if (this.isMobile) {
-        // Show/hide controls on pause and resume (triggered by tap).
-        this.adsManager.addEventListener(
-            google.ima.AdEvent.Type.PAUSED,
-            onAdPaused_);
-        this.adsManager.addEventListener(
-            google.ima.AdEvent.Type.RESUMED,
-            onAdResumed_);
-      }
-
-      if (!this.autoPlayAdBreaks) {
-        try {
-          var initWidth = this.getPlayerWidth();
-          var initHeight = this.getPlayerHeight();
-          this.adsManagerDimensions.width = initWidth;
-          this.adsManagerDimensions.height = initHeight;
-          this.adsManager.init(
-              initWidth,
-              initHeight,
-              google.ima.ViewMode.NORMAL);
-          this.adsManager.setVolume(this.player.muted() ? 0 : this.player.volume());
-        } catch (adError) {
-          onAdError_(adError);
-        }
-      }
-
-      this.player.trigger('adsready');
-    }.bind(this);
-
-    /**
-     * DEPRECATED: Use startFromReadyCallback
-     * Start ad playback, or content video playback in the absence of a
-     * pre-roll.
-     */
-    this.start = function() {
-      window.console.log(
-          'WARNING: player.ima.start is deprecated. Use ' +
-              'player.ima.startFromReadyCallback instead.');
-    };
-
-    /**
-     * Start ad playback, or content video playback in the absence of a
-     * pre-roll. **NOTE**: This method only needs to be called if you provide
-     * your own readyCallback as the second parameter to player.ima(). If you
-     * only provide options and do not provide your own readyCallback,
-     * **DO NOT** call this method. If you do provide your own readyCallback,
-     * you should call this method in the last line of that callback. For more
-     * info, see this method's usage in our advanced and playlist examples.
-     */
-    this.startFromReadyCallback = function() {
-      if (this.autoPlayAdBreaks) {
-        try {
-          this.adsManager.init(
-              this.getPlayerWidth(),
-              this.getPlayerHeight(),
-              google.ima.ViewMode.NORMAL);
-          this.adsManager.setVolume(this.player.muted() ? 0 : this.player.volume());
-          this.adsManager.start();
-        } catch (adError) {
-          onAdError_(adError);
-        }
-      }
-    }.bind(this);
-
-    /**
-     * Listener for errors fired by the AdsLoader.
-     * @param {google.ima.AdErrorEvent} event The error event thrown by the
-     *     AdsLoader. See
-     *     https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdError.Type
-     * @private
-     */
-    var onAdsLoaderError_ = function(event) {
-      window.console.log('AdsLoader error: ' + event.getError());
-      this.adContainerDiv.style.display = 'none';
-      if (this.adsManager) {
-        this.adsManager.destroy();
-      }
-      this.player.trigger({type: 'adserror', data: { AdError: event.getError(), AdErrorEvent: event }});
-    }.bind(this);
-
-    /**
-     * Listener for errors thrown by the AdsManager.
-     * @param {google.ima.AdErrorEvent} adErrorEvent The error event thrown by
-     *     the AdsManager.
-     * @private
-     */
-    var onAdError_ = function(adErrorEvent) {
-      var errorMessage = adErrorEvent.getError !== undefined ? adErrorEvent.getError() : adErrorEvent.stack;
-      window.console.log('Ad error: ' + errorMessage);
-      this.vjsControls.show();
-      this.adsManager.destroy();
-      this.adContainerDiv.style.display = 'none';
-      this.player.trigger({ type: 'adserror', data: { AdError: errorMessage, AdErrorEvent: adErrorEvent }});
-    }.bind(this);
-
-    /**
-     * Listener for AD_BREAK_READY. Passes event on to publisher's listener.
-     * @param {google.ima.AdEvent} adEvent AdEvent thrown by the AdsManager.
-     * @private
-     */
-    var onAdBreakReady_ = function(adEvent) {
-      this.adBreakReadyListener(adEvent);
-    }.bind(this);
-
-    /**
-     * Called by publishers in manual ad break playback mode to start an ad
-     * break.
-     */
-    this.playAdBreak = function() {
-      if (!this.autoPlayAdBreaks) {
-        this.adsManager.start();
-      }
-    }.bind(this);
-
-    /**
-     * Pauses the content video and displays the ad container so ads can play.
-     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @private
-     */
-    this.onContentPauseRequested_ = function(adEvent) {
-      this.adsActive = true;
-      this.adPlaying = true;
-      this.contentSource = this.player.currentSrc();
-      this.player.off('ended', this.localContentEndedListener);
-      if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
-        // Skip this call for post-roll ads
-        this.player.ads.startLinearAdMode();
-      }
-      this.adContainerDiv.style.display = 'block';
-
-      var contentType = adEvent.getAd().getContentType();
-      if ((contentType === 'application/javascript') && !this.settings.showControlsForJSAds) {
-        this.controlsDiv.style.display = 'none';
-      } else {
-        this.controlsDiv.style.display = 'block';
-      }
-
-      this.vjsControls.hide();
-      showPlayButton();
-      this.player.pause();
-      hideAdControls_();
-    }.bind(this);
-
-    /**
-     * Resumes content video and hides the ad container.
-     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @private
-     */
-    this.onContentResumeRequested_ = function(adEvent) {
-      this.adsActive = false;
-      this.adPlaying = false;
-      this.player.on('ended', this.localContentEndedListener);
-      if (this.currentAd == null || // hide for post-roll only playlist
-          this.currentAd.isLinear()) { // don't hide for non-linear ads
-        this.adContainerDiv.style.display = 'none';
-      }
-      this.vjsControls.show();
-      if (!this.currentAd) {
-        // Something went wrong playing the ad
-        this.player.ads.endLinearAdMode();
-      } else if (!this.contentComplete &&
-          // Don't exit linear mode after post-roll or content will auto-replay
-          this.currentAd.getAdPodInfo().getPodIndex() != -1 ) {
-        this.player.ads.endLinearAdMode();
-      }
-      // Hide controls in case of future non-linear ads. They'll be unhidden in
-      // content_pause_requested.
-      this.controlsDiv.style.display = 'none';
-      this.countdownDiv.innerHTML = '';
-    }.bind(this);
-
-    /**
-     * Records that ads have completed and calls contentAndAdsEndedListeners
-     * if content is also complete.
-     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @private
-     */
-    var onAllAdsCompleted_ = function(adEvent) {
-      this.allAdsCompleted = true;
-      this.adContainerDiv.style.display = 'none';
-      if (this.contentComplete == true) {
-        if (this.contentPlayer.src != this.contentSource) {
-          this.player.src(this.contentSource);
-        }
-        for (var index in this.contentAndAdsEndedListeners) {
-          this.contentAndAdsEndedListeners[index]();
-        }
-      }
-    }.bind(this);
-
-    /**
-     * Starts the content video when a non-linear ad is loaded.
-     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @private
-     */
-   var onAdLoaded_ = function(adEvent) {
-      if (!adEvent.getAd().isLinear()) {
-        this.player.play();
-      }
-    }.bind(this);
-
-    /**
-     * Starts the interval timer to check the current ad time when an ad starts
-     * playing.
-     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @private
-     */
-    var onAdStarted_ = function(adEvent) {
-      this.currentAd = adEvent.getAd();
-      if (this.currentAd.isLinear()) {
-        this.adTrackingTimer = setInterval(
-            onAdPlayheadTrackerInterval_, 250);
-        // Don't bump container when controls are shown
-        removeClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
-      } else {
-        // Bump container when controls are shown
-       addClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
-      }
-      // For non-linear ads that show after a linear ad.
-      this.adContainerDiv.style.display = 'block';
-      this.player.trigger('ads-ad-started');
-    }.bind(this);
-
-    /**
      * Syncs controls when an ad pauses.
      * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
      * @private
      */
     var onAdPaused_ = function(adEvent) {
-      showPauseButton();
+      showPlayButton();
       showAdControls_();
       this.adPlaying = false;
     }.bind(this);
@@ -522,20 +377,9 @@
      * @private
      */
     var onAdResumed_ = function(adEvent) {
-      showPlayButton();
+      showPauseButton();
       hideAdControls_();
       this.adPlaying = true;
-    }.bind(this);
-
-    /**
-     * Clears the interval timer for current ad time when an ad completes.
-     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
-     * @private
-     */
-    this.onAdComplete_ = function(adEvent) {
-      if (this.currentAd.isLinear()) {
-        clearInterval(this.adTrackingTimer);
-      }
     }.bind(this);
 
     /**
@@ -616,7 +460,7 @@
     /**
      * Show pause and hide play button
      */
-    var showPauseButton = function() {
+    var showPlayButton = function() {
       addClass_(this.playPauseDiv, 'ima-paused');
       removeClass_(this.playPauseDiv, 'ima-playing');
     }.bind(this);
@@ -624,7 +468,7 @@
     /**
      * Show play and hide pause button
      */
-    var showPlayButton = function() {
+    var showPauseButton = function() {
       addClass_(this.playPauseDiv, 'ima-playing');
       removeClass_(this.playPauseDiv, 'ima-paused');
     }.bind(this);
@@ -635,11 +479,11 @@
      */
     var onAdPlayPauseClick_ = function() {
       if (this.adPlaying) {
-        showPauseButton();
+        showPlayButton();
         this.adsManager.pause();
         this.adPlaying = false;
       } else {
-        showPlayButton();
+        showPauseButton();
         this.adsManager.resume();
         this.adPlaying = true;
       }
@@ -786,26 +630,414 @@
     }.bind(this);
 
     /**
-     * Seeks content to 00:00:00. This is used as an event handler for the
-     * loadedmetadata event, since seeking is not possible until that event has
-     * fired.
+     * Detects when the player is resized (for fluid support) and resizes the
+     * ads manager to match.
+     *
      * @private
      */
-    var seekContentToZero_ = function() {
-      this.player.off('loadedmetadata', seekContentToZero_);
-      this.player.currentTime(0);
+    var checkForResize_ = function() {
+      var currentWidth = this.getPlayerWidth();
+      var currentHeight = this.getPlayerHeight();
+
+      if (this.adsManager && (currentWidth != this.adsManagerDimensions.width ||
+          currentHeight != this.adsManagerDimensions.height)) {
+        this.adsManagerDimensions.width = currentWidth;
+        this.adsManagerDimensions.height = currentHeight;
+        this.adsManager.resize(currentWidth, currentHeight,
+            google.ima.ViewMode.NORMAL);
+      }
     }.bind(this);
 
     /**
-     * Seeks content to 00:00:00 and starts playback. This is used as an event
-     * handler for the loadedmetadata event, since seeking is not possible until
-     * that event has fired.
+     * Changes the flag to show or hide the ad countdown timer.
+     *
+     * @param {boolean} showCountdownIn Show or hide the countdown timer.
+     */
+    this.setShowCountdown = function(showCountdownIn) {
+      this.showCountdown = showCountdownIn;
+      this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
+    }.bind(this);
+
+     /*************************
+     ***** IMA Integration ****
+     *************************/
+
+    /**
+     * Create AdsRenderingSettings for the IMA SDK.
      * @private
      */
-    var playContentFromZero_ = function() {
-      this.player.off('loadedmetadata', playContentFromZero_);
-      this.player.currentTime(0);
-      this.player.play();
+    var createAdsRenderingSettings_ = function() {
+      this.adsRenderingSettings = new google.ima.AdsRenderingSettings();
+      this.adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete =
+          true;
+      if (this.settings['adsRenderingSettings']) {
+        for (var setting in this.settings['adsRenderingSettings']) {
+          this.adsRenderingSettings[setting] =
+              this.settings['adsRenderingSettings'][setting];
+        }
+      }
+    }.bind(this);
+
+    /**
+     * Creates and initializes the AdsLoader.
+     */
+    var setUpAdsLoader_ = function() {
+      this.adsLoader = new google.ima.AdsLoader(this.adDisplayContainer);
+
+      this.adsLoader.getSettings().setVpaidMode(
+          google.ima.ImaSdkSettings.VpaidMode.ENABLED);
+      if (this.settings.vpaidAllowed == false) {
+        this.adsLoader.getSettings().setVpaidMode(
+            google.ima.ImaSdkSettings.VpaidMode.DISABLED);
+      }
+      if (this.settings.vpaidMode) {
+        this.adsLoader.getSettings().setVpaidMode(this.settings.vpaidMode);
+      }
+
+      if (this.settings.locale) {
+        this.adsLoader.getSettings().setLocale(this.settings.locale);
+      }
+
+      if (this.settings.numRedirects) {
+        this.adsLoader.getSettings().setNumRedirects(
+            this.settings.numRedirects);
+      }
+
+      this.adsLoader.getSettings().setPlayerType('videojs-ima');
+      this.adsLoader.getSettings().setPlayerVersion(this.VERSION);
+      this.adsLoader.getSettings().setAutoPlayAdBreaks(this.autoPlayAdBreaks);
+
+      this.adsLoader.addEventListener(
+        google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
+        onAdsManagerLoaded_,
+        false);
+      this.adsLoader.addEventListener(
+        google.ima.AdErrorEvent.Type.AD_ERROR,
+        onAdsLoaderError_,
+        false);
+    }.bind(this);
+
+    /**
+     * Initializes the AdDisplayContainer. On mobile, this must be done as a
+     * result of user action.
+     */
+    this.initializeAdDisplayContainer = function() {
+      this.adDisplayContainerInitialized = true;
+      this.adDisplayContainer.initialize();
+    }.bind(this);
+
+    /**
+     * Creates the AdsRequest and request ads through the AdsLoader.
+     */
+    this.requestAds = function() {
+      var adsRequest = new google.ima.AdsRequest();
+      if (this.settings.adTagUrl) {
+        adsRequest.adTagUrl = this.settings.adTagUrl;
+      } else {
+        adsRequest.adsResponse = this.settings.adsResponse;
+      }
+      if (this.settings.forceNonLinearFullSlot) {
+        adsRequest.forceNonLinearFullSlot = true;
+      }
+
+      adsRequest.linearAdSlotWidth = this.getPlayerWidth();
+      adsRequest.linearAdSlotHeight = this.getPlayerHeight();
+      adsRequest.nonLinearAdSlotWidth =
+          this.settings.nonLinearWidth || this.getPlayerWidth();
+      adsRequest.nonLinearAdSlotHeight =
+          this.settings.nonLinearHeight || (this.getPlayerHeight() / 3);
+
+      adsRequest.setAdWillAutoPlay(this.settings.adWillAutoPlay);
+
+      this.adsLoader.requestAds(adsRequest);
+    }.bind(this);
+
+    /**
+     * Listener for the ADS_MANAGER_LOADED event. Creates the AdsManager,
+     * sets up event listeners, and triggers the 'adsready' event for
+     * videojs-ads-contrib.
+     * @private
+     */
+    var onAdsManagerLoaded_ = function(adsManagerLoadedEvent) {
+      createAdsRenderingSettings_();
+
+      this.adsManager = adsManagerLoadedEvent.getAdsManager(
+          this.contentPlayheadTracker, this.adsRenderingSettings);
+
+      this.adsManager.addEventListener(
+          google.ima.AdErrorEvent.Type.AD_ERROR,
+          onAdError_);
+      this.adsManager.addEventListener(
+          google.ima.AdEvent.Type.AD_BREAK_READY,
+          onAdBreakReady_);
+      this.adsManager.addEventListener(
+          google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
+          this.onContentPauseRequested_);
+      this.adsManager.addEventListener(
+          google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED,
+          this.onContentResumeRequested_);
+      this.adsManager.addEventListener(
+          google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
+          onAllAdsCompleted_);
+
+      this.adsManager.addEventListener(
+          google.ima.AdEvent.Type.LOADED,
+          onAdLoaded_);
+      this.adsManager.addEventListener(
+          google.ima.AdEvent.Type.STARTED,
+          onAdStarted_);
+      this.adsManager.addEventListener(
+          google.ima.AdEvent.Type.CLICK,
+          onAdPlayPauseClick_);
+      this.adsManager.addEventListener(
+          google.ima.AdEvent.Type.COMPLETE,
+          this.onAdComplete_);
+      this.adsManager.addEventListener(
+          google.ima.AdEvent.Type.SKIPPED,
+          this.onAdComplete_);
+
+      if (this.isMobile) {
+        // Show/hide controls on pause and resume (triggered by tap).
+        this.adsManager.addEventListener(
+            google.ima.AdEvent.Type.PAUSED,
+            onAdPaused_);
+        this.adsManager.addEventListener(
+            google.ima.AdEvent.Type.RESUMED,
+            onAdResumed_);
+      }
+
+      if (!this.autoPlayAdBreaks) {
+        try {
+          var initWidth = this.getPlayerWidth();
+          var initHeight = this.getPlayerHeight();
+          this.adsManagerDimensions.width = initWidth;
+          this.adsManagerDimensions.height = initHeight;
+          this.adsManager.init(
+              initWidth,
+              initHeight,
+              google.ima.ViewMode.NORMAL);
+          this.adsManager.setVolume(
+              this.player.muted() ? 0 : this.player.volume());
+          if (!this.adDisplayContainerInitialized) {
+            this.adDisplayContainer.initialize();
+          }
+        } catch (adError) {
+          onAdError_(adError);
+        }
+      }
+
+      this.player.trigger('adsready');
+    }.bind(this);
+
+    /**
+     * Start ad playback, or content video playback in the absence of a
+     * pre-roll. **NOTE**: This method only needs to be called if you provide
+     * your own readyCallback as the second parameter to player.ima(). If you
+     * only provide options and do not provide your own readyCallback,
+     * **DO NOT** call this method. If you do provide your own readyCallback,
+     * you should call this method in the last line of that callback. For more
+     * info, see this method's usage in our advanced and playlist examples.
+     */
+    this.startFromReadyCallback = function() {
+      if (this.autoPlayAdBreaks) {
+        try {
+          var initWidth = this.getPlayerWidth();
+          var initHeight = this.getPlayerHeight();
+          this.adsManagerDimensions.width = initWidth;
+          this.adsManagerDimensions.height = initHeight;
+          this.adsManager.init(
+              initWidth,
+              initHeight,
+              google.ima.ViewMode.NORMAL);
+          this.adsManager.setVolume(
+              this.player.muted() ? 0 : this.player.volume());
+          if (!this.adDisplayContainerInitialized) {
+            this.adDisplayContainer.initialize();
+          }
+          this.adsManager.start();
+        } catch (adError) {
+          onAdError_(adError);
+        }
+      }
+    }.bind(this);
+
+    /**
+     * Listener for errors fired by the AdsLoader.
+     * @param {google.ima.AdErrorEvent} event The error event thrown by the
+     *     AdsLoader. See
+     *     https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdError.Type
+     * @private
+     */
+    var onAdsLoaderError_ = function(event) {
+      window.console.log('AdsLoader error: ' + event.getError());
+      this.adContainerDiv.style.display = 'none';
+      if (this.adsManager) {
+        this.adsManager.destroy();
+      }
+      this.player.trigger({type: 'adserror', data: {
+        AdError: event.getError(),
+        AdErrorEvent: event
+      }});
+    }.bind(this);
+
+    /**
+     * Listener for errors thrown by the AdsManager.
+     * @param {google.ima.AdErrorEvent} adErrorEvent The error event thrown by
+     *     the AdsManager.
+     * @private
+     */
+    var onAdError_ = function(adErrorEvent) {
+      var errorMessage =
+          adErrorEvent.getError !== undefined ?
+              adErrorEvent.getError() : adErrorEvent.stack;
+      window.console.log('Ad error: ' + errorMessage);
+      this.vjsControls.show();
+      this.adsManager.destroy();
+      this.adContainerDiv.style.display = 'none';
+      this.player.trigger({ type: 'adserror', data: {
+        AdError: errorMessage,
+        AdErrorEvent: adErrorEvent
+      }});
+    }.bind(this);
+
+    /**
+     * Listener for AD_BREAK_READY. Passes event on to publisher's listener.
+     * @param {google.ima.AdEvent} adEvent AdEvent thrown by the AdsManager.
+     * @private
+     */
+    var onAdBreakReady_ = function(adEvent) {
+      this.adBreakReadyListener(adEvent);
+    }.bind(this);
+
+    /**
+     * Called by publishers in manual ad break playback mode to start an ad
+     * break.
+     */
+    this.playAdBreak = function() {
+      if (!this.autoPlayAdBreaks) {
+        this.adsManager.start();
+      }
+    }.bind(this);
+
+    /**
+     * Pauses the content video and displays the ad container so ads can play.
+     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+     * @private
+     */
+    this.onContentPauseRequested_ = function(adEvent) {
+      this.adsActive = true;
+      this.adPlaying = true;
+      this.contentSource = this.player.currentSrc();
+      this.player.off('ended', this.localContentEndedListener);
+      if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
+        // Skip this call for post-roll ads
+        this.player.ads.startLinearAdMode();
+      }
+      this.adContainerDiv.style.display = 'block';
+
+      var contentType = adEvent.getAd().getContentType();
+      if ((contentType === 'application/javascript') &&
+          !this.settings.showControlsForJSAds) {
+        this.controlsDiv.style.display = 'none';
+      } else {
+        this.controlsDiv.style.display = 'block';
+      }
+
+      this.vjsControls.hide();
+      showPauseButton();
+      this.player.pause();
+      hideAdControls_();
+    }.bind(this);
+
+    /**
+     * Resumes content video and hides the ad container.
+     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+     * @private
+     */
+    this.onContentResumeRequested_ = function(adEvent) {
+      this.adsActive = false;
+      this.adPlaying = false;
+      this.player.on('ended', this.localContentEndedListener);
+      if (this.currentAd == null || // hide for post-roll only playlist
+          this.currentAd.isLinear()) { // don't hide for non-linear ads
+        this.adContainerDiv.style.display = 'none';
+      }
+      this.vjsControls.show();
+      if (!this.currentAd) {
+        // Something went wrong playing the ad
+        this.player.ads.endLinearAdMode();
+      } else if (!this.contentComplete &&
+          // Don't exit linear mode after post-roll or content will auto-replay
+          this.currentAd.getAdPodInfo().getPodIndex() != -1 ) {
+        this.player.ads.endLinearAdMode();
+      }
+      // Hide controls in case of future non-linear ads. They'll be unhidden in
+      // content_pause_requested.
+      this.controlsDiv.style.display = 'none';
+      this.countdownDiv.innerHTML = '';
+    }.bind(this);
+
+    /**
+     * Records that ads have completed and calls contentAndAdsEndedListeners
+     * if content is also complete.
+     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+     * @private
+     */
+    var onAllAdsCompleted_ = function(adEvent) {
+      this.allAdsCompleted = true;
+      this.adContainerDiv.style.display = 'none';
+      if (this.contentComplete == true) {
+        if (this.contentPlayer.src != this.contentSource) {
+          this.player.src(this.contentSource);
+        }
+        for (var index in this.contentAndAdsEndedListeners) {
+          this.contentAndAdsEndedListeners[index]();
+        }
+      }
+    }.bind(this);
+
+    /**
+     * Starts the content video when a non-linear ad is loaded.
+     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+     * @private
+     */
+    var onAdLoaded_ = function(adEvent) {
+      if (!adEvent.getAd().isLinear()) {
+        this.player.play();
+      }
+    }.bind(this);
+
+    /**
+     * Starts the interval timer to check the current ad time when an ad starts
+     * playing.
+     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+     * @private
+     */
+    var onAdStarted_ = function(adEvent) {
+      this.currentAd = adEvent.getAd();
+      if (this.currentAd.isLinear()) {
+        this.adTrackingTimer = setInterval(
+            onAdPlayheadTrackerInterval_, 250);
+        // Don't bump container when controls are shown
+        removeClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
+      } else {
+        // Bump container when controls are shown
+       addClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
+      }
+      // For non-linear ads that show after a linear ad.
+      this.adContainerDiv.style.display = 'block';
+      this.player.trigger('ads-ad-started');
+    }.bind(this);
+
+    /**
+     * Clears the interval timer for current ad time when an ad completes.
+     * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+     * @private
+     */
+    this.onAdComplete_ = function(adEvent) {
+      if (this.currentAd.isLinear()) {
+        clearInterval(this.adTrackingTimer);
+      }
     }.bind(this);
 
     /**
@@ -845,7 +1077,8 @@
      * Ads an EventListener to the AdsManager. For a list of available events,
      * see
      * https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdEvent.Type
-     * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to listen.
+     * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to
+     *     listen.
      * @param {function} callback The method to call when the event is fired.
      */
     this.addEventListener = function(event, callback) {
@@ -860,25 +1093,6 @@
      */
     this.getAdsManager = function() {
       return this.adsManager;
-    }.bind(this);
-
-    /**
-     * DEPRECATED: Use setContentWithAdTag.
-     * Sets the content of the video player. You should use this method instead
-     * of setting the content src directly to ensure the proper ad tag is
-     * requested when the video content is loaded.
-     * @param {?string} contentSrc The URI for the content to be played. Leave
-     *     blank to use the existing content.
-     * @param {?string} adTag The ad tag to be requested when the content loads.
-     *     Leave blank to use the existing ad tag.
-     * @param {?boolean} playOnLoad True to play the content once it has loaded,
-     *     false to only load the content but not start playback.
-     */
-    this.setContent = function(contentSrc, adTag, playOnLoad) {
-      window.console.log(
-          'WARNING: player.ima.setContent is deprecated. Use ' +
-              'player.ima.setContentWithAdTag instead.');
-      this.setContentWithAdTag(contentSrc, adTag, playOnLoad);
     }.bind(this);
 
     /**
@@ -909,17 +1123,19 @@
      * @param {?boolean} playOnLoad True to play the content once it has loaded,
      *     false to only load the content but not start playback.
      */
-    this.setContentWithAdsResponse = function(contentSrc, adsResponse, playOnLoad) {
+    this.setContentWithAdsResponse =
+        function(contentSrc, adsResponse, playOnLoad) {
       resetIMA_();
-      this.settings.adsResponse = adsResponse ? adsResponse : this.settings.adsResponse;
+      this.settings.adsResponse =
+          adsResponse ? adsResponse : this.settings.adsResponse;
       changeSource_(contentSrc, playOnLoad);
     }.bind(this);
 
     /**
      * Changes the ad tag. You will need to call requestAds after this method
      * for the new ads to be requested.
-     * @param {?string} adTag The ad tag to be requested the next time requestAds
-     *     is called.
+     * @param {?string} adTag The ad tag to be requested the next time
+     *     requestAds is called.
      */
     this.changeAdTag = function(adTag) {
       resetIMA_();
@@ -951,28 +1167,9 @@
     }.bind(this);
 
     /**
-     * Adds a listener for the 'ended' event of the video player. This should be
-     * used instead of setting an 'ended' listener directly to ensure that the
-     * ima can do proper cleanup of the SDK before other event listeners
-     * are called.
-     * @param {function} listener The listener to be called when content completes.
-     */
-    this.addContentEndedListener = function(listener) {
-      this.contentEndedListeners.push(listener);
-    }.bind(this);
-
-    /**
-     * Adds a listener that will be called when content and all ads have
-     * finished playing.
-     * @param {function} listener The listener to be called when content and ads complete.
-     */
-    this.addContentAndAdsEndedListener = function(listener) {
-      this.contentAndAdsEndedListeners.push(listener);
-    }.bind(this);
-
-    /**
      * Sets the listener to be called to trigger manual ad break playback.
-     * @param {function} listener The listener to be called to trigger manual ad break playback.
+     * @param {function} listener The listener to be called to trigger manual ad
+     *     break playback.
      */
     this.setAdBreakReadyListener = function(listener) {
       this.adBreakReadyListener = listener;
@@ -983,7 +1180,7 @@
      */
     this.pauseAd = function() {
       if (this.adsActive && this.adPlaying) {
-        showPauseButton();
+        showPlayButton();
         this.adsManager.pause();
         this.adPlaying = false;
       }
@@ -994,23 +1191,10 @@
      */
     this.resumeAd = function() {
       if (this.adsActive && !this.adPlaying) {
-        showPlayButton();
+        showPauseButton();
         this.adsManager.resume();
         this.adPlaying = true;
       }
-    }.bind(this);
-
-    /**
-     * Set up intervals to check for seeking and update current video time.
-     * @private
-     */
-    var setUpPlayerIntervals_ = function() {
-      this.updateTimeIntervalHandle =
-          setInterval(updateCurrentTime_, this.seekCheckInterval);
-      this.seekCheckIntervalHandle =
-          setInterval(checkForSeeking_, this.seekCheckInterval);
-      this.resizeCheckIntervalHandle =
-          setInterval(checkForResize_, this.resizeCheckInterval);
     }.bind(this);
 
     /**
@@ -1035,7 +1219,8 @@
      */
     var checkForSeeking_ = function() {
       var tempCurrentTime = this.player.currentTime();
-      var diff = (tempCurrentTime - this.contentPlayheadTracker.previousTime) * 1000;
+      var diff =
+          (tempCurrentTime - this.contentPlayheadTracker.previousTime) * 1000;
       if (Math.abs(diff) > this.seekCheckInterval + this.seekThreshold) {
         this.contentPlayheadTracker.seeking = true;
       } else {
@@ -1045,31 +1230,27 @@
     }.bind(this);
 
     /**
-     * Detects when the player is resized (for fluid support) and resizes the
-     * ads manager to match.
-     *
-     * @private
+     * Local content ended listener for contentComplete.
      */
-    var checkForResize_ = function() {
-      var currentWidth = this.getPlayerWidth();
-      var currentHeight = this.getPlayerHeight();
-
-      if (this.adsManager && (currentWidth != this.adsManagerDimensions.width ||
-          currentHeight != this.adsManagerDimensions.height)) {
-        this.adsManagerDimensions.width = currentWidth;
-        this.adsManagerDimensions.height = currentHeight;
-        this.adsManager.resize(currentWidth, currentHeight, google.ima.ViewMode.NORMAL);
+    this.localContentEndedListener = function() {
+      if (this.adsLoader && !this.contentComplete) {
+        this.adsLoader.contentComplete();
+        this.contentComplete = true;
       }
-    }.bind(this);
-
-    /**
-     * Changes the flag to show or hide the ad countdown timer.
-     *
-     * @param {boolean} showCountdownIn Show or hide the countdown timer.
-     */
-    this.setShowCountdown = function(showCountdownIn) {
-      this.showCountdown = showCountdownIn;
-      this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
+      for (var index in this.contentEndedListeners) {
+        this.contentEndedListeners[index]();
+      }
+      if (this.allAdsCompleted) {
+        for (var index in this.contentAndAdsEndedListeners) {
+          this.contentAndAdsEndedListeners[index]();
+        }
+      }
+      clearInterval(this.updateTimeIntervalHandle);
+      clearInterval(this.seekCheckIntervalHandle);
+      clearInterval(this.resizeCheckIntervalHandle);
+      if(this.player.el()) {
+        this.player.one('play', setUpPlayerIntervals_);
+      }
     }.bind(this);
 
     /**
@@ -1233,7 +1414,7 @@
     /**
      * True if ALL_ADS_COMPLETED has fired, false until then.
      */
-     this.allAdsCompleted = false;
+    this.allAdsCompleted = false;
 
     /**
      * Handle to interval that repeatedly updates current time.
@@ -1334,88 +1515,9 @@
      */
     this.contentSource = '';
 
-    /**
-     * Local content ended listener for contentComplete.
-     */
-    this.localContentEndedListener = function() {
-      if (this.adsLoader && !this.contentComplete) {
-        this.adsLoader.contentComplete();
-        this.contentComplete = true;
-      }
-      for (var index in this.contentEndedListeners) {
-        this.contentEndedListeners[index]();
-      }
-      if (this.allAdsCompleted) {
-        for (var index in this.contentAndAdsEndedListeners) {
-          this.contentAndAdsEndedListeners[index]();
-        }
-      }
-      clearInterval(this.updateTimeIntervalHandle);
-      clearInterval(this.seekCheckIntervalHandle);
-      clearInterval(this.resizeCheckIntervalHandle);
-      if(this.player.el()) {
-        this.player.one('play', setUpPlayerIntervals_);
-      }
-    }.bind(this);
-
-    this.playerDisposedListener = function(){
-      this.contentEndedListeners = [];
-      this.contentAndAdsEndedListeners = [];
-      this.contentComplete = true;
-      this.player.off('ended', this.localContentEndedListener);
-
-      // Bug fix: https://github.com/googleads/videojs-ima/issues/306
-      if (this.player.ads.adTimeoutTimeout) {
-        clearTimeout(this.player.ads.adTimeoutTimeout);
-      }
-
-      var intervalsToClear = [this.updateTimeIntervalHandle, this.seekCheckIntervalHandle,
-        this.adTrackingTimer, this.resizeCheckIntervalHandle];
-      for (var index in intervalsToClear) {
-        var interval = intervalsToClear[index];
-        if (interval) {
-          clearInterval(interval);
-        }
-      }
-      if (this.adsManager) {
-        this.adsManager.destroy();
-        this.adsManager = null;
-      }
-    }.bind(this);
-
-    this.settings = extend({}, ima_defaults, options || {});
-
-    // Currently this isn't used but I can see it being needed in the future, so
-    // to avoid implementation problems with later updates I'm requiring it.
-    if (!this.settings['id']) {
-      window.console.log('Error: must provide id of video.js div');
-      return;
-    }
+    initWithSettings_();
 
     this.controlPrefix = (this.settings.id + '_') || '';
-
-    this.contentPlayer = document.getElementById(this.settings['id'] + '_html5_api');
-
-    // Detect inline options
-    if(this.contentPlayer.hasAttribute('autoplay')){
-      this.settings['adWillAutoPlay'] = this.settings['adWillAutoPlay'] || true;
-    }
-
-    // Default showing countdown timer to true.
-    this.showCountdown = true;
-    if (this.settings['showCountdown'] == false) {
-      this.showCountdown = false;
-    }
-
-    this.autoPlayAdBreaks = true;
-    if (this.settings['autoPlayAdBreaks'] == false) {
-      this.autoPlayAdBreaks = false;
-    }
-
-    player.one('play', setUpPlayerIntervals_);
-
-    player.on('ended', this.localContentEndedListener);
-    player.on('dispose', this.playerDisposedListener);
 
     var contrib_ads_defaults = {
       debug: this.settings.debug,
@@ -1426,62 +1528,13 @@
     var ads_plugin_settings =
         extend({}, contrib_ads_defaults, options['contribAdsSettings'] || {});
 
-    player.ads(ads_plugin_settings);
-
-    this.adsRenderingSettings = new google.ima.AdsRenderingSettings();
-    this.adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
-    if (this.settings['adsRenderingSettings']) {
-      for (var setting in this.settings['adsRenderingSettings']) {
-        this.adsRenderingSettings[setting] =
-            this.settings['adsRenderingSettings'][setting];
-      }
-    }
-
-    if (this.settings['locale']) {
-      google.ima.settings.setLocale(this.settings['locale']);
-    }
-
-    if (this.settings['disableFlashAds']) {
-      google.ima.settings.setDisableFlashAds(this.settings['disableFlashAds']);
-    }
-
-    if (this.settings['disableCustomPlaybackForIOS10Plus']) {
-      google.ima.settings.setDisableCustomPlaybackForIOS10Plus(this.settings['disableCustomPlaybackForIOS10Plus']);
-    }
-
     createAdContainer_();
-    this.adsLoader = new google.ima.AdsLoader(this.adDisplayContainer);
+    setUpAdsLoader_();
 
-    this.adsLoader.getSettings().setVpaidMode(
-        google.ima.ImaSdkSettings.VpaidMode.ENABLED);
-    if (this.settings.vpaidAllowed == false) {
-      this.adsLoader.getSettings().setVpaidMode(
-          google.ima.ImaSdkSettings.VpaidMode.DISABLED);
-    }
-    if (this.settings.vpaidMode) {
-      this.adsLoader.getSettings().setVpaidMode(this.settings.vpaidMode);
-    }
+    player.one('play', setUpPlayerIntervals_);
 
-    if (this.settings.locale) {
-      this.adsLoader.getSettings().setLocale(this.settings.locale);
-    }
-
-    if (this.settings.numRedirects) {
-      this.adsLoader.getSettings().setNumRedirects(this.settings.numRedirects);
-    }
-
-    this.adsLoader.getSettings().setPlayerType('videojs-ima');
-    this.adsLoader.getSettings().setPlayerVersion(this.VERSION);
-    this.adsLoader.getSettings().setAutoPlayAdBreaks(this.autoPlayAdBreaks);
-
-    this.adsLoader.addEventListener(
-      google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
-      onAdsManagerLoaded_,
-      false);
-    this.adsLoader.addEventListener(
-      google.ima.AdErrorEvent.Type.AD_ERROR,
-      onAdsLoaderError_,
-      false);
+    player.on('ended', this.localContentEndedListener);
+    player.on('dispose', this.playerDisposedListener);
 
     if (!readyCallback) {
       readyCallback = this.startFromReadyCallback;
@@ -1492,6 +1545,12 @@
       player.on('fullscreenchange', onFullscreenChange_);
       player.on('volumechange', onVolumeChange_);
     });
+
+    player.ads(ads_plugin_settings);
+
+    if (this.settings.adTagUrl || this.settings.adsResponse) {
+      this.requestAds();
+    }
   };
 
   // Cross-compatibility for Video.js 5 and 6.

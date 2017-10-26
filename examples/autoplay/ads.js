@@ -22,7 +22,8 @@ var options = {
       'iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&' +
       'impl=s&gdfp_req=1&env=vp&output=xml_vmap1&unviewed_position_start=1&' +
       'cust_params=sample_ar%3Dpremidpostpod%26deployment%3Dgmf-js&cmsid=496&' +
-      'vid=short_onecue&correlator='
+      'vid=short_onecue&correlator=',
+  contribAdsSettings: {debug: true}
 };
 
 player.ima(options);
@@ -41,5 +42,4 @@ if ((navigator.userAgent.match(/iPad/i) ||
 // by initializing the ads once the page has loaded this script, rather than waiting for a page load
 player.one('ready', function() {
   player.ima.initializeAdDisplayContainer();
-  player.ima.requestAds();
 });

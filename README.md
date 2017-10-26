@@ -30,7 +30,7 @@ In your index.html file, create a new video.js player and load a (currently empt
   <head>
     <!-- Load dependent stylesheets. -->
     <link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
-    <link rel="stylesheet" href="path/to/videojs.ads.css" />
+    <link rel="stylesheet" href="path/to/videojs-contrib-ads.css" />
     <link rel="stylesheet" href="path/to/videojs.ima.css" />
   </head>
 
@@ -42,7 +42,7 @@ In your index.html file, create a new video.js player and load a (currently empt
     <!-- Load dependent scripts -->
     <script src="//vjs.zencdn.net/4.5/video.js"></script>
     <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-    <script src="/path/to/videojs.ads.js"></script>
+    <script src="/path/to/videojs-contrib-ads.js"></script>
     <script src="/path/to/videojs.ima.js"></script>
     <script src="player.js"></script>
   </body>
