@@ -464,7 +464,7 @@
       this.allAdsCompleted = true;
       this.adContainerDiv.style.display = 'none';
       if (this.contentComplete == true) {
-        if (this.contentPlayer.src != this.contentSource) {          
+        if (this.contentPlayer.src != this.contentSource) {
           // Avoid setted autoplay after the post-roll
           this.player.autoplay(false);
           this.player.src({
@@ -1406,7 +1406,8 @@
 
     this.controlPrefix = (this.settings.id + '_') || '';
 
-    this.contentPlayer = document.getElementById(this.settings['id'] + '_html5_api');
+    // Get contentPlayer (tech agnostic)
+    this.contentPlayer = document.getElementById(this.settings.id).getElementsByClassName('vjs-tech')[0];
 
     // Detect inline options
     if(this.contentPlayer.hasAttribute('autoplay')){
