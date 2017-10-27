@@ -405,7 +405,6 @@
       this.adsActive = true;
       this.adPlaying = true;
       this.contentSource = this.player.currentSrc();
-      this.contentSourceType = this.player.currentType();
       this.player.off('ended', this.localContentEndedListener);
       if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
         // Skip this call for post-roll ads
@@ -465,12 +464,16 @@
       this.adContainerDiv.style.display = 'none';
       if (this.contentComplete == true) {
         if (this.contentPlayer.src != this.contentSource) {
+<<<<<<< HEAD
           // Avoid setted autoplay after the post-roll
           this.player.autoplay(false);
           this.player.src({
             src: this.contentSource,
             type: this.contentSourceType
           });
+=======
+          this.player.src(this.contentSource);
+>>>>>>> parent of 1232b41... Merge pull request #433 from valse/master
         }
         for (var index in this.contentAndAdsEndedListeners) {
           this.contentAndAdsEndedListeners[index]();
@@ -1339,12 +1342,6 @@
      * post-roll on iOS.
      */
     this.contentSource = '';
-
-    /**
-     * Stores the content source type so we can re-populate it manually after a
-     * post-roll.
-     */
-    this.contentSourceType = '';
 
     /**
      * Local content ended listener for contentComplete.
