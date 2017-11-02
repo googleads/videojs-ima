@@ -15,7 +15,6 @@
  */
 
 var Ads = function() {
-
   this.player = videojs('content_video');
 
   // Remove controls from the player on iPad to stop native controls from stealing
@@ -35,7 +34,7 @@ var Ads = function() {
       navigator.userAgent.match(/Android/i)) {
     startEvent = 'touchend';
   }
-  this.player.one(startEvent, this.bind(this, this.initFromStart));
+  this.player.one(startEvent, this.initFromStart.bind(this));
 
   this.options = {
     id: 'content_video',
@@ -44,7 +43,6 @@ var Ads = function() {
         'impl=s&gdfp_req=1&env=vp&output=xml_vmap1&unviewed_position_start=1&' +
         'cust_params=sample_ar%3Dpremidpostpod%26deployment%3Dgmf-js&' +
         'cmsid=496&vid=short_onecue&correlator=',
-    debug: true,
     adsManagerLoadedCallback: this.adsManagerLoadedCallback.bind(this)
   };
 
@@ -52,18 +50,6 @@ var Ads = function() {
                    'http://rmcdn.2mdn.net/Demo/html5/output.mp4'];
   this.posters = ['../posters/android.png', '../posters/dfp.png'];
   this.currentContent = 0;
-
-  this.events = [google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
-                google.ima.AdEvent.Type.CLICK,
-                google.ima.AdEvent.Type.COMPLETE,
-                google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
-                google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED,
-                google.ima.AdEvent.Type.FIRST_QUARTILE,
-                google.ima.AdEvent.Type.LOADED,
-                google.ima.AdEvent.Type.MIDPOINT,
-                google.ima.AdEvent.Type.PAUSED,
-                google.ima.AdEvent.Type.STARTED,
-                google.ima.AdEvent.Type.THIRD_QUARTILE];
 
   this.console = document.getElementById('ima-sample-console');
   this.linearAdPlaying = false;
@@ -77,7 +63,7 @@ var Ads = function() {
       if (this.playlistItems[index].tagName == 'DIV') {
         this.playlistItems[index].addEventListener(
             'click',
-            this.bind(this, this.onPlaylistItemClick),
+            this.onPlaylistItemClick.bind(this),
             false);
       }
     }
@@ -98,10 +84,21 @@ Ads.prototype.init = function() {
 };
 
 Ads.prototype.adsManagerLoadedCallback = function() {
-  for (var index = 0; index < this.events.length; index++) {
+  var events = [google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
+                google.ima.AdEvent.Type.CLICK,
+                google.ima.AdEvent.Type.COMPLETE,
+                google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
+                google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED,
+                google.ima.AdEvent.Type.FIRST_QUARTILE,
+                google.ima.AdEvent.Type.LOADED,
+                google.ima.AdEvent.Type.MIDPOINT,
+                google.ima.AdEvent.Type.PAUSED,
+                google.ima.AdEvent.Type.STARTED,
+                google.ima.AdEvent.Type.THIRD_QUARTILE];
+  for (var index = 0; index < events.length; index++) {
     this.player.ima.addEventListener(
-        this.events[index],
-        this.bind(this, this.onAdEvent));
+        events[index],
+        this.onAdEvent.bind(this));
   }
 
   // When the page first loads, don't autoplay. After that, when the user
@@ -112,9 +109,9 @@ Ads.prototype.adsManagerLoadedCallback = function() {
 };
 
 Ads.prototype.onAdEvent = function(event) {
-  if (event.type == 'contentPauseRequested') {
+  if (event.type == google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED) {
     this.linearAdPlaying = true;
-  } else if (event.type == 'contentResumeRequested') {
+  } else if (event.type == google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED) {
     this.linearAdPlaying = false;
   } else {
     this.console.innerHTML =
@@ -123,10 +120,12 @@ Ads.prototype.onAdEvent = function(event) {
 };
 
 Ads.prototype.onPlaylistItemClick = function(event) {
-  if (!this.initialized) {
-    this.init();
-  }
   if (!this.linearAdPlaying) {
+    if (!this.initialized) {
+      // Handles the case where the user loads the page and clicks a playlist item
+      // immediately, never clicks the play button on the player.
+      this.init();
+    }
     this.player.ima.setContentWithAdTag(
         this.contents[event.target.id],
         null,
@@ -135,10 +134,4 @@ Ads.prototype.onPlaylistItemClick = function(event) {
     this.player.ima.requestAds();
   }
   this.playlistItemClicked = true;
-};
-
-Ads.prototype.bind = function(thisObj, fn) {
-  return function() {
-    fn.apply(thisObj, arguments);
-  };
 };

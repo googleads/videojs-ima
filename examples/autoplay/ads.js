@@ -22,8 +22,7 @@ var options = {
       'iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&' +
       'impl=s&gdfp_req=1&env=vp&output=xml_vmap1&unviewed_position_start=1&' +
       'cust_params=sample_ar%3Dpremidpostpod%26deployment%3Dgmf-js&cmsid=496&' +
-      'vid=short_onecue&correlator=',
-  contribAdsSettings: {debug: true}
+      'vid=short_onecue&correlator='
 };
 
 player.ima(options);
@@ -36,10 +35,3 @@ if ((navigator.userAgent.match(/iPad/i) ||
     contentPlayer.hasAttribute('controls')) {
   contentPlayer.removeAttribute('controls');
 }
-
-// Initialize the ad container when the page has loaded
-// NOTE: while doing this outside an event listener is not recommended, you can avoid the flicker bug
-// by initializing the ads once the page has loaded this script, rather than waiting for a page load
-player.one('ready', function() {
-  player.ima.initializeAdDisplayContainer();
-});
