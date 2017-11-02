@@ -35,11 +35,3 @@ if ((navigator.userAgent.match(/iPad/i) ||
     contentPlayer.hasAttribute('controls')) {
   contentPlayer.removeAttribute('controls');
 }
-
-// Initialize the ad container when the page has loaded
-// NOTE: while doing this outside an event listener is not recommended, you can avoid the flicker bug
-// by initializing the ads once the page has loaded this script, rather than waiting for a page load
-player.one('ready', function() {
-  player.ima.initializeAdDisplayContainer();
-  player.ima.requestAds();
-});

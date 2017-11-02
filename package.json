@@ -10,20 +10,21 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test": "python -m SimpleHTTPServer"
+    "start": "http-server"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/googleads/videojs-ima"
   },
   "dependencies": {
-    "videojs-contrib-ads": "~5.0.3"
+    "videojs-contrib-ads": "~5.1.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
+    "http-server": "0.10.0",
     "videojs-doc-generator": "0.0.1"
   },
   "peerDependencies": {
-    "video.js": ">=5.3.0"
+    "video.js": ">=5.19.2"
   }
 }
