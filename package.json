@@ -10,7 +10,9 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "start": "http-server"
+    "start": "http-server",
+    "webdriver": "node test/webdriver/*.js",
+    "test": "npm-run-all -p -r start webdriver"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "http-server": "0.10.0",
+    "npm-run-all": "^4.1.1",
     "videojs-doc-generator": "0.0.1"
   },
   "peerDependencies": {
