@@ -22,6 +22,7 @@
     "videojs-contrib-ads": "~5.1.0"
   },
   "devDependencies": {
+    "chromedriver": "^2.33.2",
     "grunt": "^0.4.5",
     "http-server": "0.10.0",
     "npm-run-all": "^4.1.1",
