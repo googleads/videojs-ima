@@ -2,8 +2,13 @@ var webdriver = require('selenium-webdriver'),
     until = webdriver.until;
     By = webdriver.By;
 
+const chromedriver = require('chromedriver');
+const chromeCapabilities = webdriver.Capabilities.chrome();
+chromeCapabilities.set('chromeOptions', {args: ['--headless']});
+
 var driver = new webdriver.Builder()
     .forBrowser('chrome')
+    .withCapabilities(chromeCapabilities)
     .build();
 
 driver.get('http://localhost:8080/test/webdriver/');
