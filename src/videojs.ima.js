@@ -171,7 +171,8 @@
       }
 
       this.contentPlayer =
-          document.getElementById(this.settings['id'] + '_html5_api');
+          document.getElementById(this.settings.id).getElementsByClassName(
+              'vjs-tech')[0];
 
       // Detect inline options
       if(this.contentPlayer.hasAttribute('autoplay')){
@@ -975,6 +976,7 @@
           this.currentAd.getAdPodInfo().getPodIndex() != -1 ) {
         this.player.ads.endLinearAdMode();
       }
+        this.player.ads.endLinearAdMode();
       // Hide controls in case of future non-linear ads. They'll be unhidden in
       // content_pause_requested.
       this.controlsDiv.style.display = 'none';

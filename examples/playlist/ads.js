@@ -43,7 +43,8 @@ var Ads = function() {
         'impl=s&gdfp_req=1&env=vp&output=xml_vmap1&unviewed_position_start=1&' +
         'cust_params=sample_ar%3Dpremidpostpod%26deployment%3Dgmf-js&' +
         'cmsid=496&vid=short_onecue&correlator=',
-    adsManagerLoadedCallback: this.adsManagerLoadedCallback.bind(this)
+    adsManagerLoadedCallback: this.adsManagerLoadedCallback.bind(this),
+    debug: true
   };
 
   this.contents = ['http://rmcdn.2mdn.net/Demo/vast_inspector/android.mp4',
