@@ -13,16 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+var onAdErrorEvent = function(event) {
+  console.log(event);
+};
+
+var adTags = [
+  'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dskippablelinear&correlator=',
+  'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator=',
+  'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dredirecterror&nofb=1&correlator='
+];
+
+var searchParams = new URLSearchParams(location.search);
+var adTagIdx = parseInt(searchParams.get('ad'));
+
+if (isNaN(adTagIdx) || adTags.length <= adTagIdx) {
+  adTagIdx = 0;
+}
 
 var player = videojs('content_video');
 
 var options = {
   id: 'content_video',
-  adTagUrl: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x480&' +
-      'iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&' +
-      'impl=s&gdfp_req=1&env=vp&output=xml_vmap1&unviewed_position_start=1&' +
-      'cust_params=sample_ar%3Dpremidpostpod%26deployment%3Dgmf-js&cmsid=496&' +
-      'vid=short_onecue&correlator='
+  adTagUrl: adTags[adTagIdx]
 };
 
 player.ima(options);
@@ -44,6 +56,13 @@ if (navigator.userAgent.match(/iPhone/i) ||
     navigator.userAgent.match(/Android/i)) {
   startEvent = 'touchend';
 }
+
+player.on("adserror", function(event){
+  var log = document.getElementById('log');
+  log.innerHTML = event.data.AdError;
+});
+
 player.one(startEvent, function() {
     player.ima.initializeAdDisplayContainer();
 });
+
