@@ -405,6 +405,7 @@
       this.adsActive = true;
       this.adPlaying = true;
       this.contentSource = this.player.currentSrc();
+      this.contentSourceType = this.player.currentType();
       this.player.off('ended', this.localContentEndedListener);
       if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
         // Skip this call for post-roll ads
@@ -464,7 +465,12 @@
       this.adContainerDiv.style.display = 'none';
       if (this.contentComplete == true) {
         if (this.contentPlayer.src != this.contentSource) {
-          this.player.src(this.contentSource);
+          // Avoid setted autoplay after the post-roll
+          this.player.autoplay(false);
+          this.player.src({
+            src: this.contentSource,
+            type: this.contentSourceType
+          });
         }
         for (var index in this.contentAndAdsEndedListeners) {
           this.contentAndAdsEndedListeners[index]();
@@ -1335,6 +1341,12 @@
     this.contentSource = '';
 
     /**
+     * Stores the content source type so we can re-populate it manually after a
+     * post-roll.
+     */
+    this.contentSourceType = '';
+
+    /**
      * Local content ended listener for contentComplete.
      */
     this.localContentEndedListener = function() {
@@ -1394,7 +1406,8 @@
 
     this.controlPrefix = (this.settings.id + '_') || '';
 
-    this.contentPlayer = document.getElementById(this.settings['id'] + '_html5_api');
+    // Get contentPlayer (tech agnostic)
+    this.contentPlayer = document.getElementById(this.settings.id).getElementsByClassName('vjs-tech')[0];
 
     // Detect inline options
     if(this.contentPlayer.hasAttribute('autoplay')){
