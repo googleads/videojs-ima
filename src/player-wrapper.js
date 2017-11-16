@@ -184,3 +184,77 @@ PlayerWrapper.prototype.toggleFullscreen = function() {
     this.vjsPlayer.requestFullscreen();
   }
 };
+
+
+/**
+ * Returns the content playhead tracker.
+ */
+PlayerWrapper.prototype.getContentPlayheadTracker = function() {
+  return this.contentPlayheadTracker;
+};
+
+
+/**
+ * Handles ad errors.
+ *
+ * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
+ */
+PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
+  this.vjsControls.show();
+  var errorMessage =
+      adErrorEvent.getError !== undefined ?
+          adErrorEvent.getError() : adErrorEvent.stack;
+  this.player.trigger({ type: 'adserror', data: {
+    AdError: errorMessage,
+    AdErrorEvent: adErrorEvent
+  }});
+};
+
+/**
+ * Handles ad break starting.
+ *
+ * @param {Object} adEvent The event fired by the IMA SDK.
+ */
+PlayerWrapper.prototype.onAdBreakStart = function(adEvent) {
+  this.contentSource = this.vjsPlayer.currentSrc();
+  this.player.off('ended', this.localContentEndedListener);
+  if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
+    // Skip this call for post-roll ads
+    this.player.ads.startLinearAdMode();
+  }
+  this.vjsControls.hide();
+  this.vjsPlayer.pause();
+}
+
+/**
+ * Handles ad break ending.
+ */
+PlayerWrapper.prototype.onAdBreakEnd = function() {
+  this.player.on('ended', this.localContentEndedListener);
+  var currentAd = this.controller.getCurrentAd();
+  if (!currentAd) {
+    // Something went wrong playing the ad
+    this.vjsPlayer.ads.endLinearAdMode();
+  } else if (!this.contentComplete &&
+      // Don't exit linear mode after post-roll or content will auto-replay
+      currentAd.getAdPodInfo().getPodIndex() != -1 ) {
+    this.player.ads.endLinearAdMode();
+  }
+  // TODO: See if this works without the decision tree above.
+  //this.player.ads.endLinearAdMode();
+}
+
+
+/**
+ * Handles when all ads have finished playing.
+ */
+PlayerWrapper.prototype.onAllAdsCompleted = function() {
+  if (this.contentComplete == true) {
+    if (this.h5Player.src != this.contentSource) {
+      this.vjsPlayer.src(this.contentSource);
+    }
+    for (var index in this.contentAndAdsEndedListeners) {
+      this.contentAndAdsEndedListeners[index]();
+    }
+  }
+}

@@ -124,6 +124,14 @@ Controller.prototype.getContentPlayer = function() {
 
 
 /**
+ * Returns the content playhead tracker.
+ */
+Controller.prototype.getContentPlayheadTracker = function() {
+  return this.playerWrapper.getContentPlayheadTracker();
+}
+
+
+/**
  * Add or modify a setting.
  *
  * @param {string} key Key to modify
@@ -142,7 +150,7 @@ Controller.prototype.onAdPlayPauseClick = function() {
     this.adUi.onAdsPaused();
     this.sdkImpl.pauseAds();
   } else {
-    this.adUi.onAdsResumed();
+    this.adUi.onAdsPlaying();
     this.sdkImpl.resumeAds();
   }
 };
@@ -189,6 +197,53 @@ Controller.prototype.getPlayerVolume = function() {
  */
 Controller.prototype.toggleFullscreen = function() {
   return this.playerWrapper.toggleFullscreen();
+};
+
+
+/**
+ * Relays ad errors to the player wrapper.
+ *
+ * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
+ */
+Controller.prototype.onAdError = function(adErrorEvent) {
+  this.adUi.onAdError();
+  this.playerWrapper.onAdError(adErrorEvent);
+}
+
+/**
+ * Handles ad break starting.
+ *
+ * @param {Object} adEvent The event fired by the IMA SDK.
+ */
+Controller.prototype.onAdBreakStart = function() {
+  this.playerWrapper.onAdBreakStart(adEvent);
+  this.adui.onAdBreakStart(adEvent);
+}
+
+
+/**
+ * Handles ad break ending.
+ */
+Controller.prototype.onAdBreakEnd = function() {
+  this.playerWrapper.onAdBreakEnd(adEvent);
+  this.adui.onAdBreakEnd(adEvent);
+}
+
+
+/**
+ * Handles when all ads have finished playing.
+ */
+Controller.prototype.onAllAdsCompleted = function() {
+  this.adui.onAllAdsCompleted();
+  this.player.onAllAdsCompleted();
+}
+
+
+/**
+ * @return {Object} The current ad.
+ */
+Controller.prototype.getCurrentAd = function() {
+  return this.sdkImpl.getCurrentAd();
 };
 
 

@@ -82,11 +82,6 @@ var AdUi = function(controller) {
   this.fullscreenDiv;
 
   /**
-   * Listener to be called to trigger manual ad break playback.
-   */
-  this.adBreakReadyListener = undefined;
-
-  /**
    * Bound event handler for onMouseUp.
    */
   this.boundOnMouseUp = this.onMouseUp_.bind(this);
@@ -251,7 +246,7 @@ AdUi.prototype.onAdsPaused = function() {
 /**
  * Show play and hide pause button
  */
-AdUi.prototype.onAdsResumed = function() {
+AdUi.prototype.onAdsPlaying = function() {
   this.addClass_(this.playPauseDiv, 'ima-playing');
   this.removeClass_(this.playPauseDiv, 'ima-paused');
 };
@@ -306,8 +301,6 @@ AdUi.prototype.onMouseUp_ = function(event) {
 };
 
 
-
-
 /* Utility function to set volume and associated UI
  * @private
  */
@@ -329,6 +322,69 @@ Adui.prototype.changeVolume_ = function(event) {
     this.removeClass_(this.muteDiv, 'ima-muted');
   }
   this.controller.setVolume(percent / 100); //0-1
+}
+
+
+/**
+ * Handles ad errors.
+ */
+AdUi.prototype.onAdError = function() {
+  this.adContainerDiv.style.display = 'none';
+};
+
+
+/**
+ * Handles ad break starting.
+ *
+ * @param {Object} adEvent The event fired by the IMA SDK.
+ */
+AdUi.prototype.onAdBreakStart = function(adEvent) {
+  this.adContainerDiv.style.display = 'block';
+
+  var contentType = adEvent.getAd().getContentType();
+  if ((contentType === 'application/javascript') &&
+      !this.controller.getSettings()['showControlsForJSAds']) {
+    this.controlsDiv.style.display = 'none';
+  } else {
+    this.controlsDiv.style.display = 'block';
+  }
+  this.onAdsPlaying();
+  // Start with the ad controls minimized.
+  this.hideAdControls();
+};
+
+
+/**
+ * Handles ad break ending.
+ */
+AdUi.prototype.onAdBreakEnd = function() {
+  var currentAd = this.controller.getCurrentAd();
+  if (currentAd == null || // hide for post-roll only playlist
+      currentAd.isLinear()) { // don't hide for non-linear ads
+    this.adContainerDiv.style.display = 'none';
+  }
+  this.controlsDiv.style.display = 'none';
+  this.countdownDiv.innerHTML = '';
+}
+
+
+/**
+ * Handles when all ads have finished playing.
+ */
+AdUi.prototype.onAllAdsCompleted = function() {
+}
+
+
+/**
+ * Hide the ad controls.
+ * @private
+ */
+AdUi.prototype.hideAdControls = function() {
+  this.controlsDiv.style.height = '14px';
+  this.playPauseDiv.style.display = 'none';
+  this.muteDiv.style.display = 'none';
+  this.sliderDiv.style.display = 'none';
+  this.fullscreenDiv.style.display = 'none';
 }
 
 
