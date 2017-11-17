@@ -1501,7 +1501,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
 
-  player.ads(ads_plugin_settings);
+  this.vjsPlayer.ads(ads_plugin_settings);
 };
 
 
@@ -1632,8 +1632,8 @@ PlayerWrapper.prototype.onPlayerReady = function() {
   // TODO: See if IMA works without this - it should sync by itself.
   // Sync ad volume with player volume.
   //onVolumeChange_();
-  player.on('fullscreenchange', this.onFullscreenChange_.bind(this));
-  player.on('volumechange', this.onVolumeChange_.bind(this));
+  this.vjsPlayer.on('fullscreenchange', this.onFullscreenChange_.bind(this));
+  this.vjsPlayer.on('volumechange', this.onVolumeChange_.bind(this));
 };
 
 
@@ -1854,9 +1854,8 @@ PlayerWrapper.prototype.onAdsReady = function() {
  *     blank to use the existing content.
  * @param {?boolean} playOnLoad True to play the content once it has loaded,
  *     false to only load the content but not start playback.
- * @private
  */
-PlayerWrapper.prototype.changeSource_ = function(contentSrc, playOnLoad) {
+PlayerWrapper.prototype.changeSource = function(contentSrc, playOnLoad) {
   // Only try to pause the player when initialised with a source already
   if (!!this.vjsPlayer.currentSrc()) {
     this.vjsPlayer.currentTime(0);
@@ -2062,7 +2061,15 @@ Controller.prototype.getContentPlayer = function() {
  */
 Controller.prototype.getContentPlayheadTracker = function() {
   return this.playerWrapper.getContentPlayheadTracker();
-}
+};
+
+
+/**
+ * Requests ads.
+ */
+Controller.prototype.requestAds = function() {
+  this.sdkImpl.requestAds();
+};
 
 
 /**
@@ -2439,6 +2446,7 @@ Controller.prototype.setShowCountdown = function(showCountdownIn) {
 Controller.prototype.initializeAdDisplayContainer = function() {
   this.sdkImpl.initializeAdDisplayContainer();
 };
+
 
 /**
  * Called by publishers in manual ad break playback mode to start an ad

@@ -139,7 +139,15 @@ Controller.prototype.getContentPlayer = function() {
  */
 Controller.prototype.getContentPlayheadTracker = function() {
   return this.playerWrapper.getContentPlayheadTracker();
-}
+};
+
+
+/**
+ * Requests ads.
+ */
+Controller.prototype.requestAds = function() {
+  this.sdkImpl.requestAds();
+};
 
 
 /**
@@ -516,6 +524,7 @@ Controller.prototype.setShowCountdown = function(showCountdownIn) {
 Controller.prototype.initializeAdDisplayContainer = function() {
   this.sdkImpl.initializeAdDisplayContainer();
 };
+
 
 /**
  * Called by publishers in manual ad break playback mode to start an ad
