@@ -123,17 +123,18 @@ var AdUi = function(controller) {
  * @private
  */
 AdUi.prototype.createAdContainer_ = function() {
-  this.assignControlAttributes(
-      this.controller.this.adContainerDiv, 'ima-ad-container');
+  this.adContainerDiv = document.createElement('div');
+  this.assignControlAttributes_(
+      this.adContainerDiv, 'ima-ad-container');
   this.adContainerDiv.style.position = "absolute";
   this.adContainerDiv.style.zIndex = 1111;
   this.adContainerDiv.addEventListener(
       'mouseenter',
-      showAdControls_,
+      this.showAdControls_.bind(this),
       false);
   this.adContainerDiv.addEventListener(
       'mouseleave',
-      hideAdControls_,
+      this.hideAdControls_.bind(this),
       false);
   this.createControls_();
   this.controller.injectAdContainerDiv(this.adContainerDiv);
@@ -151,7 +152,7 @@ AdUi.prototype.createControls_ = function() {
 
   this.countdownDiv = document.createElement('div');
   this.assignControlAttributes_(this.countdownDiv, 'ima-countdown-div');
-  this.countdownDiv.innerHTML = this.settings.adLabel;
+  this.countdownDiv.innerHTML = this.controller.getSettings()['adLabel'];
   this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
 
   this.seekBarDiv = document.createElement('div');
@@ -229,7 +230,7 @@ AdUi.prototype.onAdMuteClick_ = function() {
  * Listener for clicks on the fullscreen button during ad playback.
  * @private
  */
-var onAdFullscreenClick_ = function() {
+AdUi.prototype.onAdFullscreenClick_ = function() {
   this.controller.toggleFullscreen();
 };
 
@@ -240,6 +241,16 @@ var onAdFullscreenClick_ = function() {
 AdUi.prototype.onAdsPaused = function() {
   this.addClass_(this.playPauseDiv, 'ima-paused');
   this.removeClass_(this.playPauseDiv, 'ima-playing');
+  this.showAdControls_();
+};
+
+
+/**
+ * Show pause and hide play button
+ */
+AdUi.prototype.onAdsResumed = function() {
+  this.onAdsPlaying();
+  this.showAdControls_();
 };
 
 
@@ -250,6 +261,38 @@ AdUi.prototype.onAdsPlaying = function() {
   this.addClass_(this.playPauseDiv, 'ima-playing');
   this.removeClass_(this.playPauseDiv, 'ima-paused');
 };
+
+
+/**
+ * Takes data from the controller to update the UI.
+ *
+ * @param {number} currentTime Current time of the ad.
+ * @param {number} duration Duration of the ad.
+ * @param {number} adPosition Index of the ad in the pod.
+ * @param {number} totalAds Total number of ads in the pod.
+ */
+AdUi.prototype.updateAdUi =
+    function(currentTime, duration, adPosition, totalAds) {
+  var remainingTime = duration - currentTime;
+  // Update countdown timer data
+  var remainingMinutes = Math.floor(remainingTime / 60);
+  var remainingSeconds = Math.floor(remainingTime % 60);
+  if (remainingSeconds.toString().length < 2) {
+    remainingSeconds = '0' + remainingSeconds;
+  }
+  var podCount = ': ';
+  if (totalAds > 1) {
+    podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
+  }
+  this.countdownDiv.innerHTML =
+      this.controller.getSettings()['adLabel'] + podCount +
+      remainingMinutes + ':' + remainingSeconds;
+
+  // Update UI
+  var playProgressRatio = currentTime / duration;
+  var playProgressPercent = playProgressRatio * 100;
+  this.progressDiv.style.width = playProgressPercent + '%';
+}
 
 /**
  * Handles UI changes when the ad is unmuted.
@@ -304,7 +347,7 @@ AdUi.prototype.onMouseUp_ = function(event) {
 /* Utility function to set volume and associated UI
  * @private
  */
-Adui.prototype.changeVolume_ = function(event) {
+AdUi.prototype.changeVolume_ = function(event) {
   var percent =
       (event.clientX - this.sliderDiv.getBoundingClientRect().left) /
           this.sliderDiv.offsetWidth;
@@ -350,7 +393,7 @@ AdUi.prototype.onAdBreakStart = function(adEvent) {
   }
   this.onAdsPlaying();
   // Start with the ad controls minimized.
-  this.hideAdControls();
+  this.hideAdControls_();
 };
 
 
@@ -372,20 +415,99 @@ AdUi.prototype.onAdBreakEnd = function() {
  * Handles when all ads have finished playing.
  */
 AdUi.prototype.onAllAdsCompleted = function() {
-}
+  this.adContainerDiv.style.display = 'none';
+};
+
+
+/**
+ * Handles when a linear ad starts.
+ */
+AdUi.prototype.onLinearAdStart = function() {
+  // Don't bump container when controls are shown
+  this.removeClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
+};
+
+
+/**
+ * Handles when a non-linear ad starts.
+ */
+AdUi.prototype.onNonLinearAdStart = function() {
+  // For non-linear ads that show after a linear ad. For linear ads, we show the
+  // ad container in onAdBreakStart to prevent blinking in pods.
+  this.adContainerDiv.style.display = 'block';
+  // Bump container when controls are shown
+ addClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
+};
+
+
+/**
+ * Called when the player wrapper detects that the player has been resized.
+ *
+ * @param {number} width The post-resize width of the player.
+ * @param {number} height The post-resize height of the player.
+ */
+AdUi.prototype.onPlayerResize = function(width, height) {
+  if (this.adsManager) {
+    this.adsManagerDimensions.width = width;
+    this.adsManagerDimensions.height = height;
+    this.adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
+  }
+};
+
+
+AdUi.prototype.onPlayerEnterFullscreen = function() {
+  this.addClass_(this.fullscreenDiv, 'ima-fullscreen');
+  this.removeClass_(this.fullscreenDiv, 'ima-non-fullscreen');
+};
+
+
+AdUi.prototype.onPlayerExitFullscreen = function() {
+  this.addClass_(this.fullscreenDiv, 'ima-non-fullscreen');
+  this.removeClass_(this.fullscreenDiv, 'ima-fullscreen');
+};
+
+
+/**
+ * Called when the player volume changes.
+ *
+ * @param {number} volume The new player volume.
+ */
+AdUi.prototype.onPlayerVolumeChanged = function(volume) {
+  if (volume == 0) {
+    this.addClass_(this.muteDiv, 'ima-muted');
+    this.removeClass_(this.muteDiv, 'ima-non-muted');
+    this.sliderLevelDiv.style.width = '0%';
+  } else {
+    this.addClass_(this.muteDiv, 'ima-non-muted');
+    this.removeClass_(this.muteDiv, 'ima-muted');
+    this.sliderLevelDiv.style.width = volume * 100 + '%';
+  }
+};
+
+/**
+ * Shows ad controls on mouseover.
+ * @private
+ */
+AdUi.prototype.showAdControls_ = function() {
+  this.controlsDiv.style.height = '37px';
+  this.playPauseDiv.style.display = 'block';
+  this.muteDiv.style.display = 'block';
+  this.sliderDiv.style.display = 'block';
+  this.fullscreenDiv.style.display = 'block';
+};
 
 
 /**
  * Hide the ad controls.
  * @private
  */
-AdUi.prototype.hideAdControls = function() {
+AdUi.prototype.hideAdControls_ = function() {
   this.controlsDiv.style.height = '14px';
   this.playPauseDiv.style.display = 'none';
   this.muteDiv.style.display = 'none';
   this.sliderDiv.style.display = 'none';
   this.fullscreenDiv.style.display = 'none';
-}
+};
 
 
 /**
@@ -468,4 +590,15 @@ AdUi.prototype.removeClass_ = function(element, classToRemove){
  */
 AdUi.prototype.getAdContainerDiv = function() {
   return this.adContainerDiv;
-}
+};
+
+
+/**
+ * Changes the flag to show or hide the ad countdown timer.
+ *
+ * @param {boolean} showCountdownIn Show or hide the countdown timer.
+ */
+AdUi.prototype.setShowCountdown = function(showCountdownIn) {
+  this.showCountdown = showCountdownIn;
+  this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
+};
