@@ -11,9 +11,9 @@
   },
   "scripts": {
     "build": "node build/build.js",
+    "contBuild": "watch 'npm run build' src",
     "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuild",
-    "postdevServer": "forever stop ./node_modules/http-server/bin/http-server",
-    "contBuild": "watch 'npm run build' src"
+    "postdevServer": "forever stop ./node_modules/http-server/bin/http-server"
   },
   "repository": {
     "type": "git",
