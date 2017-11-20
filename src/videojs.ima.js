@@ -600,7 +600,6 @@
      * @private
      */
     var hideAdControls_ = function() {
-      // this.controlsDiv.style.height = '14px';
       removeClass_(this.controlsDiv, 'ima-controls-div-showing');
       this.playPauseDiv.style.display = 'none';
       this.muteDiv.style.display = 'none';
@@ -613,7 +612,6 @@
      * @private
      */
     var showAdControls_ = function() {
-      //this.controlsDiv.style.height = '37px';
       addClass_(this.controlsDiv, 'ima-controls-div-showing');
       this.playPauseDiv.style.display = 'block';
       this.muteDiv.style.display = 'block';
