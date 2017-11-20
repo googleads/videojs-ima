@@ -220,7 +220,7 @@ PlayerWrapper.prototype.localContentEndedListener = function() {
   clearInterval(this.seekCheckIntervalHandle);
   clearInterval(this.resizeCheckIntervalHandle);
   if(this.vjsPlayer.el()) {
-    this.vjsPlayer.one('play', this.setUpPlayerIntervals_.bind(this));
+    this.vjsPlayer.one('play', this.setUpPlayerIntervals.bind(this));
   }
 };
 
@@ -557,3 +557,5 @@ PlayerWrapper.prototype.reset = function() {
   // mid-roll time.
   this.contentPlayheadTracker.currentTime = 0;
 };
+
+export default PlayerWrapper;

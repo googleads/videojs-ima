@@ -17,6 +17,9 @@
  * https://www.github.com/googleads/videojs-ima
  */
 
+import Controller from './controller.js';
+import videojs from 'video.js';
+
 /**
  * Exposes the ImaPlugin to a publisher implementation.
  *
@@ -179,7 +182,10 @@ var ImaPlugin = function(player, options) {
   }.bind(this);
 };
 
-/**
- * Current plugin version.
- */
-ImaPlugin.VERSION = '1.0.0';
+
+var init = function(options) {
+  this.ima = new ImaPlugin(this, options);
+};
+
+var registerPlugin = videojs.registerPlugin || videojs.plugin;
+registerPlugin('ima', init);

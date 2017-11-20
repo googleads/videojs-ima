@@ -601,3 +601,5 @@ AdUi.prototype.setShowCountdown = function(showCountdownIn) {
   this.showCountdown = showCountdownIn;
   this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
 };
+
+export default AdUi;

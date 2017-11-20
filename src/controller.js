@@ -16,6 +16,9 @@
  * IMA SDK integration plugin for Video.js. For more information see
  * https://www.github.com/googleads/videojs-ima
  */
+import PlayerWrapper from './player-wrapper.js';
+import AdUi from './ad-ui.js';
+import SdkImpl from './sdk-impl.js';
 
  /**
   * The grand coordinator of the plugin. Facilitates communication between all
@@ -624,3 +627,5 @@ Controller.prototype.extend = function(obj) {
   }
   return obj;
 };
+
+export default Controller;
