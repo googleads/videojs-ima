@@ -1,5 +1,6 @@
 const concat = require('concat');
 const fs = require('file-system');
+const uglify = require('uglify-js');
 
 const sourceFiles = [
   'src/header.js',
@@ -10,7 +11,11 @@ const sourceFiles = [
   'src/ima-plugin.js',
   'src/footer.js'
 ];
-const outFile = 'dist/videojs.ima.js'
-concat(sourceFiles, outFile)
+const outFile = 'dist/videojs.ima.max.js'
+concat(sourceFiles).then(concatCode => {
+  const uglifiedCode = uglify.minify(concatCode);
+  fs.writeFile('dist/videojs.ima.js', uglifiedCode.code);
+  fs.writeFile('dist/videojs.ima.max.js', concatCode);
+});
 
 fs.copyFile('src/css/videojs.ima.css', 'dist/videojs.ima.css');
