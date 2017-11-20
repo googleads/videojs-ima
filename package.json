@@ -13,7 +13,8 @@
     "build": "node build/build.js",
     "contBuild": "watch 'npm run build' src",
     "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuild",
-    "postdevServer": "forever stop ./node_modules/http-server/bin/http-server"
+    "postdevServer": "forever stop ./node_modules/http-server/bin/http-server",
+    "lint": "jshint src/**.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "forever": "^0.15.3",
     "grunt": "^0.4.5",
     "http-server": "^0.10.0",
+    "jshint": "^2.9.5",
     "uglify-js": "^3.1.10",
     "videojs-doc-generator": "^0.0.1",
     "watch": "^1.0.2"

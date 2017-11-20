@@ -62,7 +62,7 @@ var Controller = function(player, options) {
     prerollTimeout: this.settings.prerollTimeout
   };
   var ads_plugin_settings = this.extend(
-      {}, contrib_ads_defaults, options['contribAdsSettings'] || {});
+      {}, contrib_ads_defaults, options.contribAdsSettings || {});
 
   this.playerWrapper = new PlayerWrapper(player, ads_plugin_settings, this);
   this.adUi = new AdUi(this);
@@ -88,14 +88,14 @@ Controller.prototype.initWithSettings_ = function(options) {
   // Currently this isn't used but I can see it being needed in the future,
   // so to avoid implementation problems with later updates I'm requiring
   // it.
-  if (!this.settings['id']) {
+  if (!this.settings.id) {
     window.console.error('Error: must provide id of video.js div');
     return;
   }
 
   // Default showing countdown timer to true.
   this.showCountdown = true;
-  if (this.settings['showCountdown'] === false) {
+  if (this.settings.showCountdown === false) {
     this.showCountdown = false;
   }
 };
@@ -123,7 +123,7 @@ Controller.prototype.injectAdContainerDiv = function(adContainerDiv) {
  */
 Controller.prototype.getAdContainerDiv = function() {
   return this.adUi.getAdContainerDiv();
-}
+};
 
 
 /**
@@ -131,7 +131,7 @@ Controller.prototype.getAdContainerDiv = function() {
  */
 Controller.prototype.getContentPlayer = function() {
   return this.playerWrapper.getContentPlayer();
-}
+};
 
 
 /**
@@ -169,7 +169,7 @@ Controller.prototype.setSetting = function(key, value) {
 Controller.prototype.onErrorLoadingAds = function(adErrorEvent) {
   this.adUi.onAdError();
   this.playerWrapper.onAdError(adErrorEvent);
-}
+};
 
 
 /**
@@ -252,6 +252,14 @@ Controller.prototype.onAdBreakStart = function(adEvent) {
 
 
 /**
+ * Show the ad container.
+ */
+Controller.prototype.showAdContainer = function() {
+  this.adUi.showAdContainer();
+};
+
+
+/**
  * Handles ad break ending.
  */
 Controller.prototype.onAdBreakEnd = function() {
@@ -295,7 +303,7 @@ Controller.prototype.onAdsResumed = function() {
  */
 Controller.prototype.onAdPlayheadUpdated =
     function(currentTime, duration, adPosition, totalAds) {
-  this.adUi.updateAdUi(currentTime, duration, adPosition, totalAds)
+  this.adUi.updateAdUi(currentTime, duration, adPosition, totalAds);
 };
 
 
@@ -325,10 +333,18 @@ Controller.prototype.onLinearAdStart = function() {
 
 
 /**
+ * Handles when a non-linear ad loads.
+ */
+Controller.prototype.onNonLinearAdLoad = function() {
+  this.adUi.onNonLinearAdLoad();
+};
+
+
+/**
  * Handles when a non-linear ad starts.
  */
 Controller.prototype.onNonLinearAdStart = function() {
-  this.adUi.onNonLinearAdStart();
+  this.adUi.onNonLinearAdLoad();
   this.playerWrapper.onAdStart();
 };
 
@@ -445,7 +461,7 @@ Controller.prototype.onPlayerVolumeChanged = function(volume) {
 Controller.prototype.setContentWithAdTag =
     function(contentSrc, adTag, playOnLoad) {
   this.reset();
-  this.settings['adTagUrl'] = adTag ? adTag : this.settings['adTagUrl'];
+  this.settings.adTagUrl = adTag ? adTag : this.settings.adTagUrl;
   this.playerWrapper.changeSource(contentSrc, playOnLoad);
 };
 
@@ -464,8 +480,8 @@ Controller.prototype.setContentWithAdTag =
 Controller.prototype.setContentWithAdsResponse =
     function(contentSrc, adsResponse, playOnLoad) {
   this.reset();
-  this.settings['adsResponse'] =
-      adsResponse ? adsResponse : this.settings['adsResponse'];
+  this.settings.adsResponse =
+      adsResponse ? adsResponse : this.settings.adsResponse;
   this.playerWrapper.changeSource(contentSrc, playOnLoad);
 };
 
@@ -565,7 +581,7 @@ Controller.prototype.getAdsManager = function() {
  */
 Controller.prototype.changeAdTag = function(adTag) {
   this.reset();
-  this.settings['adTagUrl'] = adTag;
+  this.settings.adTagUrl = adTag;
 };
 
 /**

@@ -34,52 +34,52 @@ var AdUi = function(controller) {
   /**
    * Div used as an ad container.
    */
-  this.adContainerDiv;
+  this.adContainerDiv = document.createElement('div');
 
   /**
    * Div used to display ad controls.
    */
-  this.controlsDiv;
+  this.controlsDiv = document.createElement('div');
 
   /**
    * Div used to display ad countdown timer.
    */
-  this.countdownDiv;
+  this.countdownDiv = document.createElement('div');
 
   /**
    * Div used to display add seek bar.
    */
-  this.seekBarDiv;
+  this.seekBarDiv = document.createElement('div');
 
   /**
    * Div used to display ad progress (in seek bar).
    */
-  this.progressDiv;
+  this.progressDiv = document.createElement('div');
 
   /**
    * Div used to display ad play/pause button.
    */
-  this.playPauseDiv;
+  this.playPauseDiv = document.createElement('div');
 
   /**
    * Div used to display ad mute button.
    */
-  this.muteDiv;
+  this.muteDiv = document.createElement('div');
 
   /**
    * Div used by the volume slider.
    */
-  this.sliderDiv;
+  this.sliderDiv = document.createElement('div');
 
   /**
    * Volume slider level visuals
    */
-  this.sliderLevelDiv;
+  this.sliderLevelDiv = document.createElement('div');
 
   /**
    * Div used to display ad fullscreen button.
    */
-  this.fullscreenDiv;
+  this.fullscreenDiv = document.createElement('div');
 
   /**
    * Bound event handler for onMouseUp.
@@ -111,7 +111,7 @@ var AdUi = function(controller) {
    * Boolean flag to show or hide the ad countdown timer.
    */
   this.showCountdown = true;
-  if (this.controller.getSettings()['showCountdown'] == false) {
+  if (this.controller.getSettings().showCountdown == false) {
     this.showCountdown = false;
   }
 
@@ -123,7 +123,6 @@ var AdUi = function(controller) {
  * @private
  */
 AdUi.prototype.createAdContainer_ = function() {
-  this.adContainerDiv = document.createElement('div');
   this.assignControlAttributes_(
       this.adContainerDiv, 'ima-ad-container');
   this.adContainerDiv.style.position = "absolute";
@@ -146,23 +145,18 @@ AdUi.prototype.createAdContainer_ = function() {
  * @private
  */
 AdUi.prototype.createControls_ = function() {
-  this.controlsDiv = document.createElement('div');
   this.assignControlAttributes_(this.controlsDiv, 'ima-controls-div');
   this.controlsDiv.style.width = '100%';
 
-  this.countdownDiv = document.createElement('div');
   this.assignControlAttributes_(this.countdownDiv, 'ima-countdown-div');
-  this.countdownDiv.innerHTML = this.controller.getSettings()['adLabel'];
+  this.countdownDiv.innerHTML = this.controller.getSettings().adLabel;
   this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
 
-  this.seekBarDiv = document.createElement('div');
   this.assignControlAttributes_(this.seekBarDiv, 'ima-seek-bar-div');
   this.seekBarDiv.style.width = '100%';
 
-  this.progressDiv = document.createElement('div');
   this.assignControlAttributes_(this.progressDiv, 'ima-progress-div');
 
-  this.playPauseDiv = document.createElement('div');
   this.assignControlAttributes_(this.playPauseDiv, 'ima-play-pause-div');
   this.addClass_(this.playPauseDiv, 'ima-playing');
   this.playPauseDiv.addEventListener(
@@ -170,7 +164,6 @@ AdUi.prototype.createControls_ = function() {
       this.onAdPlayPauseClick_.bind(this),
       false);
 
-  this.muteDiv = document.createElement('div');
   this.assignControlAttributes_(this.muteDiv, 'ima-mute-div');
   this.addClass_(this.muteDiv, 'ima-non-muted');
   this.muteDiv.addEventListener(
@@ -178,17 +171,14 @@ AdUi.prototype.createControls_ = function() {
       this.onAdMuteClick_.bind(this),
       false);
 
-  this.sliderDiv = document.createElement('div');
   this.assignControlAttributes_(this.sliderDiv, 'ima-slider-div');
   this.sliderDiv.addEventListener(
       'mousedown',
       this.onAdVolumeSliderMouseDown_.bind(this),
       false);
 
-  this.sliderLevelDiv = document.createElement('div');
   this.assignControlAttributes_(this.sliderLevelDiv, 'ima-slider-level-div');
 
-  this.fullscreenDiv = document.createElement('div');
   this.assignControlAttributes_(this.fullscreenDiv, 'ima-fullscreen-div');
   this.addClass_(this.fullscreenDiv, 'ima-non-fullscreen');
   this.fullscreenDiv.addEventListener(
@@ -285,14 +275,15 @@ AdUi.prototype.updateAdUi =
     podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
   }
   this.countdownDiv.innerHTML =
-      this.controller.getSettings()['adLabel'] + podCount +
+      this.controller.getSettings().adLabel + podCount +
       remainingMinutes + ':' + remainingSeconds;
 
   // Update UI
   var playProgressRatio = currentTime / duration;
   var playProgressPercent = playProgressRatio * 100;
   this.progressDiv.style.width = playProgressPercent + '%';
-}
+};
+
 
 /**
  * Handles UI changes when the ad is unmuted.
@@ -365,7 +356,15 @@ AdUi.prototype.changeVolume_ = function(event) {
     this.removeClass_(this.muteDiv, 'ima-muted');
   }
   this.controller.setVolume(percent / 100); //0-1
-}
+};
+
+
+/**
+ * Show the ad container.
+ */
+AdUi.prototype.showAdContainer = function() {
+  this.adContainerDiv.style.display = 'block';
+};
 
 
 /**
@@ -386,7 +385,7 @@ AdUi.prototype.onAdBreakStart = function(adEvent) {
 
   var contentType = adEvent.getAd().getContentType();
   if ((contentType === 'application/javascript') &&
-      !this.controller.getSettings()['showControlsForJSAds']) {
+      !this.controller.getSettings().showControlsForJSAds) {
     this.controlsDiv.style.display = 'none';
   } else {
     this.controlsDiv.style.display = 'block';
@@ -408,7 +407,7 @@ AdUi.prototype.onAdBreakEnd = function() {
   }
   this.controlsDiv.style.display = 'none';
   this.countdownDiv.innerHTML = '';
-}
+};
 
 
 /**
@@ -431,12 +430,12 @@ AdUi.prototype.onLinearAdStart = function() {
 /**
  * Handles when a non-linear ad starts.
  */
-AdUi.prototype.onNonLinearAdStart = function() {
+AdUi.prototype.onNonLinearAdLoad = function() {
   // For non-linear ads that show after a linear ad. For linear ads, we show the
   // ad container in onAdBreakStart to prevent blinking in pods.
   this.adContainerDiv.style.display = 'block';
   // Bump container when controls are shown
- addClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
+  this.addClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
 };
 
 
@@ -564,7 +563,7 @@ AdUi.prototype.addClass_ = function(element, classToAdd){
     return element;
   }
 
-  return element.className = element.className.trim() + ' ' + classToAdd;
+  element.className = element.className.trim() + ' ' + classToAdd;
 };
 
 
@@ -580,7 +579,7 @@ AdUi.prototype.removeClass_ = function(element, classToRemove){
   }
 
   var classRegexp = this.getClassRegexp_(classToRemove);
-  return element.className =
+  element.className =
       element.className.trim().replace(classRegexp, '');
 };
 

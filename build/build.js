@@ -3,13 +3,13 @@ const fs = require('file-system');
 const uglify = require('uglify-js');
 
 const sourceFiles = [
-  'src/header.js',
+  'build/header.js',
   'src/sdk-impl.js',
   'src/ad-ui.js',
   'src/player-wrapper.js',
   'src/controller.js',
   'src/ima-plugin.js',
-  'src/footer.js'
+  'build/footer.js'
 ];
 const outFile = 'dist/videojs.ima.max.js'
 concat(sourceFiles).then(concatCode => {

@@ -76,7 +76,7 @@ var SdkImpl = function(controller) {
   /**
    * IMA SDK AdDisplayContainer.
    */
-  this.adDisplayContainer;
+  this.adDisplayContainer = null;
 
   /**
    * True if the AdDisplayContainer has been initialized. False otherwise.
@@ -86,12 +86,12 @@ var SdkImpl = function(controller) {
   /**
    * IMA SDK AdsLoader
    */
-  this.adsLoader;
+  this.adsLoader = null;
 
   /**
    * IMA SDK AdsManager
    */
-  this.adsManager;
+  this.adsManager = null;
 
   /**
    * IMA SDK AdsRenderingSettings.
@@ -101,23 +101,23 @@ var SdkImpl = function(controller) {
   /**
    * Ad tag URL. Should return VAST, VMAP, or ad rules.
    */
-  this.adTagUrl;
+  this.adTagUrl = null;
 
   /**
    * VAST, VMAP, or ad rules response. Used in lieu of fetching a response
    * from an ad tag URL.
    */
-  this.adsResponse;
+  this.adsResponse = null;
 
   /**
    * Current IMA SDK Ad.
    */
-  this.currentAd;
+  this.currentAd = null;
 
   /**
    * Timer used to track ad progress.
    */
-  this.adTrackingTimer;
+  this.adTrackingTimer = null;
 
   /**
    * True if ALL_ADS_COMPLETED has fired, false until then.
@@ -163,27 +163,27 @@ var SdkImpl = function(controller) {
    * Boolean flag to enable manual ad break playback.
    */
   this.autoPlayAdBreaks = true;
-  if (this.controller.getSettings()['autoPlayAdBreaks'] === false) {
+  if (this.controller.getSettings().autoPlayAdBreaks === false) {
     this.autoPlayAdBreaks = false;
   }
 
   // Set SDK settings from plugin settings.
-  if (this.controller.getSettings()['locale']) {
-    google.ima.settings.setLocale(this.controller.getSettings()['locale']);
+  if (this.controller.getSettings().locale) {
+    google.ima.settings.setLocale(this.controller.getSettings().locale);
   }
-  if (this.controller.getSettings()['disableFlashAds']) {
+  if (this.controller.getSettings().disableFlashAds) {
     google.ima.settings.setDisableFlashAds(
-        this.controller.getSettings()['disableFlashAds']);
+        this.controller.getSettings().disableFlashAds);
   }
-  if (this.controller.getSettings()['disableCustomPlaybackForIOS10Plus']) {
+  if (this.controller.getSettings().disableCustomPlaybackForIOS10Plus) {
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(
-        this.controller.getSettings()['disableCustomPlaybackForIOS10Plus']);
+        this.controller.getSettings().disableCustomPlaybackForIOS10Plus);
   }
 
   this.initAdObjects();
 
-  if (this.controller.getSettings()['adTagUrl'] ||
-      this.controller.getSettings()['adsResponse']) {
+  if (this.controller.getSettings().adTagUrl ||
+      this.controller.getSettings().adsResponse) {
     this.requestAds();
   }
 };
@@ -201,23 +201,23 @@ SdkImpl.prototype.initAdObjects = function() {
 
   this.adsLoader.getSettings().setVpaidMode(
       google.ima.ImaSdkSettings.VpaidMode.ENABLED);
-  if (this.controller.getSettings()['vpaidAllowed'] == false) {
+  if (this.controller.getSettings().vpaidAllowed == false) {
     this.adsLoader.getSettings().setVpaidMode(
         google.ima.ImaSdkSettings.VpaidMode.DISABLED);
   }
-  if (this.controller.getSettings()['vpaidMode']) {
+  if (this.controller.getSettings().vpaidMode) {
     this.adsLoader.getSettings().setVpaidMode(
-        this.controller.getSettings()['vpaidMode']);
+        this.controller.getSettings().vpaidMode);
   }
 
-  if (this.controller.getSettings()['locale']) {
+  if (this.controller.getSettings().locale) {
     this.adsLoader.getSettings().setLocale(
-        this.controller.getSettings['locale']);
+        this.controller.getSettings.locale);
   }
 
-  if (this.controller.getSettings()['numRedirects']) {
+  if (this.controller.getSettings().numRedirects) {
     this.adsLoader.getSettings().setNumRedirects(
-        this.controller.getSettings['numRedirects']);
+        this.controller.getSettings.numRedirects);
   }
 
   this.adsLoader.getSettings().setPlayerType('videojs-ima');
@@ -239,25 +239,25 @@ SdkImpl.prototype.initAdObjects = function() {
  */
 SdkImpl.prototype.requestAds = function() {
   var adsRequest = new google.ima.AdsRequest();
-  if (this.controller.getSettings()['adTagUrl']) {
-    adsRequest.adTagUrl = this.controller.getSettings()['adTagUrl'];
+  if (this.controller.getSettings().adTagUrl) {
+    adsRequest.adTagUrl = this.controller.getSettings().adTagUrl;
   } else {
-    adsRequest.adsResponse = this.controller.getSettings()['adsResponse'];
+    adsRequest.adsResponse = this.controller.getSettings().adsResponse;
   }
-  if (this.controller.getSettings()['forceNonLinearFullSlot']) {
+  if (this.controller.getSettings().forceNonLinearFullSlot) {
     adsRequest.forceNonLinearFullSlot = true;
   }
 
   adsRequest.linearAdSlotWidth = this.controller.getPlayerWidth();
   adsRequest.linearAdSlotHeight = this.controller.getPlayerHeight();
   adsRequest.nonLinearAdSlotWidth =
-      this.controller.getSettings()['nonLinearWidth'] ||
+      this.controller.getSettings().nonLinearWidth ||
       this.controller.getPlayerWidth();
   adsRequest.nonLinearAdSlotHeight =
-      this.controller.getSettings()['nonLinearHeight'] ||
+      this.controller.getSettings().nonLinearHeight ||
       (this.controller.getPlayerHeight() / 3);
 
-  adsRequest.setAdWillAutoPlay(this.controller.getSettings()['adWillAutoPlay']);
+  adsRequest.setAdWillAutoPlay(this.controller.getSettings().adWillAutoPlay);
 
   this.adsLoader.requestAds(adsRequest);
 };
@@ -323,8 +323,8 @@ SdkImpl.prototype.onAdsManagerLoaded_ = function(adsManagerLoadedEvent) {
 
   this.controller.onAdsReady();
 
-  if (this.controller.getSettings()['adsManagerLoadedCallback']) {
-    this.controller.getSettings()['adsManagerLoadedCallback']();
+  if (this.controller.getSettings().adsManagerLoadedCallback) {
+    this.controller.getSettings().adsManagerLoadedCallback();
   }
 };
 
@@ -366,7 +366,7 @@ SdkImpl.prototype.initAdsManager = function() {
   } catch (adError) {
     this.onAdError_(adError);
   }
-}
+};
 
 
 /**
@@ -377,10 +377,10 @@ SdkImpl.prototype.createAdsRenderingSettings_ = function() {
   this.adsRenderingSettings = new google.ima.AdsRenderingSettings();
   this.adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete =
       true;
-  if (this.controller.getSettings()['adsRenderingSettings']) {
-    for (var setting in this.controller.getSettings()['adsRenderingSettings']) {
+  if (this.controller.getSettings().adsRenderingSettings) {
+    for (var setting in this.controller.getSettings().adsRenderingSettings) {
       this.adsRenderingSettings[setting] =
-          this.controller.getSettings()['adsRenderingSettings'][setting];
+          this.controller.getSettings().adsRenderingSettings[setting];
     }
   }
 };
@@ -446,7 +446,8 @@ SdkImpl.prototype.onContentResumeRequested_ = function(adEvent) {
 SdkImpl.prototype.onAllAdsCompleted_ = function(adEvent) {
   this.allAdsCompleted = true;
   this.controller.onAllAdsCompleted();
-}
+};
+
 
 /**
  * Starts the content video when a non-linear ad is loaded.
@@ -455,6 +456,7 @@ SdkImpl.prototype.onAllAdsCompleted_ = function(adEvent) {
  */
 SdkImpl.prototype.onAdLoaded_ = function(adEvent) {
   if (!adEvent.getAd().isLinear()) {
+    this.controller.onNonLinearAdLoad();
     this.controller.playContent();
   }
 };
@@ -561,6 +563,7 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function() {
   if (this.autoPlayAdBreaks) {
     this.initAdsManager();
     try {
+      this.controller.showAdContainer();
       this.adsManager.start();
     } catch (adError) {
       this.onAdError_(adError);
@@ -707,6 +710,7 @@ SdkImpl.prototype.initializeAdDisplayContainer = function() {
  */
 SdkImpl.prototype.playAdBreak = function() {
   if (!this.autoPlayAdBreaks) {
+    this.controller.showAdContainer();
     this.adsManager.start();
   }
 };
@@ -793,52 +797,52 @@ var AdUi = function(controller) {
   /**
    * Div used as an ad container.
    */
-  this.adContainerDiv;
+  this.adContainerDiv = document.createElement('div');
 
   /**
    * Div used to display ad controls.
    */
-  this.controlsDiv;
+  this.controlsDiv = document.createElement('div');
 
   /**
    * Div used to display ad countdown timer.
    */
-  this.countdownDiv;
+  this.countdownDiv = document.createElement('div');
 
   /**
    * Div used to display add seek bar.
    */
-  this.seekBarDiv;
+  this.seekBarDiv = document.createElement('div');
 
   /**
    * Div used to display ad progress (in seek bar).
    */
-  this.progressDiv;
+  this.progressDiv = document.createElement('div');
 
   /**
    * Div used to display ad play/pause button.
    */
-  this.playPauseDiv;
+  this.playPauseDiv = document.createElement('div');
 
   /**
    * Div used to display ad mute button.
    */
-  this.muteDiv;
+  this.muteDiv = document.createElement('div');
 
   /**
    * Div used by the volume slider.
    */
-  this.sliderDiv;
+  this.sliderDiv = document.createElement('div');
 
   /**
    * Volume slider level visuals
    */
-  this.sliderLevelDiv;
+  this.sliderLevelDiv = document.createElement('div');
 
   /**
    * Div used to display ad fullscreen button.
    */
-  this.fullscreenDiv;
+  this.fullscreenDiv = document.createElement('div');
 
   /**
    * Bound event handler for onMouseUp.
@@ -870,7 +874,7 @@ var AdUi = function(controller) {
    * Boolean flag to show or hide the ad countdown timer.
    */
   this.showCountdown = true;
-  if (this.controller.getSettings()['showCountdown'] == false) {
+  if (this.controller.getSettings().showCountdown == false) {
     this.showCountdown = false;
   }
 
@@ -882,7 +886,6 @@ var AdUi = function(controller) {
  * @private
  */
 AdUi.prototype.createAdContainer_ = function() {
-  this.adContainerDiv = document.createElement('div');
   this.assignControlAttributes_(
       this.adContainerDiv, 'ima-ad-container');
   this.adContainerDiv.style.position = "absolute";
@@ -905,23 +908,18 @@ AdUi.prototype.createAdContainer_ = function() {
  * @private
  */
 AdUi.prototype.createControls_ = function() {
-  this.controlsDiv = document.createElement('div');
   this.assignControlAttributes_(this.controlsDiv, 'ima-controls-div');
   this.controlsDiv.style.width = '100%';
 
-  this.countdownDiv = document.createElement('div');
   this.assignControlAttributes_(this.countdownDiv, 'ima-countdown-div');
-  this.countdownDiv.innerHTML = this.controller.getSettings()['adLabel'];
+  this.countdownDiv.innerHTML = this.controller.getSettings().adLabel;
   this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
 
-  this.seekBarDiv = document.createElement('div');
   this.assignControlAttributes_(this.seekBarDiv, 'ima-seek-bar-div');
   this.seekBarDiv.style.width = '100%';
 
-  this.progressDiv = document.createElement('div');
   this.assignControlAttributes_(this.progressDiv, 'ima-progress-div');
 
-  this.playPauseDiv = document.createElement('div');
   this.assignControlAttributes_(this.playPauseDiv, 'ima-play-pause-div');
   this.addClass_(this.playPauseDiv, 'ima-playing');
   this.playPauseDiv.addEventListener(
@@ -929,7 +927,6 @@ AdUi.prototype.createControls_ = function() {
       this.onAdPlayPauseClick_.bind(this),
       false);
 
-  this.muteDiv = document.createElement('div');
   this.assignControlAttributes_(this.muteDiv, 'ima-mute-div');
   this.addClass_(this.muteDiv, 'ima-non-muted');
   this.muteDiv.addEventListener(
@@ -937,17 +934,14 @@ AdUi.prototype.createControls_ = function() {
       this.onAdMuteClick_.bind(this),
       false);
 
-  this.sliderDiv = document.createElement('div');
   this.assignControlAttributes_(this.sliderDiv, 'ima-slider-div');
   this.sliderDiv.addEventListener(
       'mousedown',
       this.onAdVolumeSliderMouseDown_.bind(this),
       false);
 
-  this.sliderLevelDiv = document.createElement('div');
   this.assignControlAttributes_(this.sliderLevelDiv, 'ima-slider-level-div');
 
-  this.fullscreenDiv = document.createElement('div');
   this.assignControlAttributes_(this.fullscreenDiv, 'ima-fullscreen-div');
   this.addClass_(this.fullscreenDiv, 'ima-non-fullscreen');
   this.fullscreenDiv.addEventListener(
@@ -1044,14 +1038,15 @@ AdUi.prototype.updateAdUi =
     podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
   }
   this.countdownDiv.innerHTML =
-      this.controller.getSettings()['adLabel'] + podCount +
+      this.controller.getSettings().adLabel + podCount +
       remainingMinutes + ':' + remainingSeconds;
 
   // Update UI
   var playProgressRatio = currentTime / duration;
   var playProgressPercent = playProgressRatio * 100;
   this.progressDiv.style.width = playProgressPercent + '%';
-}
+};
+
 
 /**
  * Handles UI changes when the ad is unmuted.
@@ -1124,7 +1119,15 @@ AdUi.prototype.changeVolume_ = function(event) {
     this.removeClass_(this.muteDiv, 'ima-muted');
   }
   this.controller.setVolume(percent / 100); //0-1
-}
+};
+
+
+/**
+ * Show the ad container.
+ */
+AdUi.prototype.showAdContainer = function() {
+  this.adContainerDiv.style.display = 'block';
+};
 
 
 /**
@@ -1145,7 +1148,7 @@ AdUi.prototype.onAdBreakStart = function(adEvent) {
 
   var contentType = adEvent.getAd().getContentType();
   if ((contentType === 'application/javascript') &&
-      !this.controller.getSettings()['showControlsForJSAds']) {
+      !this.controller.getSettings().showControlsForJSAds) {
     this.controlsDiv.style.display = 'none';
   } else {
     this.controlsDiv.style.display = 'block';
@@ -1167,7 +1170,7 @@ AdUi.prototype.onAdBreakEnd = function() {
   }
   this.controlsDiv.style.display = 'none';
   this.countdownDiv.innerHTML = '';
-}
+};
 
 
 /**
@@ -1190,12 +1193,12 @@ AdUi.prototype.onLinearAdStart = function() {
 /**
  * Handles when a non-linear ad starts.
  */
-AdUi.prototype.onNonLinearAdStart = function() {
+AdUi.prototype.onNonLinearAdLoad = function() {
   // For non-linear ads that show after a linear ad. For linear ads, we show the
   // ad container in onAdBreakStart to prevent blinking in pods.
   this.adContainerDiv.style.display = 'block';
   // Bump container when controls are shown
- addClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
+  this.addClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
 };
 
 
@@ -1323,7 +1326,7 @@ AdUi.prototype.addClass_ = function(element, classToAdd){
     return element;
   }
 
-  return element.className = element.className.trim() + ' ' + classToAdd;
+  element.className = element.className.trim() + ' ' + classToAdd;
 };
 
 
@@ -1339,7 +1342,7 @@ AdUi.prototype.removeClass_ = function(element, classToRemove){
   }
 
   var classRegexp = this.getClassRegexp_(classToRemove);
-  return element.className =
+  element.className =
       element.className.trim().replace(classRegexp, '');
 };
 
@@ -1398,7 +1401,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
   /**
    * Timer used to track content progress.
    */
-  this.contentTrackingTimer;
+  this.contentTrackingTimer = null;
 
   /**
    * True if our content video has completed, false otherwise.
@@ -1408,7 +1411,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
   /**
    * Handle to interval that repeatedly updates current time.
    */
-  this.updateTimeIntervalHandle;
+  this.updateTimeIntervalHandle = null;
 
   /**
    * Interval (ms) to check for player resize for fluid support.
@@ -1418,7 +1421,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
   /**
    * Handle to interval that repeatedly checks for seeking.
    */
-  this.seekCheckIntervalHandle;
+  this.seekCheckIntervalHandle = null;
 
   /**
    * Interval (ms) on which to check if the user is seeking through the
@@ -1429,7 +1432,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
   /**
    * Handle to interval that repeatedly checks for player resize.
    */
-  this.resizeCheckIntervalHandle;
+  this.resizeCheckIntervalHandle = null;
 
   /**
    * Interval (ms) to check for player resize for fluid support.
@@ -1486,7 +1489,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
    */
   this.h5Player =
       document.getElementById(
-          this.controller.getSettings()['id']).getElementsByClassName(
+          this.controller.getSettings().id).getElementsByClassName(
               'vjs-tech')[0];
 
   // Detect inline options
@@ -1676,7 +1679,8 @@ PlayerWrapper.prototype.injectAdContainerDiv = function(adContainerDiv) {
  */
 PlayerWrapper.prototype.getContentPlayer = function() {
   return this.h5Player;
-}
+};
+
 
 /**
  * @return {number} The volume, 0-1.
@@ -1984,7 +1988,7 @@ var Controller = function(player, options) {
     prerollTimeout: this.settings.prerollTimeout
   };
   var ads_plugin_settings = this.extend(
-      {}, contrib_ads_defaults, options['contribAdsSettings'] || {});
+      {}, contrib_ads_defaults, options.contribAdsSettings || {});
 
   this.playerWrapper = new PlayerWrapper(player, ads_plugin_settings, this);
   this.adUi = new AdUi(this);
@@ -2010,14 +2014,14 @@ Controller.prototype.initWithSettings_ = function(options) {
   // Currently this isn't used but I can see it being needed in the future,
   // so to avoid implementation problems with later updates I'm requiring
   // it.
-  if (!this.settings['id']) {
+  if (!this.settings.id) {
     window.console.error('Error: must provide id of video.js div');
     return;
   }
 
   // Default showing countdown timer to true.
   this.showCountdown = true;
-  if (this.settings['showCountdown'] === false) {
+  if (this.settings.showCountdown === false) {
     this.showCountdown = false;
   }
 };
@@ -2045,7 +2049,7 @@ Controller.prototype.injectAdContainerDiv = function(adContainerDiv) {
  */
 Controller.prototype.getAdContainerDiv = function() {
   return this.adUi.getAdContainerDiv();
-}
+};
 
 
 /**
@@ -2053,7 +2057,7 @@ Controller.prototype.getAdContainerDiv = function() {
  */
 Controller.prototype.getContentPlayer = function() {
   return this.playerWrapper.getContentPlayer();
-}
+};
 
 
 /**
@@ -2091,7 +2095,7 @@ Controller.prototype.setSetting = function(key, value) {
 Controller.prototype.onErrorLoadingAds = function(adErrorEvent) {
   this.adUi.onAdError();
   this.playerWrapper.onAdError(adErrorEvent);
-}
+};
 
 
 /**
@@ -2174,6 +2178,14 @@ Controller.prototype.onAdBreakStart = function(adEvent) {
 
 
 /**
+ * Show the ad container.
+ */
+Controller.prototype.showAdContainer = function() {
+  this.adUi.showAdContainer();
+};
+
+
+/**
  * Handles ad break ending.
  */
 Controller.prototype.onAdBreakEnd = function() {
@@ -2217,7 +2229,7 @@ Controller.prototype.onAdsResumed = function() {
  */
 Controller.prototype.onAdPlayheadUpdated =
     function(currentTime, duration, adPosition, totalAds) {
-  this.adUi.updateAdUi(currentTime, duration, adPosition, totalAds)
+  this.adUi.updateAdUi(currentTime, duration, adPosition, totalAds);
 };
 
 
@@ -2247,10 +2259,18 @@ Controller.prototype.onLinearAdStart = function() {
 
 
 /**
+ * Handles when a non-linear ad loads.
+ */
+Controller.prototype.onNonLinearAdLoad = function() {
+  this.adUi.onNonLinearAdLoad();
+};
+
+
+/**
  * Handles when a non-linear ad starts.
  */
 Controller.prototype.onNonLinearAdStart = function() {
-  this.adUi.onNonLinearAdStart();
+  this.adUi.onNonLinearAdLoad();
   this.playerWrapper.onAdStart();
 };
 
@@ -2367,7 +2387,7 @@ Controller.prototype.onPlayerVolumeChanged = function(volume) {
 Controller.prototype.setContentWithAdTag =
     function(contentSrc, adTag, playOnLoad) {
   this.reset();
-  this.settings['adTagUrl'] = adTag ? adTag : this.settings['adTagUrl'];
+  this.settings.adTagUrl = adTag ? adTag : this.settings.adTagUrl;
   this.playerWrapper.changeSource(contentSrc, playOnLoad);
 };
 
@@ -2386,8 +2406,8 @@ Controller.prototype.setContentWithAdTag =
 Controller.prototype.setContentWithAdsResponse =
     function(contentSrc, adsResponse, playOnLoad) {
   this.reset();
-  this.settings['adsResponse'] =
-      adsResponse ? adsResponse : this.settings['adsResponse'];
+  this.settings.adsResponse =
+      adsResponse ? adsResponse : this.settings.adsResponse;
   this.playerWrapper.changeSource(contentSrc, playOnLoad);
 };
 
@@ -2487,7 +2507,7 @@ Controller.prototype.getAdsManager = function() {
  */
 Controller.prototype.changeAdTag = function(adTag) {
   this.reset();
-  this.settings['adTagUrl'] = adTag;
+  this.settings.adTagUrl = adTag;
 };
 
 /**
@@ -2707,7 +2727,7 @@ var ImaPlugin = function(player, options) {
    * you should call this method in the last line of that callback. For more
    * info, see this method's usage in our advanced and playlist examples.
    */
-  this.startFromReadyCallback = function() {
+  this.startFromAdsManagerLoadedCallback = function() {
     this.controller.onPlayerReadyForPreroll();
   }.bind(this);
 };

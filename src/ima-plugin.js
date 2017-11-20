@@ -174,7 +174,7 @@ var ImaPlugin = function(player, options) {
    * you should call this method in the last line of that callback. For more
    * info, see this method's usage in our advanced and playlist examples.
    */
-  this.startFromReadyCallback = function() {
+  this.startFromAdsManagerLoadedCallback = function() {
     this.controller.onPlayerReadyForPreroll();
   }.bind(this);
 };

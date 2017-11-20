@@ -33,7 +33,7 @@ var SdkImpl = function(controller) {
   /**
    * IMA SDK AdDisplayContainer.
    */
-  this.adDisplayContainer;
+  this.adDisplayContainer = null;
 
   /**
    * True if the AdDisplayContainer has been initialized. False otherwise.
@@ -43,12 +43,12 @@ var SdkImpl = function(controller) {
   /**
    * IMA SDK AdsLoader
    */
-  this.adsLoader;
+  this.adsLoader = null;
 
   /**
    * IMA SDK AdsManager
    */
-  this.adsManager;
+  this.adsManager = null;
 
   /**
    * IMA SDK AdsRenderingSettings.
@@ -58,23 +58,23 @@ var SdkImpl = function(controller) {
   /**
    * Ad tag URL. Should return VAST, VMAP, or ad rules.
    */
-  this.adTagUrl;
+  this.adTagUrl = null;
 
   /**
    * VAST, VMAP, or ad rules response. Used in lieu of fetching a response
    * from an ad tag URL.
    */
-  this.adsResponse;
+  this.adsResponse = null;
 
   /**
    * Current IMA SDK Ad.
    */
-  this.currentAd;
+  this.currentAd = null;
 
   /**
    * Timer used to track ad progress.
    */
-  this.adTrackingTimer;
+  this.adTrackingTimer = null;
 
   /**
    * True if ALL_ADS_COMPLETED has fired, false until then.
@@ -120,27 +120,27 @@ var SdkImpl = function(controller) {
    * Boolean flag to enable manual ad break playback.
    */
   this.autoPlayAdBreaks = true;
-  if (this.controller.getSettings()['autoPlayAdBreaks'] === false) {
+  if (this.controller.getSettings().autoPlayAdBreaks === false) {
     this.autoPlayAdBreaks = false;
   }
 
   // Set SDK settings from plugin settings.
-  if (this.controller.getSettings()['locale']) {
-    google.ima.settings.setLocale(this.controller.getSettings()['locale']);
+  if (this.controller.getSettings().locale) {
+    google.ima.settings.setLocale(this.controller.getSettings().locale);
   }
-  if (this.controller.getSettings()['disableFlashAds']) {
+  if (this.controller.getSettings().disableFlashAds) {
     google.ima.settings.setDisableFlashAds(
-        this.controller.getSettings()['disableFlashAds']);
+        this.controller.getSettings().disableFlashAds);
   }
-  if (this.controller.getSettings()['disableCustomPlaybackForIOS10Plus']) {
+  if (this.controller.getSettings().disableCustomPlaybackForIOS10Plus) {
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(
-        this.controller.getSettings()['disableCustomPlaybackForIOS10Plus']);
+        this.controller.getSettings().disableCustomPlaybackForIOS10Plus);
   }
 
   this.initAdObjects();
 
-  if (this.controller.getSettings()['adTagUrl'] ||
-      this.controller.getSettings()['adsResponse']) {
+  if (this.controller.getSettings().adTagUrl ||
+      this.controller.getSettings().adsResponse) {
     this.requestAds();
   }
 };
@@ -158,23 +158,23 @@ SdkImpl.prototype.initAdObjects = function() {
 
   this.adsLoader.getSettings().setVpaidMode(
       google.ima.ImaSdkSettings.VpaidMode.ENABLED);
-  if (this.controller.getSettings()['vpaidAllowed'] == false) {
+  if (this.controller.getSettings().vpaidAllowed == false) {
     this.adsLoader.getSettings().setVpaidMode(
         google.ima.ImaSdkSettings.VpaidMode.DISABLED);
   }
-  if (this.controller.getSettings()['vpaidMode']) {
+  if (this.controller.getSettings().vpaidMode) {
     this.adsLoader.getSettings().setVpaidMode(
-        this.controller.getSettings()['vpaidMode']);
+        this.controller.getSettings().vpaidMode);
   }
 
-  if (this.controller.getSettings()['locale']) {
+  if (this.controller.getSettings().locale) {
     this.adsLoader.getSettings().setLocale(
-        this.controller.getSettings['locale']);
+        this.controller.getSettings.locale);
   }
 
-  if (this.controller.getSettings()['numRedirects']) {
+  if (this.controller.getSettings().numRedirects) {
     this.adsLoader.getSettings().setNumRedirects(
-        this.controller.getSettings['numRedirects']);
+        this.controller.getSettings.numRedirects);
   }
 
   this.adsLoader.getSettings().setPlayerType('videojs-ima');
@@ -196,25 +196,25 @@ SdkImpl.prototype.initAdObjects = function() {
  */
 SdkImpl.prototype.requestAds = function() {
   var adsRequest = new google.ima.AdsRequest();
-  if (this.controller.getSettings()['adTagUrl']) {
-    adsRequest.adTagUrl = this.controller.getSettings()['adTagUrl'];
+  if (this.controller.getSettings().adTagUrl) {
+    adsRequest.adTagUrl = this.controller.getSettings().adTagUrl;
   } else {
-    adsRequest.adsResponse = this.controller.getSettings()['adsResponse'];
+    adsRequest.adsResponse = this.controller.getSettings().adsResponse;
   }
-  if (this.controller.getSettings()['forceNonLinearFullSlot']) {
+  if (this.controller.getSettings().forceNonLinearFullSlot) {
     adsRequest.forceNonLinearFullSlot = true;
   }
 
   adsRequest.linearAdSlotWidth = this.controller.getPlayerWidth();
   adsRequest.linearAdSlotHeight = this.controller.getPlayerHeight();
   adsRequest.nonLinearAdSlotWidth =
-      this.controller.getSettings()['nonLinearWidth'] ||
+      this.controller.getSettings().nonLinearWidth ||
       this.controller.getPlayerWidth();
   adsRequest.nonLinearAdSlotHeight =
-      this.controller.getSettings()['nonLinearHeight'] ||
+      this.controller.getSettings().nonLinearHeight ||
       (this.controller.getPlayerHeight() / 3);
 
-  adsRequest.setAdWillAutoPlay(this.controller.getSettings()['adWillAutoPlay']);
+  adsRequest.setAdWillAutoPlay(this.controller.getSettings().adWillAutoPlay);
 
   this.adsLoader.requestAds(adsRequest);
 };
@@ -280,8 +280,8 @@ SdkImpl.prototype.onAdsManagerLoaded_ = function(adsManagerLoadedEvent) {
 
   this.controller.onAdsReady();
 
-  if (this.controller.getSettings()['adsManagerLoadedCallback']) {
-    this.controller.getSettings()['adsManagerLoadedCallback']();
+  if (this.controller.getSettings().adsManagerLoadedCallback) {
+    this.controller.getSettings().adsManagerLoadedCallback();
   }
 };
 
@@ -323,7 +323,7 @@ SdkImpl.prototype.initAdsManager = function() {
   } catch (adError) {
     this.onAdError_(adError);
   }
-}
+};
 
 
 /**
@@ -334,10 +334,10 @@ SdkImpl.prototype.createAdsRenderingSettings_ = function() {
   this.adsRenderingSettings = new google.ima.AdsRenderingSettings();
   this.adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete =
       true;
-  if (this.controller.getSettings()['adsRenderingSettings']) {
-    for (var setting in this.controller.getSettings()['adsRenderingSettings']) {
+  if (this.controller.getSettings().adsRenderingSettings) {
+    for (var setting in this.controller.getSettings().adsRenderingSettings) {
       this.adsRenderingSettings[setting] =
-          this.controller.getSettings()['adsRenderingSettings'][setting];
+          this.controller.getSettings().adsRenderingSettings[setting];
     }
   }
 };
@@ -403,7 +403,8 @@ SdkImpl.prototype.onContentResumeRequested_ = function(adEvent) {
 SdkImpl.prototype.onAllAdsCompleted_ = function(adEvent) {
   this.allAdsCompleted = true;
   this.controller.onAllAdsCompleted();
-}
+};
+
 
 /**
  * Starts the content video when a non-linear ad is loaded.
@@ -412,6 +413,7 @@ SdkImpl.prototype.onAllAdsCompleted_ = function(adEvent) {
  */
 SdkImpl.prototype.onAdLoaded_ = function(adEvent) {
   if (!adEvent.getAd().isLinear()) {
+    this.controller.onNonLinearAdLoad();
     this.controller.playContent();
   }
 };
@@ -518,6 +520,7 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function() {
   if (this.autoPlayAdBreaks) {
     this.initAdsManager();
     try {
+      this.controller.showAdContainer();
       this.adsManager.start();
     } catch (adError) {
       this.onAdError_(adError);
@@ -664,6 +667,7 @@ SdkImpl.prototype.initializeAdDisplayContainer = function() {
  */
 SdkImpl.prototype.playAdBreak = function() {
   if (!this.autoPlayAdBreaks) {
+    this.controller.showAdContainer();
     this.adsManager.start();
   }
 };

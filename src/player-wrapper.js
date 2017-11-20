@@ -34,7 +34,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
   /**
    * Timer used to track content progress.
    */
-  this.contentTrackingTimer;
+  this.contentTrackingTimer = null;
 
   /**
    * True if our content video has completed, false otherwise.
@@ -44,7 +44,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
   /**
    * Handle to interval that repeatedly updates current time.
    */
-  this.updateTimeIntervalHandle;
+  this.updateTimeIntervalHandle = null;
 
   /**
    * Interval (ms) to check for player resize for fluid support.
@@ -54,7 +54,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
   /**
    * Handle to interval that repeatedly checks for seeking.
    */
-  this.seekCheckIntervalHandle;
+  this.seekCheckIntervalHandle = null;
 
   /**
    * Interval (ms) on which to check if the user is seeking through the
@@ -65,7 +65,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
   /**
    * Handle to interval that repeatedly checks for player resize.
    */
-  this.resizeCheckIntervalHandle;
+  this.resizeCheckIntervalHandle = null;
 
   /**
    * Interval (ms) to check for player resize for fluid support.
@@ -122,7 +122,7 @@ var PlayerWrapper = function(player, ads_plugin_settings, controller) {
    */
   this.h5Player =
       document.getElementById(
-          this.controller.getSettings()['id']).getElementsByClassName(
+          this.controller.getSettings().id).getElementsByClassName(
               'vjs-tech')[0];
 
   // Detect inline options
@@ -312,7 +312,8 @@ PlayerWrapper.prototype.injectAdContainerDiv = function(adContainerDiv) {
  */
 PlayerWrapper.prototype.getContentPlayer = function() {
   return this.h5Player;
-}
+};
+
 
 /**
  * @return {number} The volume, 0-1.
