@@ -10,11 +10,15 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "contBuild": "watch 'npm run rollup' src",
-    "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuild",
+    "contBuildDev": "watch 'npm run rollupDev' src",
+    "contBuildProd": "watch 'npm run rollupProd' src",
+    "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuildDev",
     "postdevServer": "forever stop ./node_modules/http-server/bin/http-server",
     "lint": "jshint src/**.js",
-    "rollup": "rollup -c"
+    "prodServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuildProd",
+    "postprodServer": "forever stop ./node_modules/http-server/bin/http-server",
+    "rollupDev": "rollup -c build/rollup.config.dev.js",
+    "rollupProd": "rollup -c build/rollup.config.prod.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +32,7 @@
     "http-server": "^0.10.0",
     "jshint": "^2.9.5",
     "rollup": "^0.51.8",
+    "rollup-plugin-copy": "^0.2.3",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-uglify": "^2.0.1",
     "uglify-es": "^3.1.10",

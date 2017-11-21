@@ -488,7 +488,7 @@ AdUi.prototype.onPlayerVolumeChanged = function(volume) {
  * @private
  */
 AdUi.prototype.showAdControls_ = function() {
-  this.controlsDiv.style.height = '37px';
+  this.addClass_(this.controlsDiv, 'ima-controls-div-showing');
   this.playPauseDiv.style.display = 'block';
   this.muteDiv.style.display = 'block';
   this.sliderDiv.style.display = 'block';
@@ -501,7 +501,7 @@ AdUi.prototype.showAdControls_ = function() {
  * @private
  */
 AdUi.prototype.hideAdControls_ = function() {
-  this.controlsDiv.style.height = '14px';
+  this.removeClass_(this.controlsDiv, 'ima-controls-div-showing');
   this.playPauseDiv.style.display = 'none';
   this.muteDiv.style.display = 'none';
   this.sliderDiv.style.display = 'none';
