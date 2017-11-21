@@ -30,7 +30,7 @@ import SdkImpl from './sdk-impl.js';
   * @struct
   * @final
   */
-var Controller = function(player, options) {
+const Controller = function(player, options) {
   /**
    * Stores user-provided settings.
    * @type {Object}
@@ -54,20 +54,20 @@ var Controller = function(player, options) {
       navigator.userAgent.match(/iPad/i) ||
       navigator.userAgent.match(/Android/i));
 
-  this.initWithSettings_(options);
+  this.initWithSettings(options);
 
   /**
    * Stores contrib-ads default settings.
    */
-  var contrib_ads_defaults = {
+  const contribAdsDefaults = {
     debug: this.settings.debug,
     timeout: this.settings.timeout,
-    prerollTimeout: this.settings.prerollTimeout
+    prerollTimeout: this.settings.prerollTimeout,
   };
-  var ads_plugin_settings = this.extend(
-      {}, contrib_ads_defaults, options.contribAdsSettings || {});
+  const adsPluginSettings = this.extend(
+      {}, contribAdsDefaults, options.contribAdsSettings || {});
 
-  this.playerWrapper = new PlayerWrapper(player, ads_plugin_settings, this);
+  this.playerWrapper = new PlayerWrapper(player, adsPluginSettings, this);
   this.adUi = new AdUi(this);
   this.sdkImpl = new SdkImpl(this);
 };
@@ -78,14 +78,15 @@ Controller.IMA_DEFAULTS = {
   timeout: 5000,
   prerollTimeout: 1000,
   adLabel: 'Advertisement',
-  showControlsForJSAds: true
+  showControlsForJSAds: true,
 };
 
 /**
  * Extends the settings to include user-provided settings.
- * @private
+ *
+ * @param {Object} options Options to be used in initialization.
  */
-Controller.prototype.initWithSettings_ = function(options) {
+Controller.prototype.initWithSettings = function(options) {
   this.settings = this.extend({}, Controller.IMA_DEFAULTS, options || {});
 
   // Currently this isn't used but I can see it being needed in the future,
@@ -106,6 +107,8 @@ Controller.prototype.initWithSettings_ = function(options) {
 
 /**
  * Return the settings object.
+ *
+ * @return {Object} The settings object.
  */
 Controller.prototype.getSettings = function() {
   return this.settings;
@@ -113,7 +116,7 @@ Controller.prototype.getSettings = function() {
 
 /**
  * Inject the ad container div into the DOM.
- * 
+ *
  * @param{HTMLElement} adContainerDiv The ad container div.
  */
 Controller.prototype.injectAdContainerDiv = function(adContainerDiv) {
@@ -139,6 +142,8 @@ Controller.prototype.getContentPlayer = function() {
 
 /**
  * Returns the content playhead tracker.
+ *
+ * @return {Object} The content playhead tracker.
  */
 Controller.prototype.getContentPlayheadTracker = function() {
   return this.playerWrapper.getContentPlayheadTracker();
@@ -229,7 +234,7 @@ Controller.prototype.getPlayerVolume = function() {
  * Toggle fullscreen state.
  */
 Controller.prototype.toggleFullscreen = function() {
-  return this.playerWrapper.toggleFullscreen();
+  this.playerWrapper.toggleFullscreen();
 };
 
 
@@ -354,6 +359,8 @@ Controller.prototype.onNonLinearAdStart = function() {
 
 /**
  * Get the player width.
+ *
+ * @return {number} The width of the player.
  */
 Controller.prototype.getPlayerWidth = function() {
   return this.playerWrapper.getPlayerWidth();
@@ -361,7 +368,9 @@ Controller.prototype.getPlayerWidth = function() {
 
 
 /**
- * Get the player width.
+ * Get the player height.
+ *
+ * @return {number} The height of the player.
  */
 Controller.prototype.getPlayerHeight = function() {
   return this.playerWrapper.getPlayerHeight();
@@ -398,8 +407,10 @@ Controller.prototype.onContentComplete = function() {
  * Called when content and all ads have completed.
  */
 Controller.prototype.onContentAndAdsCompleted = function() {
-  for (var index in this.contentAndAdsEndedListeners) {
-    this.contentAndAdsEndedListeners[index]();
+  for (let index in this.contentAndAdsEndedListeners) {
+    if (typeof this.contentAndAdsEndedListeners[index] === 'function') {
+      this.contentAndAdsEndedListeners[index]();
+    }
   }
 };
 
@@ -498,13 +509,19 @@ Controller.prototype.reset = function() {
 };
 
 
+/**
+ * Listener JSDoc for ESLint. This listener can be passed to
+ * (add|remove)ContentEndedListener.
+ * @callback listener
+ */
+
 
 /**
  * Adds a listener for the 'ended' event of the video player. This should be
  * used instead of setting an 'ended' listener directly to ensure that the
  * ima can do proper cleanup of the SDK before other event listeners
  * are called.
- * @param {function} listener The listener to be called when content
+ * @param {listener} listener The listener to be called when content
  *     completes.
  */
 Controller.prototype.addContentEndedListener = function(listener) {
@@ -512,15 +529,24 @@ Controller.prototype.addContentEndedListener = function(listener) {
 };
 
 
-
 /**
  * Adds a listener that will be called when content and all ads have
  * finished playing.
- * @param {function} listener The listener to be called when content and ads
+ * @param {listener} listener The listener to be called when content and ads
  *     complete.
  */
 Controller.prototype.addContentAndAdsEndedListener = function(listener) {
   this.contentAndAdsEndedListeners.push(listener);
+};
+
+
+/**
+ * Sets the listener to be called to trigger manual ad break playback.
+ * @param {listener} listener The listener to be called to trigger manual ad
+ *     break playback.
+ */
+Controller.prototype.setAdBreakReadyListener = function(listener) {
+  this.sdkImpl.setAdBreakReadyListener(listener);
 };
 
 
@@ -555,12 +581,18 @@ Controller.prototype.playAdBreak = function() {
 
 
 /**
+ * Callback JSDoc for ESLint. This callback can be passed to addEventListener.
+ * @callback callback
+ */
+
+
+/**
  * Ads an EventListener to the AdsManager. For a list of available events,
  * see
  * https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdEvent.Type
  * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to
  *     listen.
- * @param {function} callback The method to call when the event is fired.
+ * @param {callback} callback The method to call when the event is fired.
  */
 Controller.prototype.addEventListener = function(event, callback) {
   this.sdkImpl.addEventListener(event, callback);
@@ -612,13 +644,13 @@ Controller.prototype.resumeAd = function() {
  * @param {...Object} var_args The objects whose properties are to be extended
  *     onto obj.
  * @return {Object} The extended object.
- */ 
-Controller.prototype.extend = function(obj) {
-  var arg;
-  var index;
-  var key;
-  for (index = 1; index < arguments.length; index++) {
-    arg = arguments[index];
+ */
+Controller.prototype.extend = function(obj, ...args) {
+  let arg;
+  let index;
+  let key;
+  for (index = 0; index < args.length; index++) {
+    arg = args[index];
     for (key in arg) {
       if (arg.hasOwnProperty(key)) {
         obj[key] = arg[key];

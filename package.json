@@ -10,15 +10,13 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "contBuildDev": "watch 'npm run rollupDev' src",
-    "contBuildProd": "watch 'npm run rollupProd' src",
+    "contBuildDev": "watch 'npm run rollup:dev' src",
     "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuildDev",
     "postdevServer": "forever stop ./node_modules/http-server/bin/http-server",
-    "lint": "jshint src/**.js",
-    "prodServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuildProd",
-    "postprodServer": "forever stop ./node_modules/http-server/bin/http-server",
-    "rollupDev": "rollup -c build/rollup.config.dev.js",
-    "rollupProd": "rollup -c build/rollup.config.prod.js"
+    "lint": "eslint \"src/*.js\"",
+    "rollup": "npm-run-all rollup:*",
+    "rollup:dev": "rollup -c build/rollup.config.dev.js",
+    "rollup:prod": "rollup -c build/rollup.config.prod.js"
   },
   "repository": {
     "type": "git",
@@ -28,9 +26,12 @@
     "videojs-contrib-ads": "~5.1.0"
   },
   "devDependencies": {
+    "eslint": "^4.11.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-jsdoc": "^3.2.0",
     "forever": "^0.15.3",
     "http-server": "^0.10.0",
-    "jshint": "^2.9.5",
+    "npm-run-all": "^4.1.2",
     "rollup": "^0.51.8",
     "rollup-plugin-copy": "^0.2.3",
     "rollup-plugin-json": "^2.3.0",

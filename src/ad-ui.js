@@ -25,7 +25,7 @@
  * @struct
  * @final
  */
-var AdUi = function(controller) {
+const AdUi = function(controller) {
   /**
    * Plugin controller.
    */
@@ -84,106 +84,105 @@ var AdUi = function(controller) {
   /**
    * Bound event handler for onMouseUp.
    */
-  this.boundOnMouseUp = this.onMouseUp_.bind(this);
+  this.boundOnMouseUp = this.onMouseUp.bind(this);
 
   /**
    * Bound event handler for onMouseMove.
    */
-  this.boundOnMouseUp = this.onMouseMove_.bind(this);
+  this.boundOnMouseUp = this.onMouseMove.bind(this);
 
   /**
    * Stores data for the ad playhead tracker.
    */
   this.adPlayheadTracker = {
-    currentTime: 0,
-    duration: 0,
-    isPod: false,
-    adPosition: 0,
-    totalAds: 0
+    'currentTime': 0,
+    'duration': 0,
+    'isPod': false,
+    'adPosition': 0,
+    'totalAds': 0,
   };
 
   /**
    * Used to prefix videojs ima controls.
    */
-  this.controlPrefix = (this.controller.getSettings().id + '_') || '';
+  this.controlPrefix = this.controller.getSettings().id ?
+      this.controller.getSettings().id + '_' : '';
 
   /**
    * Boolean flag to show or hide the ad countdown timer.
    */
   this.showCountdown = true;
-  if (this.controller.getSettings().showCountdown == false) {
+  if (this.controller.getSettings().showCountdown === false) {
     this.showCountdown = false;
   }
 
-  this.createAdContainer_();
+  this.createAdContainer();
 };
 
 /**
  * Creates the ad container.
- * @private
  */
-AdUi.prototype.createAdContainer_ = function() {
-  this.assignControlAttributes_(
+AdUi.prototype.createAdContainer = function() {
+  this.assignControlAttributes(
       this.adContainerDiv, 'ima-ad-container');
-  this.adContainerDiv.style.position = "absolute";
+  this.adContainerDiv.style.position = 'absolute';
   this.adContainerDiv.style.zIndex = 1111;
   this.adContainerDiv.addEventListener(
       'mouseenter',
-      this.showAdControls_.bind(this),
+      this.showAdControls.bind(this),
       false);
   this.adContainerDiv.addEventListener(
       'mouseleave',
-      this.hideAdControls_.bind(this),
+      this.hideAdControls.bind(this),
       false);
-  this.createControls_();
+  this.createControls();
   this.controller.injectAdContainerDiv(this.adContainerDiv);
 };
 
 
 /**
  * Create the controls.
- * @private
  */
-AdUi.prototype.createControls_ = function() {
-  this.assignControlAttributes_(this.controlsDiv, 'ima-controls-div');
+AdUi.prototype.createControls = function() {
+  this.assignControlAttributes(this.controlsDiv, 'ima-controls-div');
   this.controlsDiv.style.width = '100%';
 
-  this.assignControlAttributes_(this.countdownDiv, 'ima-countdown-div');
+  this.assignControlAttributes(this.countdownDiv, 'ima-countdown-div');
   this.countdownDiv.innerHTML = this.controller.getSettings().adLabel;
   this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
 
-  this.assignControlAttributes_(this.seekBarDiv, 'ima-seek-bar-div');
+  this.assignControlAttributes(this.seekBarDiv, 'ima-seek-bar-div');
   this.seekBarDiv.style.width = '100%';
 
-  this.assignControlAttributes_(this.progressDiv, 'ima-progress-div');
+  this.assignControlAttributes(this.progressDiv, 'ima-progress-div');
 
-  this.assignControlAttributes_(this.playPauseDiv, 'ima-play-pause-div');
-  this.addClass_(this.playPauseDiv, 'ima-playing');
+  this.assignControlAttributes(this.playPauseDiv, 'ima-play-pause-div');
+  this.addClass(this.playPauseDiv, 'ima-playing');
   this.playPauseDiv.addEventListener(
       'click',
-      this.onAdPlayPauseClick_.bind(this),
+      this.onAdPlayPauseClick.bind(this),
       false);
 
-  this.assignControlAttributes_(this.muteDiv, 'ima-mute-div');
-  this.addClass_(this.muteDiv, 'ima-non-muted');
+  this.assignControlAttributes(this.muteDiv, 'ima-mute-div');
+  this.addClass(this.muteDiv, 'ima-non-muted');
   this.muteDiv.addEventListener(
       'click',
-      this.onAdMuteClick_.bind(this),
+      this.onAdMuteClick.bind(this),
       false);
 
-  this.assignControlAttributes_(this.sliderDiv, 'ima-slider-div');
+  this.assignControlAttributes(this.sliderDiv, 'ima-slider-div');
   this.sliderDiv.addEventListener(
       'mousedown',
-      this.onAdVolumeSliderMouseDown_.bind(this),
+      this.onAdVolumeSliderMouseDown.bind(this),
       false);
 
-  this.assignControlAttributes_(this.sliderLevelDiv, 'ima-slider-level-div');
+  this.assignControlAttributes(this.sliderLevelDiv, 'ima-slider-level-div');
 
-  this.assignControlAttributes_(this.fullscreenDiv, 'ima-fullscreen-div');
-  this.addClass_(this.fullscreenDiv, 'ima-non-fullscreen');
+  this.assignControlAttributes(this.fullscreenDiv, 'ima-fullscreen-div');
+  this.addClass(this.fullscreenDiv, 'ima-non-fullscreen');
   this.fullscreenDiv.addEventListener(
       'click',
-      this.onAdFullscreenClick_.bind(this),
+      this.onAdFullscreenClick.bind(this),
       false);
 
   this.adContainerDiv.appendChild(this.controlsDiv);
@@ -200,27 +199,24 @@ AdUi.prototype.createControls_ = function() {
 
 /**
  * Listener for clicks on the play/pause button during ad playback.
- * @private
  */
-AdUi.prototype.onAdPlayPauseClick_ = function() {
+AdUi.prototype.onAdPlayPauseClick = function() {
   this.controller.onAdPlayPauseClick();
 };
 
 
 /**
  * Listener for clicks on the play/pause button during ad playback.
- * @private
  */
-AdUi.prototype.onAdMuteClick_ = function() {
+AdUi.prototype.onAdMuteClick = function() {
   this.controller.onAdMuteClick();
 };
 
 
 /**
  * Listener for clicks on the fullscreen button during ad playback.
- * @private
  */
-AdUi.prototype.onAdFullscreenClick_ = function() {
+AdUi.prototype.onAdFullscreenClick = function() {
   this.controller.toggleFullscreen();
 };
 
@@ -229,9 +225,9 @@ AdUi.prototype.onAdFullscreenClick_ = function() {
  * Show pause and hide play button
  */
 AdUi.prototype.onAdsPaused = function() {
-  this.addClass_(this.playPauseDiv, 'ima-paused');
-  this.removeClass_(this.playPauseDiv, 'ima-playing');
-  this.showAdControls_();
+  this.addClass(this.playPauseDiv, 'ima-paused');
+  this.removeClass(this.playPauseDiv, 'ima-playing');
+  this.showAdControls();
 };
 
 
@@ -240,7 +236,7 @@ AdUi.prototype.onAdsPaused = function() {
  */
 AdUi.prototype.onAdsResumed = function() {
   this.onAdsPlaying();
-  this.showAdControls_();
+  this.showAdControls();
 };
 
 
@@ -248,8 +244,8 @@ AdUi.prototype.onAdsResumed = function() {
  * Show play and hide pause button
  */
 AdUi.prototype.onAdsPlaying = function() {
-  this.addClass_(this.playPauseDiv, 'ima-playing');
-  this.removeClass_(this.playPauseDiv, 'ima-paused');
+  this.addClass(this.playPauseDiv, 'ima-playing');
+  this.removeClass(this.playPauseDiv, 'ima-paused');
 };
 
 
@@ -263,14 +259,14 @@ AdUi.prototype.onAdsPlaying = function() {
  */
 AdUi.prototype.updateAdUi =
     function(currentTime, duration, adPosition, totalAds) {
-  var remainingTime = duration - currentTime;
+  const remainingTime = duration - currentTime;
   // Update countdown timer data
-  var remainingMinutes = Math.floor(remainingTime / 60);
-  var remainingSeconds = Math.floor(remainingTime % 60);
+  const remainingMinutes = Math.floor(remainingTime / 60);
+  let remainingSeconds = Math.floor(remainingTime % 60);
   if (remainingSeconds.toString().length < 2) {
     remainingSeconds = '0' + remainingSeconds;
   }
-  var podCount = ': ';
+  let podCount = ': ';
   if (totalAds > 1) {
     podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
   }
@@ -279,8 +275,8 @@ AdUi.prototype.updateAdUi =
       remainingMinutes + ':' + remainingSeconds;
 
   // Update UI
-  var playProgressRatio = currentTime / duration;
-  var playProgressPercent = playProgressRatio * 100;
+  const playProgressRatio = currentTime / duration;
+  const playProgressPercent = playProgressRatio * 100;
   this.progressDiv.style.width = playProgressPercent + '%';
 };
 
@@ -289,10 +285,10 @@ AdUi.prototype.updateAdUi =
  * Handles UI changes when the ad is unmuted.
  */
 AdUi.prototype.unmute = function() {
-  this.addClass_(this.muteDiv, 'ima-non-muted');
-  this.removeClass_(this.muteDiv, 'ima-muted');
+  this.addClass(this.muteDiv, 'ima-non-muted');
+  this.removeClass(this.muteDiv, 'ima-muted');
   this.sliderLevelDiv.style.width =
-      this.controller.getPlayerVolume() * 100 + "%";
+      this.controller.getPlayerVolume() * 100 + '%';
 };
 
 
@@ -300,62 +296,58 @@ AdUi.prototype.unmute = function() {
  * Handles UI changes when the ad is muted.
  */
 AdUi.prototype.mute = function() {
-  this.addClass_(this.muteDiv, 'ima-muted');
-  this.removeClass_(this.muteDiv, 'ima-non-muted');
+  this.addClass(this.muteDiv, 'ima-muted');
+  this.removeClass(this.muteDiv, 'ima-non-muted');
   this.sliderLevelDiv.style.width = '0%';
 };
 
 
-
-
-/* Listener for mouse down events during ad playback. Used for volume.
- * @private
+/*
+ * Listener for mouse down events during ad playback. Used for volume.
  */
-AdUi.prototype.onAdVolumeSliderMouseDown_ = function() {
+AdUi.prototype.onAdVolumeSliderMouseDown = function() {
    document.addEventListener('mouseup', this.boundOnMouseUp, false);
    document.addEventListener('mousemove', this.boundOnMouseMove, false);
 };
 
 
-/* Mouse movement listener used for volume slider.
- * @private
+/*
+ * Mouse movement listener used for volume slider.
  */
-AdUi.prototype.onMouseMove_ = function(event) {
-  this.changeVolume_(event);
+AdUi.prototype.onMouseMove = function(event) {
+  this.changeVolume(event);
 };
 
 
-/* Mouse release listener used for volume slider.
- * @private
+/*
+ * Mouse release listener used for volume slider.
  */
-AdUi.prototype.onMouseUp_ = function(event) {
-  this.changeVolume_(event);
+AdUi.prototype.onMouseUp = function(event) {
+  this.changeVolume(event);
   document.removeEventListener('mouseup', this.boundOnMouseUp);
   document.removeEventListener('mousemove', this.boundOnMouseMove);
 };
 
 
-/* Utility function to set volume and associated UI
- * @private
+/*
+ * Utility function to set volume and associated UI
  */
-AdUi.prototype.changeVolume_ = function(event) {
-  var percent =
+AdUi.prototype.changeVolume = function(event) {
+  let percent =
       (event.clientX - this.sliderDiv.getBoundingClientRect().left) /
           this.sliderDiv.offsetWidth;
   percent *= 100;
-  //Bounds value 0-100 if mouse is outside slider region.
+  // Bounds value 0-100 if mouse is outside slider region.
   percent = Math.min(Math.max(percent, 0), 100);
-  this.sliderLevelDiv.style.width = percent + "%";
+  this.sliderLevelDiv.style.width = percent + '%';
   if (this.percent == 0) {
-    this.addClass_(this.muteDiv, 'ima-muted');
-    this.removeClass_(this.muteDiv, 'ima-non-muted');
+    this.addClass(this.muteDiv, 'ima-muted');
+    this.removeClass(this.muteDiv, 'ima-non-muted');
+  } else {
+    this.addClass(this.muteDiv, 'ima-non-muted');
+    this.removeClass(this.muteDiv, 'ima-muted');
   }
-  else
-  {
-    this.addClass_(this.muteDiv, 'ima-non-muted');
-    this.removeClass_(this.muteDiv, 'ima-muted');
-  }
-  this.controller.setVolume(percent / 100); //0-1
+  this.controller.setVolume(percent / 100); // 0-1
 };
 
 
@@ -383,7 +375,7 @@ AdUi.prototype.onAdError = function() {
 AdUi.prototype.onAdBreakStart = function(adEvent) {
   this.adContainerDiv.style.display = 'block';
 
-  var contentType = adEvent.getAd().getContentType();
+  const contentType = adEvent.getAd().getContentType();
   if ((contentType === 'application/javascript') &&
       !this.controller.getSettings().showControlsForJSAds) {
     this.controlsDiv.style.display = 'none';
@@ -392,7 +384,7 @@ AdUi.prototype.onAdBreakStart = function(adEvent) {
   }
   this.onAdsPlaying();
   // Start with the ad controls minimized.
-  this.hideAdControls_();
+  this.hideAdControls();
 };
 
 
@@ -400,7 +392,7 @@ AdUi.prototype.onAdBreakStart = function(adEvent) {
  * Handles ad break ending.
  */
 AdUi.prototype.onAdBreakEnd = function() {
-  var currentAd = this.controller.getCurrentAd();
+  const currentAd = this.controller.getCurrentAd();
   if (currentAd == null || // hide for post-roll only playlist
       currentAd.isLinear()) { // don't hide for non-linear ads
     this.adContainerDiv.style.display = 'none';
@@ -423,7 +415,7 @@ AdUi.prototype.onAllAdsCompleted = function() {
  */
 AdUi.prototype.onLinearAdStart = function() {
   // Don't bump container when controls are shown
-  this.removeClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
+  this.removeClass(this.adContainerDiv, 'bumpable-ima-ad-container');
 };
 
 
@@ -435,7 +427,7 @@ AdUi.prototype.onNonLinearAdLoad = function() {
   // ad container in onAdBreakStart to prevent blinking in pods.
   this.adContainerDiv.style.display = 'block';
   // Bump container when controls are shown
-  this.addClass_(this.adContainerDiv, 'bumpable-ima-ad-container');
+  this.addClass(this.adContainerDiv, 'bumpable-ima-ad-container');
 };
 
 
@@ -449,20 +441,22 @@ AdUi.prototype.onPlayerResize = function(width, height) {
   if (this.adsManager) {
     this.adsManagerDimensions.width = width;
     this.adsManagerDimensions.height = height;
+    /* global google */
+    /* eslint no-undef: 'error' */
     this.adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
   }
 };
 
 
 AdUi.prototype.onPlayerEnterFullscreen = function() {
-  this.addClass_(this.fullscreenDiv, 'ima-fullscreen');
-  this.removeClass_(this.fullscreenDiv, 'ima-non-fullscreen');
+  this.addClass(this.fullscreenDiv, 'ima-fullscreen');
+  this.removeClass(this.fullscreenDiv, 'ima-non-fullscreen');
 };
 
 
 AdUi.prototype.onPlayerExitFullscreen = function() {
-  this.addClass_(this.fullscreenDiv, 'ima-non-fullscreen');
-  this.removeClass_(this.fullscreenDiv, 'ima-fullscreen');
+  this.addClass(this.fullscreenDiv, 'ima-non-fullscreen');
+  this.removeClass(this.fullscreenDiv, 'ima-fullscreen');
 };
 
 
@@ -473,22 +467,21 @@ AdUi.prototype.onPlayerExitFullscreen = function() {
  */
 AdUi.prototype.onPlayerVolumeChanged = function(volume) {
   if (volume == 0) {
-    this.addClass_(this.muteDiv, 'ima-muted');
-    this.removeClass_(this.muteDiv, 'ima-non-muted');
+    this.addClass(this.muteDiv, 'ima-muted');
+    this.removeClass(this.muteDiv, 'ima-non-muted');
     this.sliderLevelDiv.style.width = '0%';
   } else {
-    this.addClass_(this.muteDiv, 'ima-non-muted');
-    this.removeClass_(this.muteDiv, 'ima-muted');
+    this.addClass(this.muteDiv, 'ima-non-muted');
+    this.removeClass(this.muteDiv, 'ima-muted');
     this.sliderLevelDiv.style.width = volume * 100 + '%';
   }
 };
 
 /**
  * Shows ad controls on mouseover.
- * @private
  */
-AdUi.prototype.showAdControls_ = function() {
-  this.addClass_(this.controlsDiv, 'ima-controls-div-showing');
+AdUi.prototype.showAdControls = function() {
+  this.addClass(this.controlsDiv, 'ima-controls-div-showing');
   this.playPauseDiv.style.display = 'block';
   this.muteDiv.style.display = 'block';
   this.sliderDiv.style.display = 'block';
@@ -498,10 +491,9 @@ AdUi.prototype.showAdControls_ = function() {
 
 /**
  * Hide the ad controls.
- * @private
  */
-AdUi.prototype.hideAdControls_ = function() {
-  this.removeClass_(this.controlsDiv, 'ima-controls-div-showing');
+AdUi.prototype.hideAdControls = function() {
+  this.removeClass(this.controlsDiv, 'ima-controls-div-showing');
   this.playPauseDiv.style.display = 'none';
   this.muteDiv.style.display = 'none';
   this.sliderDiv.style.display = 'none';
@@ -514,9 +506,8 @@ AdUi.prototype.hideAdControls_ = function() {
  * style class.
  * @param {HTMLElement} element Element that needs the controlName assigned.
  * @param {string} controlName Control name to assign.
- * @private
  */
-AdUi.prototype.assignControlAttributes_ = function(element, controlName) {
+AdUi.prototype.assignControlAttributes = function(element, controlName) {
   element.id = this.controlPrefix + controlName;
   element.className = this.controlPrefix + controlName + ' ' + controlName;
 };
@@ -524,11 +515,11 @@ AdUi.prototype.assignControlAttributes_ = function(element, controlName) {
 
 /**
  * Returns a regular expression to test a string for the given className.
- * @param className
- * @returns {RegExp}
- * @private
+ *
+ * @param {string} className The name of the class.
+ * @return {RegExp} The regular expression used to test for that class.
  */
-AdUi.prototype.getClassRegexp_ = function(className){
+AdUi.prototype.getClassRegexp = function(className) {
   // Matches on
   // (beginning of string OR NOT word char)
   // classname
@@ -541,44 +532,35 @@ AdUi.prototype.getClassRegexp_ = function(className){
 /**
  * Returns whether or not the provided element has the provied class in its
  * className.
- * @param element
- * @param className
- * @return {boolean}
- * @private
+ * @param {HTMLElement} element Element to tes.t
+ * @param {string} className Class to look for.
+ * @return {boolean} True if element has className in class list. False
+ *     otherwise.
  */
-AdUi.prototype.elementHasClass_ = function(element, className) {
-  var classRegexp = this.getClassRegexp_(className);
+AdUi.prototype.elementHasClass = function(element, className) {
+  const classRegexp = this.getClassRegexp(className);
   return classRegexp.test(element.className);
 };
 
 
 /**
  * Adds a class to the given element if it doesn't already have the class
- * @param element
- * @param classToAdd
- * @private
+ * @param {HTMLElement} element Element to which the class will be added.
+ * @param {string} classToAdd Class to add.
  */
-AdUi.prototype.addClass_ = function(element, classToAdd){
-  if(this.elementHasClass_(element, classToAdd)){
-    return element;
-  }
-
+AdUi.prototype.addClass = function(element, classToAdd) {
   element.className = element.className.trim() + ' ' + classToAdd;
 };
 
 
 /**
  * Removes a class from the given element if it has the given class
- * @param element
- * @param classToRemove
- * @private
+ *
+ * @param {HTMLElement} element Element from which the class will be removed.
+ * @param {string} classToRemove Class to remove.
  */
-AdUi.prototype.removeClass_ = function(element, classToRemove){
-  if(!this.elementHasClass_(element, classToRemove)){
-    return element;
-  }
-
-  var classRegexp = this.getClassRegexp_(classToRemove);
+AdUi.prototype.removeClass = function(element, classToRemove) {
+  const classRegexp = this.getClassRegexp(classToRemove);
   element.className =
       element.className.trim().replace(classRegexp, '');
 };

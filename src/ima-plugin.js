@@ -30,13 +30,20 @@ import videojs from 'video.js';
  * @struct
  * @final
  */
-var ImaPlugin = function(player, options) {
+const ImaPlugin = function(player, options) {
   this.controller = new Controller(player, options);
+
+  /**
+   * Listener JSDoc for ESLint. This listener can be passed to
+   * addContent(AndAds)EndedListener.
+   * @callback listener
+   */
 
   /**
    * Adds a listener that will be called when content and all ads have
    * finished playing.
-   * @param {function} listener The listener to be called when content and ads complete.
+   * @param {listener} listener The listener to be called when content and ads
+   *     complete.
    */
   this.addContentAndAdsEndedListener = function(listener) {
     this.controller.addContentAndAdsEndedListener(listener);
@@ -48,22 +55,32 @@ var ImaPlugin = function(player, options) {
    * used instead of setting an 'ended' listener directly to ensure that the
    * ima can do proper cleanup of the SDK before other event listeners
    * are called.
-   * @param {function} listener The listener to be called when content completes.
+   * @param {listener} listener The listener to be called when content
+   *     completes.
    */
   this.addContentEndedListener = function(listener) {
     this.controller.addContentEndedListener(listener);
   }.bind(this);
 
+
+  /**
+   * Callback JSDoc for ESLint. This callback can be passed to addEventListener.
+   * @callback callback
+   */
+
+
   /**
    * Ads an EventListener to the AdsManager. For a list of available events,
    * see
    * https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdEvent.Type
-   * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to listen.
-   * @param {function} callback The method to call when the event is fired.
+   * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to
+   *     listen.
+   * @param {callback} callback The method to call when the event is fired.
    */
   this.addEventListener = function(event, callback) {
     this.controller.addEventListener(event, callback);
   }.bind(this);
+
 
   /**
    * Changes the ad tag. You will need to call requestAds after this method
@@ -75,6 +92,7 @@ var ImaPlugin = function(player, options) {
     this.controller.changeAdTag(adTag);
   }.bind(this);
 
+
   /**
    * Returns the instance of the AdsManager.
    * @return {google.ima.AdsManager} The AdsManager being used by the plugin.
@@ -82,6 +100,7 @@ var ImaPlugin = function(player, options) {
   this.getAdsManager = function() {
     return this.controller.getAdsManager();
   }.bind(this);
+
 
   /**
    * Initializes the AdDisplayContainer. On mobile, this must be done as a
@@ -91,12 +110,14 @@ var ImaPlugin = function(player, options) {
     this.controller.initializeAdDisplayContainer();
   }.bind(this);
 
+
   /**
    * Pauses the ad.
    */
   this.pauseAd = function() {
     this.controller.pauseAd();
   }.bind(this);
+
 
   /**
    * Called by publishers in manual ad break playback mode to start an ad
@@ -106,12 +127,14 @@ var ImaPlugin = function(player, options) {
     this.controller.playAdBreak();
   }.bind(this);
 
+
   /**
    * Creates the AdsRequest and request ads through the AdsLoader.
    */
   this.requestAds = function() {
     this.controller.requestAds();
   }.bind(this);
+
 
   /**
    * Resumes the ad.
@@ -120,13 +143,17 @@ var ImaPlugin = function(player, options) {
     this.controller.resumeAd();
   }.bind(this);
 
+
   /**
    * Sets the listener to be called to trigger manual ad break playback.
-   * @param {function} listener The listener to be called to trigger manual ad break playback.
+   * @param {listener} listener The listener to be called to trigger manual ad
+   *     break playback.
    */
   this.setAdBreakReadyListener = function(listener) {
     this.controller.setAdBreakReadyListener();
   }.bind(this);
+
+
   /**
    * Sets the content of the video player. You should use this method instead
    * of setting the content src directly to ensure the proper ad tag is
@@ -141,6 +168,7 @@ var ImaPlugin = function(player, options) {
   this.setContentWithAdTag = function(contentSrc, adTag, playOnLoad) {
     this.controller.setContentWithAdTag(contentSrc, adTag, playOnLoad);
   }.bind(this);
+
 
   /**
    * Sets the content of the video player. You should use this method instead
@@ -159,6 +187,7 @@ var ImaPlugin = function(player, options) {
         contentSrc, adsResponse, playOnLoad);
   }.bind(this);
 
+
   /**
    * Changes the flag to show or hide the ad countdown timer.
    *
@@ -167,25 +196,13 @@ var ImaPlugin = function(player, options) {
   this.setShowCountdown = function(showCountdownIn) {
     this.controller.setShowCountdown(showCountdownIn);
   }.bind(this);
-
-  /**
-   * Start ad playback, or content video playback in the absence of a
-   * pre-roll. **NOTE**: This method only needs to be called if you provide
-   * your own readyCallback as the second parameter to player.ima(). If you
-   * only provide options and do not provide your own readyCallback,
-   * **DO NOT** call this method. If you do provide your own readyCallback,
-   * you should call this method in the last line of that callback. For more
-   * info, see this method's usage in our advanced and playlist examples.
-   */
-  this.startFromAdsManagerLoadedCallback = function() {
-    this.controller.onPlayerReadyForPreroll();
-  }.bind(this);
 };
 
 
-var init = function(options) {
+const init = function(options) {
+  /* eslint no-invalid-this: 'off' */
   this.ima = new ImaPlugin(this, options);
 };
 
-var registerPlugin = videojs.registerPlugin || videojs.plugin;
+const registerPlugin = videojs.registerPlugin || videojs.plugin;
 registerPlugin('ima', init);
