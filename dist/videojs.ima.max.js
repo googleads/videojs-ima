@@ -1155,7 +1155,7 @@ var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var author = {"name":"Google Inc."};
 var engines = {"node":">=0.8.0"};
-var scripts = {"contBuildDev":"watch 'npm run rollup:dev' src","devServer":"forever start ./node_modules/http-server/bin/http-server && npm run contBuildDev","postdevServer":"forever stop ./node_modules/http-server/bin/http-server","lint":"eslint \"src/*.js\"","rollup":"npm-run-all rollup:*","rollup:dev":"rollup -c build/rollup.config.dev.js","rollup:prod":"rollup -c build/rollup.config.prod.js"};
+var scripts = {"contBuildDev":"watch 'npm run rollup:dev' src","devServer":"forever start ./node_modules/http-server/bin/http-server && npm run contBuildDev","postdevServer":"forever stop ./node_modules/http-server/bin/http-server","lint":"eslint \"src/*.js\"","release":"npm-run-all rollup:release_*","rollup:dev":"rollup -c build/rollup.config.dev.js","rollup:release_max":"rollup -c build/rollup.config.max.js","rollup:release_prod":"rollup -c build/rollup.config.prod.js"};
 var repository = {"type":"git","url":"https://github.com/googleads/videojs-ima"};
 var dependencies = {"videojs-contrib-ads":"~5.1.0"};
 var devDependencies = {"eslint":"^4.11.0","eslint-config-google":"^0.9.1","eslint-plugin-jsdoc":"^3.2.0","forever":"^0.15.3","http-server":"^0.10.0","npm-run-all":"^4.1.2","rollup":"^0.51.8","rollup-plugin-copy":"^0.2.3","rollup-plugin-json":"^2.3.0","rollup-plugin-uglify":"^2.0.1","uglify-es":"^3.1.10","videojs-doc-generator":"^0.0.1","watch":"^1.0.2"};

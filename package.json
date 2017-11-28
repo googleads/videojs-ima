@@ -14,9 +14,10 @@
     "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuildDev",
     "postdevServer": "forever stop ./node_modules/http-server/bin/http-server",
     "lint": "eslint \"src/*.js\"",
-    "rollup": "npm-run-all rollup:*",
+    "release": "npm-run-all rollup:release_*",
     "rollup:dev": "rollup -c build/rollup.config.dev.js",
-    "rollup:prod": "rollup -c build/rollup.config.prod.js"
+    "rollup:release_max": "rollup -c build/rollup.config.max.js",
+    "rollup:release_prod": "rollup -c build/rollup.config.prod.js"
   },
   "repository": {
     "type": "git",

@@ -5,7 +5,7 @@ export default {
   name: 'videojsIma',
   input: 'src/ima-plugin.js',
   output: {
-    file: 'dist/videojs.ima.dev.js',
+    file: 'dist/videojs.ima.max.js',
     format: 'umd'
   },
   external: ['video.js', 'videojs-contrib-ads'],
