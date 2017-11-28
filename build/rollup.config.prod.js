@@ -18,7 +18,7 @@ export default {
     json(),
     uglify({}, minify),
     copy({
-      "src/css/videojs.ima.css": "dist/videojs.ima.css"
+      "src/css/videojs.ima.dev.css": "dist/videojs.ima.dev.css"
     })
   ]
 };
