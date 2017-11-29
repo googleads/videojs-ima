@@ -1,6 +1,6 @@
 {
   "name": "videojs-ima",
-  "version": "1.0.0",
+  "version": "0.8.0",
   "license": "Apache-2.0",
   "main": "./dist/videojs.ima.js",
   "author": {
@@ -14,7 +14,7 @@
     "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuildDev",
     "postdevServer": "forever stop ./node_modules/http-server/bin/http-server",
     "lint": "eslint \"src/*.js\"",
-    "release": "npm-run-all rollup:release_*",
+    "rollup": "npm-run-all rollup:release_*",
     "rollup:dev": "rollup -c build/rollup.config.dev.js",
     "rollup:release_max": "rollup -c build/rollup.config.max.js",
     "rollup:release_prod": "rollup -c build/rollup.config.prod.js"
@@ -28,6 +28,8 @@
     "videojs-contrib-ads": "~5.1.0"
   },
   "devDependencies": {
+    "conventional-changelog-cli": "^1.3.5",
+    "conventional-changelog-videojs": "^3.0.0",
     "eslint": "^4.11.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-jsdoc": "^3.2.0",
