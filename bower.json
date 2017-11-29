@@ -1,13 +1,16 @@
 {
   "name": "videojs-ima",
-  "main": "./src/videojs.ima.js",
+  "main": [
+    "dist/videojs.ima.js",
+    "dist/videojs.ima.css"
+  ],
   "authors": [
     "Google Inc."
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "video.js": "~5.3",
-    "videojs-contrib-ads": "~3.1.2"
+    "video.js": "^5.19.2",
+    "videojs-contrib-ads": "^5.1.0"
   },
   "repository": {
     "type": "git",
