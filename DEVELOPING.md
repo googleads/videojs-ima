@@ -16,3 +16,15 @@ the JavaScript and you can refresh the page to see your changes.
 ## Submitting code
 For information on submitting your changes, please take a look at
 [CONTRIBUTING.md](https://github.com/googleads/videojs-ima/blob/master/CONTRIBUTING.md).
+
+## Releasing
+Releases should only be created by the repository owners. If you think we're in
+need of a new release, please open an issue in our [issue
+tracker](https://github.com/googleads/videojs-ima/issues).
+
+To create a new release, run the following:
+
+```
+npm version [major|minor|patch]
+git push
+```
