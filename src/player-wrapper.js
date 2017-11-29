@@ -316,7 +316,7 @@ PlayerWrapper.prototype.getContentPlayer = function() {
  * @return {number} The volume, 0-1.
  */
 PlayerWrapper.prototype.getVolume = function() {
-  return this.vjsPlayer.volume();
+  return this.vjsPlayer.muted() ? 0 : this.vjsPlayer.volume();
 };
 
 

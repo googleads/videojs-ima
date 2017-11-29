@@ -5,7 +5,7 @@ export default {
   name: 'videojsIma',
   input: 'src/ima-plugin.js',
   output: {
-    file: 'dist/videojs.ima.max.js',
+    file: 'dist/videojs.ima.js',
     format: 'umd'
   },
   external: ['video.js', 'videojs-contrib-ads'],
@@ -15,7 +15,7 @@ export default {
   plugins: [
     json(),
     copy({
-      "src/css/videojs.ima.dev.css": "dist/videojs.ima.dev.css"
+      "src/css/videojs.ima.css": "dist/videojs.ima.css"
     })
   ]
 };

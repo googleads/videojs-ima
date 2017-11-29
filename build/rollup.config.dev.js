@@ -15,7 +15,7 @@ export default {
   plugins: [
     json(),
     copy({
-      "src/css/videojs.ima.dev.css": "dist/videojs.ima.dev.css"
+      "src/css/videojs.ima.css": "dist/videojs.ima.dev.css"
     })
   ]
 };

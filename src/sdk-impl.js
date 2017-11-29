@@ -517,6 +517,8 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function() {
     this.initAdsManager();
     try {
       this.controller.showAdContainer();
+      // Sync ad volume with content volume.
+      this.adsManager.setVolume(this.controller.getPlayerVolume());
       this.adsManager.start();
     } catch (adError) {
       this.onAdError(adError);
@@ -671,6 +673,8 @@ SdkImpl.prototype.initializeAdDisplayContainer = function() {
 SdkImpl.prototype.playAdBreak = function() {
   if (!this.autoPlayAdBreaks) {
     this.controller.showAdContainer();
+    // Sync ad volume with content volume.
+    this.adsManager.setVolume(this.controller.getPlayerVolume());
     this.adsManager.start();
   }
 };
