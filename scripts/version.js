@@ -5,7 +5,7 @@ const pkg = require('../package.json');
 process.chdir(path.resolve(__dirname, '..'));
 
 const commands = [
-  'conventional-changelog -p videojs -i CHANGELOG.md -s',
+  'conventional-changelog -p videojs -i CHANGELOG.md -s -r 0',
   'git add CHANGELOG.md',
   'git add package.json',
   `git commit -m "${pkg.version}"`,
