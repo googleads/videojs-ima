@@ -1,13 +1,11 @@
 import copy from 'rollup-plugin-copy';
 import json from 'rollup-plugin-json'
-import { minify } from 'uglify-es';
-import uglify from 'rollup-plugin-uglify';
 
 export default {
   name: 'videojsIma',
   input: 'src/ima-plugin.js',
   output: {
-    file: 'dist/videojs.ima.min.js',
+    file: 'dist/videojs.ima.js',
     format: 'umd'
   },
   external: ['video.js', 'videojs-contrib-ads'],
@@ -16,9 +14,11 @@ export default {
   },
   plugins: [
     json(),
-    uglify({}, minify),
     copy({
-      "src/css/videojs.ima.css": "dist/videojs.ima.css"
+      "src/css/videojs.ima.css": "dist/videojs.ima.css",
+      "CHANGELOG.md": "dist/CHANGELOG.md",
+      "LICENSE": "dist/LICENSE",
+      "README.md": "dist/README.md"
     })
   ]
 };
