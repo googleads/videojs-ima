@@ -11,10 +11,10 @@ process.chdir(path.resolve(__dirname, '..'));
 // Merge master.
 // npm install.
 const preSedCommands = [
-  'git push origin re-write',
+  'git push origin master',
   'git push --tags',
   'git checkout gh-pages',
-  'git merge -X theirs re-write -m "Syncing gh-pages to re-write v' + pkg.version + '"'
+  'git merge -X theirs master -m "Syncing gh-pages to master v' + pkg.version + '"'
 ];
 console.log('Executing pre sed commands');
 try {
@@ -72,7 +72,7 @@ const postSedCommands = [
   'git add -f node_modules/videojs-contrib-ads/dist/videojs.ads.min.js',
   'git commit -m "Build for samples at v' + pkg.version + '"',
   'git push origin gh-pages',
-  'git checkout re-write'
+  'git checkout master'
 ];
 console.log('Executing post-sed commands');
 try {
