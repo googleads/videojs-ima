@@ -16,9 +16,6 @@ export default {
     json(),
     copy({
       "src/css/videojs.ima.css": "dist/videojs.ima.css",
-      "CHANGELOG.md": "dist/CHANGELOG.md",
-      "LICENSE": "dist/LICENSE",
-      "README.md": "dist/README.md"
     })
   ]
 };
