@@ -35,7 +35,7 @@ empty) javascript file:
     <!-- Load dependent stylesheets. -->
     <link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
     <link rel="stylesheet" href="path/to/videojs-contrib-ads.css" />
-    <link rel="stylesheet" href="path/to/videojs.ima.dev.css" />
+    <link rel="stylesheet" href="path/to/videojs.ima.css" />
   </head>
 
   <body>
