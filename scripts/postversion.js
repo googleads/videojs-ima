@@ -1,7 +1,6 @@
 const execSync = require('child_process').execSync;
 const path = require('path');
 const pkg = require('../package.json');
-const replace = require('replace-in-file');
 const rimraf = require('rimraf');
 
 process.chdir(path.resolve(__dirname, '..'));
