@@ -10,18 +10,18 @@ process.chdir(path.resolve(__dirname, '..'));
 // Check out gh-pages.
 // Merge master.
 // npm install.
-const preSedCommands = [
+const preNpmInstallCommands = [
   'git push origin master',
   'git push --tags',
   'git checkout gh-pages',
   'git merge -X theirs master -m "Syncing gh-pages to master v' + pkg.version + '"'
 ];
-console.log('Executing pre sed commands');
+console.log('Executing pre npm install commands');
 try {
-  var cmdOut = execSync(preSedCommands.join(' && '));
-  console.log('Executd pre sed commands', cmdOut);
+  var cmdOut = execSync(preNpmInstallCommands.join(' && '));
+  console.log('Executd pre npm install commands', cmdOut);
 } catch (error) {
-  console.log('Error running pre sed commands:', error.error);
+  console.log('Error running pre npm install commands:', error.error);
 }
 
 // Remove the node_modules directory.
@@ -30,39 +30,12 @@ rimraf.sync('node_modules');
 console.log('Removed old node_modules.');
 
 // Install node modules.
-console.log('Installing node_modules');
-try {
-  var cmdOut = execSync('npm install');
-  console.log('Installed node_modules', cmdOut);
-} catch (error) {
-  console.log('Error running pre sed commands:', error.error);
-}
-
-// Replace examples' links to dev files with links to prod files.
-const replaceOptions = {
-  files: 'examples/**/*.html',
-  from: [
-    'videojs.ima.dev.css',
-    'videojs.ima.dev.js'
-  ],
-  to: [
-    'videojs.ima.css',
-    'videojs.ima.min.js'
-  ]
-}
-console.log('Executing sed on example files');
-try {
-  const changes = replace.sync(replaceOptions);
-  console.log('Executd sed on example files:', changes.join(', '));
-} catch (error) {
-  console.error('Error with example files sed:', error);
-}
-
 // Build latest.
 // Add modified files (examples, dist, and node_modules).
 // Commit and push to gh-pages
 // Switch back to master.
-const postSedCommands = [
+const postNpmInstallCommands = [
+  'npm install',
   'npm run rollup',
   'git add --all',
   'git add -f dist/',
@@ -74,10 +47,10 @@ const postSedCommands = [
   'git push origin gh-pages',
   'git checkout master'
 ];
-console.log('Executing post-sed commands');
+console.log('Running install and pushing new gh-pages');
 try {
-  cmdOut = execSync(postSedCommands.join(' && '));
-  console.log('Executed post sed commands', cmdOut);
+  var cmdOut = execSync((postNpmInstallCommands.join(' && '));
+  console.log('Ran install and pushed new gh-pages', cmdOut);
 } catch (error) {
-  console.log('Error running post sed commands:', error.error);
+  console.log('Error runninng install and pushing new gh-pages:', error.error);
 }

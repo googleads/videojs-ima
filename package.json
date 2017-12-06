@@ -10,14 +10,13 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "contBuildDev": "watch 'npm run rollup:dev' src",
-    "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuildDev",
+    "contBuild": "watch 'npm run rollup:max' src",
+    "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuild",
     "postdevServer": "forever stop ./node_modules/http-server/bin/http-server",
     "lint": "eslint \"src/*.js\"",
-    "rollup": "npm-run-all rollup:release:*",
-    "rollup:dev": "rollup -c configs/rollup.config.dev.js",
-    "rollup:release:max": "rollup -c configs/rollup.config.js",
-    "rollup:release:min": "rollup -c configs/rollup.config.min.js",
+    "rollup": "npm-run-all rollup:*",
+    "rollup:max": "rollup -c configs/rollup.config.js",
+    "rollup:min": "rollup -c configs/rollup.config.min.js",
     "preversion": "npm run lint",
     "version": "node scripts/version.js",
     "postversion": "node scripts/postversion.js"

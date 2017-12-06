@@ -43,8 +43,7 @@ var Ads = function() {
         'impl=s&gdfp_req=1&env=vp&output=xml_vmap1&unviewed_position_start=1&' +
         'cust_params=sample_ar%3Dpremidpostpod%26deployment%3Dgmf-js&' +
         'cmsid=496&vid=short_onecue&correlator=',
-    adsManagerLoadedCallback: this.adsManagerLoadedCallback.bind(this),
-    debug: true
+    adsManagerLoadedCallback: this.adsManagerLoadedCallback.bind(this)
   };
 
   this.contents = ['http://rmcdn.2mdn.net/Demo/vast_inspector/android.mp4',
@@ -123,8 +122,8 @@ Ads.prototype.onAdEvent = function(event) {
 Ads.prototype.onPlaylistItemClick = function(event) {
   if (!this.linearAdPlaying) {
     if (!this.initialized) {
-      // Handles the case where the user loads the page and clicks a playlist item
-      // immediately, never clicks the play button on the player.
+      // Handles the case where the user loads the page, clicks a playlist item
+      // immediately, and never clicks the play button on the player.
       this.init();
     }
     this.player.ima.setContentWithAdTag(

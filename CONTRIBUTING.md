@@ -16,12 +16,6 @@ Follow either of the two links above to access the appropriate CLA and instructi
 - Sign a Contributor License Agreement (see above).
 - Join the [Google Media Framework discussion group](http://groups.google.com/d/forum/google-media-framework).
 - Fork the library, make the changes and send a [pull request](https://help.github.com/articles/using-pull-requests).
-  - Before submitting your pull requests, please revert any changes to the following files:
-    ```
-    dist/videojs.ima.js
-    dist/videojs.ima.max.js
-    dist/videojs.ima.dev.css
-    ```
 - We will review your patch and add comments if any changes are required. Once any issues are resolved, we'll merge your request!
 
 # If you can't become a contributor
