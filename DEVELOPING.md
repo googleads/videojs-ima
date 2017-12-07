@@ -26,5 +26,5 @@ To create a new release, run the following:
 
 ```
 npm version [major|minor|patch]
-git push
+npm publish
 ```
