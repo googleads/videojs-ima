@@ -15,15 +15,13 @@
  */
 
 var Ads = function() {
-
-  this.player = videojs('content_video');
-
+  // Set up UI stuff.
   this.adTagInput = document.getElementById('tagInput');
-  this.sampleAdTag = document.getElementById('sampleAdTag');
-  this.sampleAdTag.addEventListener(
-      'click',
-      this.bind(this, this.onSampleAdTagClick_),
-      false);
+  var sampleAdTag = document.getElementById('sampleAdTag');
+  sampleAdTag.addEventListener('click', () => {
+    this.adTagInput.value = this.SAMPLE_AD_TAG;
+  });
+  this.console = document.getElementById('ima-sample-console');
 
   // Remove controls from the player on iPad to stop native controls from stealing
   // our click
@@ -42,28 +40,14 @@ var Ads = function() {
       navigator.userAgent.match(/Android/i)) {
     startEvent = 'touchend';
   }
-  this.player.one(startEvent, this.bind(this, this.init));
+  this.player = videojs('content_video');
+  this.player.one(startEvent, this.init.bind(this));
 
-  this.options = {
-    id: 'content_video'
+  var options = {
+    id: 'content_video',
+    adsManagerLoadedCallback: this.adsManagerLoadedCallback.bind(this)
   };
-
-  this.events = [
-    google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
-    google.ima.AdEvent.Type.CLICK,
-    google.ima.AdEvent.Type.COMPLETE,
-    google.ima.AdEvent.Type.FIRST_QUARTILE,
-    google.ima.AdEvent.Type.LOADED,
-    google.ima.AdEvent.Type.MIDPOINT,
-    google.ima.AdEvent.Type.PAUSED,
-    google.ima.AdEvent.Type.STARTED,
-    google.ima.AdEvent.Type.THIRD_QUARTILE
-  ];
-
-  this.console = document.getElementById('ima-sample-console');
-  this.player.ima(
-      this.options,
-      this.bind(this, this.adsManagerLoadedCallback));
+  this.player.ima(options);
 
 };
 
@@ -79,35 +63,32 @@ Ads.prototype.init = function() {
     this.log('Error: please fill in an ad tag');
   } else {
     this.player.ima.initializeAdDisplayContainer();
-    this.player.ima.setContent(null, this.adTagInput.value, true);
+    this.player.ima.setContentWithAdTag(null, this.adTagInput.value, false);
     this.player.ima.requestAds();
-    this.player.play();
   }
-};
-
-Ads.prototype.onSampleAdTagClick_ = function() {
-  this.adTagInput.value = this.SAMPLE_AD_TAG;
 };
 
 Ads.prototype.adsManagerLoadedCallback = function() {
-  for (var index = 0; index < this.events.length; index++) {
+  var events = [
+    google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
+    google.ima.AdEvent.Type.CLICK,
+    google.ima.AdEvent.Type.COMPLETE,
+    google.ima.AdEvent.Type.FIRST_QUARTILE,
+    google.ima.AdEvent.Type.LOADED,
+    google.ima.AdEvent.Type.MIDPOINT,
+    google.ima.AdEvent.Type.PAUSED,
+    google.ima.AdEvent.Type.STARTED,
+    google.ima.AdEvent.Type.THIRD_QUARTILE
+  ];
+
+  for (var index = 0; index < events.length; index++) {
     this.player.ima.addEventListener(
-        this.events[index],
-        this.bind(this, this.onAdEvent));
+        events[index],
+        this.onAdEvent.bind(this));
   }
-  this.player.ima.startFromReadyCallback();
 };
 
 Ads.prototype.onAdEvent = function(event) {
-  this.log('Ad event: ' + event.type);
-};
-
-Ads.prototype.log = function(message) {
+  var message = 'Ad event: ' + event.type;
   this.console.innerHTML = this.console.innerHTML + '<br/>' + message;
-}
-
-Ads.prototype.bind = function(thisObj, fn) {
-  return function() {
-    fn.apply(thisObj, arguments);
-  };
 };
