@@ -48,7 +48,7 @@ const postNpmInstallCommands = [
 ];
 console.log('Running install and pushing new gh-pages.');
 try {
-  var cmdOut = execSync((postNpmInstallCommands.join(' && '));
+  var cmdOut = execSync(postNpmInstallCommands.join(' && '));
   console.log('Ran install and pushed new gh-pages', cmdOut);
 } catch (error) {
   console.log('Error runninng install and pushing new gh-pages:', error.error);
@@ -61,13 +61,13 @@ console.log('Removed old node_modules on master.');
 
 // Install node modules.
 // Build latest.
-const postNpmInstallCommands = [
+const backOnMasterCommands = [
   'npm install',
   'npm run rollup'
 ];
 console.log('Running install on master.');
 try {
-  var cmdOut = execSync((postNpmInstallCommands.join(' && '));
+  var cmdOut = execSync(backOnMasterCommands.join(' && '));
   console.log('Ran install on master', cmdOut);
 } catch (error) {
   console.log('Error runninng install on master:', error.error);
