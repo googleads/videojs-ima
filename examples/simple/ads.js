@@ -44,9 +44,6 @@ if (navigator.userAgent.match(/iPhone/i) ||
     navigator.userAgent.match(/Android/i)) {
   startEvent = 'touchend';
 }
-
 player.one(startEvent, function() {
     player.ima.initializeAdDisplayContainer();
-    player.ima.requestAds();
-    player.play();
 });

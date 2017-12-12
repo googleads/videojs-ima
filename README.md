@@ -1,14 +1,15 @@
 # IMA SDK Plugin for Video.js
 
 ## Introduction
-The IMA SDK Plugin for Video.js provides a quick and easy IMA SDK integration for the Video.js player.
+The IMA SDK Plugin for Video.js provides a quick and easy IMA SDK integration
+for the Video.js player.
 
-The framework is currently in beta, allowing interested developers to try it out and send feedback before we finalize the APIs and features.
-
-To see the plugin in action, check out our [samples](//googleads.github.io/videojs-ima/).
+To see the plugin in action, check out our
+[samples](//googleads.github.io/videojs-ima/).
 
 ## Features
-- Easily integrate the Google IMA SDK into Video.js to enable advertising on your video content.
+- Easily integrate the Google IMA SDK into Video.js to enable advertising on
+your video content.
 
 ## Requirements
   - Your favorite text editor
@@ -21,16 +22,19 @@ The easiest way to get started is by using [npm](//www.npmjs.org/).
 npm install videojs-ima
 ```
 
-If you don't use npm, you can download the source from the src/ folder and include it directly in your project. You'll also need to download the source for the [videojs-contrib-ads plugin](//github.com/videojs/videojs-contrib-ads).
+If you don't use npm, you can download the source from the dist/ folder and
+include it directly in your project. You'll also need to download the source for
+the [videojs-contrib-ads plugin](//github.com/videojs/videojs-contrib-ads).
 
-In your index.html file, create a new video.js player and load a (currently empty) javascript file:
+In your index.html file, create a new video.js player and load a (currently
+empty) javascript file:
 
 ```html
 <html>
   <head>
     <!-- Load dependent stylesheets. -->
     <link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
-    <link rel="stylesheet" href="path/to/videojs.ads.css" />
+    <link rel="stylesheet" href="path/to/videojs-contrib-ads.css" />
     <link rel="stylesheet" href="path/to/videojs.ima.css" />
   </head>
 
@@ -42,7 +46,7 @@ In your index.html file, create a new video.js player and load a (currently empt
     <!-- Load dependent scripts -->
     <script src="//vjs.zencdn.net/4.5/video.js"></script>
     <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-    <script src="/path/to/videojs.ads.js"></script>
+    <script src="/path/to/videojs-contrib-ads.js"></script>
     <script src="/path/to/videojs.ima.js"></script>
     <script src="player.js"></script>
   </body>
@@ -61,21 +65,18 @@ var options = {
 
 // This must be called before player.play() below.
 player.ima(options);
-player.ima.requestAds();
 // On mobile devices, you must call initializeAdDisplayContainer as the result
 // of a user action (e.g. button click). If you do not make this call, the SDK
 // will make it for you, but not as the result of a user action. For more info
 // see our examples, all of which are set up to work on mobile devices.
 // player.ima.initializeAdDisplayContainer();
-
-// This must be called after player.ima(...) above.
-player.play();
 ```
 
 That's all there is to it!
 
 ## Additional settings
-The plugin accepts additional settings beyond the two required settings shown in the previous snippet. A summary of all settings follows:
+The plugin accepts additional settings beyond the two required settings shown in
+the previous snippet. A summary of all settings follows:
 
 
 | Settings | Type | Description |
@@ -132,7 +133,8 @@ The IMA SDK plugin for Video.js uses the IMA SDK, and as such is subject to the
 [IMA SDK Terms of Service](https://developers.google.com/interactive-media-ads/terms).
 
 ## Support
-If you have questions about the framework, you can ask them at https://groups.google.com/d/forum/google-media-framework
+If you have questions about the framework, you can ask them at
+https://groups.google.com/d/forum/google-media-framework
 
 ## How do I contribute?
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.

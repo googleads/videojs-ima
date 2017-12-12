@@ -89,7 +89,7 @@ test('video continues after ad was skipped', function() {
       adManager.skip();
     })
     //we overwrote the normal ready-callback, thus calling start now
-    player.ima.startFromReadyCallback();
+    player.ima.startFromAdsManagerLoadedCallback();
   };
 
   player.ima(options, readyForPrerollCallback);
