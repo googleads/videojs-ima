@@ -23,10 +23,10 @@ try {
   console.log('Error running pre npm install commands:', error.error);
 }
 
-// Remove the node_modules directory.
-console.log('Removing old node_modules.');
+// Remove the node_modules directory on gh-pages.
+console.log('Removing old node_modules on gh-pages.');
 rimraf.sync('node_modules');
-console.log('Removed old node_modules.');
+console.log('Removed old node_modules on gh-pages.');
 
 // Install node modules.
 // Build latest.
@@ -46,10 +46,29 @@ const postNpmInstallCommands = [
   'git push origin gh-pages',
   'git checkout master'
 ];
-console.log('Running install and pushing new gh-pages');
+console.log('Running install and pushing new gh-pages.');
 try {
   var cmdOut = execSync((postNpmInstallCommands.join(' && '));
   console.log('Ran install and pushed new gh-pages', cmdOut);
 } catch (error) {
   console.log('Error runninng install and pushing new gh-pages:', error.error);
+}
+
+// Remove the node_modules directory on master.
+console.log('Removing old node_modules on master.');
+rimraf.sync('node_modules');
+console.log('Removed old node_modules on master.');
+
+// Install node modules.
+// Build latest.
+const postNpmInstallCommands = [
+  'npm install',
+  'npm run rollup'
+];
+console.log('Running install on master.');
+try {
+  var cmdOut = execSync((postNpmInstallCommands.join(' && '));
+  console.log('Ran install on master', cmdOut);
+} catch (error) {
+  console.log('Error runninng install on master:', error.error);
 }
