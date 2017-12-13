@@ -122,8 +122,8 @@ Ads.prototype.onAdEvent = function(event) {
 Ads.prototype.onPlaylistItemClick = function(event) {
   if (!this.linearAdPlaying) {
     if (!this.initialized) {
-      // Handles the case where the user loads the page and clicks a playlist item
-      // immediately, never clicks the play button on the player.
+      // Handles the case where the user loads the page, clicks a playlist item
+      // immediately, and never clicks the play button on the player.
       this.init();
     }
     this.player.ima.setContentWithAdTag(
