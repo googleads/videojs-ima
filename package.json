@@ -29,7 +29,8 @@
     "CHANGELOG.md",
     "LICENSE",
     "README.md",
-    "dist/"
+    "dist/",
+    "src/"
   ],
   "dependencies": {
     "video.js": ">=5.19.2",
