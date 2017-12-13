@@ -22,7 +22,7 @@
     "testServer": "http-server",
     "preversion": "npm run lint",
     "version": "node scripts/version.js",
-    "postversion": "node scripts/postversion.js"
+    "postversion": "node scripts/postversion.js",
     "webdriver": "mocha test/webdriver/*.js"
   },
   "repository": {
