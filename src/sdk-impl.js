@@ -17,7 +17,7 @@
  * https://www.github.com/googleads/videojs-ima
  */
 
- import version from '../package.json';
+ import pkg from '../package.json';
 
  /**
   * Implementation of the IMA SDK for the plugin.
@@ -184,7 +184,7 @@ SdkImpl.prototype.initAdObjects = function() {
   }
 
   this.adsLoader.getSettings().setPlayerType('videojs-ima');
-  this.adsLoader.getSettings().setPlayerVersion(version);
+  this.adsLoader.getSettings().setPlayerVersion(pkg.version);
   this.adsLoader.getSettings().setAutoPlayAdBreaks(this.autoPlayAdBreaks);
 
   this.adsLoader.addEventListener(
