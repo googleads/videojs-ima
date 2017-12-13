@@ -68,7 +68,7 @@ const backOnMasterCommands = [
 console.log('Running build on master.');
 try {
   var cmdOut = execSync(backOnMasterCommands.join(' && '));
-  console.log('Ran install on master', cmdOut);
+  console.log('Ran build on master', cmdOut);
 } catch (error) {
   console.log('Error runninng build on master:', error.error);
 }
