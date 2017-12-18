@@ -4,3 +4,6 @@ node_js:
 dist: trusty
 addons:
   chrome: stable
+scripts:
+  - npm run lint
+  - npm test
