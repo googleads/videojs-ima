@@ -221,6 +221,7 @@ SdkImpl.prototype.requestAds = function() {
       (this.controller.getPlayerHeight() / 3);
 
   adsRequest.setAdWillAutoPlay(this.controller.getSettings().adWillAutoPlay);
+  adsRequest.setAdWillPlayMuted(this.controller.getSettings().adWillPlayMuted);
 
   this.adsLoader.requestAds(adsRequest);
 };
