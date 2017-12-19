@@ -87,6 +87,7 @@ the previous snippet. A summary of all settings follows:
 | adLabel                | string       | Replaces the "Advertisement" text in the ad label. Added for multilingual UI support. |
 | adsRenderingSettings   | object       | JSON object with ads rendering settings as defined in the IMA SDK,Docs(1). |
 | autoPlayAdBreaks       | boolean      | Whether or not to automatically play VMAP or ad rules ad breaks. Defaults,to true. |
+| adWillPlayMuted        | boolean      | Notifies the SDK whether the player intends to start ad while muted. Changing this setting will have no impact on ad playback. Defaults,to false. |
 | contribAdsSettings     | object       | Additional settings to be passed to the contrib-ads plugin(2), used by,this IMA plugin. |
 | debug                  | boolean      | True to load the debug version of the plugin, false to load the non-debug version.,Defaults to false. |
 | disableFlashAds        | boolean      | True to disable Flash ads - Flash ads will be considered an unsupported ad type. Defaults to false. |

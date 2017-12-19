@@ -79,6 +79,7 @@ Controller.IMA_DEFAULTS = {
   prerollTimeout: 1000,
   adLabel: 'Advertisement',
   showControlsForJSAds: true,
+  adWillPlayMuted: false,
 };
 
 /**
