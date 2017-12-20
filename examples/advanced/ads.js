@@ -23,6 +23,8 @@ var Ads = function() {
   });
   this.console = document.getElementById('ima-sample-console');
 
+  this.player = videojs('content_video');
+
   // Remove controls from the player on iPad to stop native controls from stealing
   // our click
   var contentPlayer =  document.getElementById('content_video_html5_api');
@@ -40,7 +42,6 @@ var Ads = function() {
       navigator.userAgent.match(/Android/i)) {
     startEvent = 'touchend';
   }
-  this.player = videojs('content_video');
   this.player.one(startEvent, this.init.bind(this));
 
   var options = {
