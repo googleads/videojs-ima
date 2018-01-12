@@ -33,7 +33,7 @@ empty) javascript file:
 <html>
   <head>
     <!-- Load dependent stylesheets. -->
-    <link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
+    <link href="path/to/video-js.css" rel="stylesheet">
     <link rel="stylesheet" href="path/to/videojs-contrib-ads.css" />
     <link rel="stylesheet" href="path/to/videojs.ima.css" />
   </head>
@@ -44,7 +44,7 @@ empty) javascript file:
       <source src="PATH_TO_YOUR_CONTENT_VIDEO" type="YOUR_CONTENT_VIDEO_TYPE" />
     </video>
     <!-- Load dependent scripts -->
-    <script src="//vjs.zencdn.net/4.5/video.js"></script>
+    <script src="/path/to/video.js"></script>
     <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
     <script src="/path/to/videojs-contrib-ads.js"></script>
     <script src="/path/to/videojs.ima.js"></script>
@@ -63,7 +63,6 @@ var options = {
   adTagUrl: 'YOUR_AD_TAG'
 };
 
-// This must be called before player.play() below.
 player.ima(options);
 // On mobile devices, you must call initializeAdDisplayContainer as the result
 // of a user action (e.g. button click). If you do not make this call, the SDK
@@ -73,6 +72,9 @@ player.ima(options);
 ```
 
 That's all there is to it!
+
+## Playground
+Check out the snippet above in-action [on CodePen](https://codepen.io/imasdk/pen/wpyQXP).
 
 ## Additional settings
 The plugin accepts additional settings beyond the two required settings shown in
