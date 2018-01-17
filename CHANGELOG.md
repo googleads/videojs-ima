@@ -1,3 +1,11 @@
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/googleads/videojs-ima/compare/v1.0.3...v1.0.4) (2018-01-17)
+
+### Documentation
+
+* Add keywords to package.json. This should list us on the videoj… ([#486](https://github.com/googleads/videojs-ima/issues/486)) ([7af46cf](https://github.com/googleads/videojs-ima/commit/7af46cf))
+* Update README with new snippet and codepen link. ([#483](https://github.com/googleads/videojs-ima/issues/483)) ([2d40f74](https://github.com/googleads/videojs-ima/commit/2d40f74))
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/googleads/videojs-ima/compare/v1.0.2...v1.0.3) (2018-01-03)
 
