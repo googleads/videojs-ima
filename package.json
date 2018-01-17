@@ -64,5 +64,9 @@
     "selenium-webdriver": "^3.6.0",
     "uglify-es": "^3.1.10",
     "watch": "^1.0.2"
-  }
+  },
+  "keywords": [
+    "videojs",
+    "videojs-plugin"
+  ]
 }
