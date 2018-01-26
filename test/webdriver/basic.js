@@ -22,7 +22,7 @@ var browsers = require('./content/capabilities');
 var browserstack = require('./content/capabilities');
 
 test.describe('Basic Tests', function() {
-  this.timeout(10 * 1000);
+  this.timeout(15 * 1000);
 
   browsers.browsers.forEach(function(browser) {
 
@@ -45,26 +45,56 @@ test.describe('Basic Tests', function() {
     });
 
     test.it( 'Displays ad UI ' + browser.name, function(){
-      driver.get('http://localhost:8080/test/webdriver/index.html?ad=0');
+      driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
       driver.findElement(By.id('content_video')).click();
-      driver.wait(until.elementLocated(
-        By.id('content_video_ima-controls-div')), 10000);
       driver.wait(until.elementIsVisible(driver.findElement(
         By.id('content_video_ima-controls-div'))), 10000);
       driver.sleep();
     });
 
-    test.it( 'Displays skippable ad UI' + browser.name, function(){
-      driver.get('http://localhost:8080/test/webdriver/index.html?ad=1');
+    test.it( 'Hides controls when ad ends ' + browser.name, function(){
+      driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
       driver.findElement(By.id('content_video')).click();
-      driver.wait(until.elementLocated(
-        By.id('content_video_ima-controls-div')), 10000);
+      driver.wait(until.elementIsNotVisible(driver.findElement(
+        By.id('content_video_ima-controls-div'))), 14000);
+      driver.sleep();
+    });
+
+
+    test.it( 'Clicks skippable ad skip button ' + browser.name, function(){
+      driver.get('http://localhost:8080/test/webdriver/index.html?ad=skippable');
+      driver.findElement(By.id('content_video')).click();
+
+      driver.switchTo().frame(driver.findElement(
+        By.css('#content_video_ima-ad-container > div:nth-child(1) > iframe')));
+      let skipButton = driver.findElement(
+        By.css('body > div.videoAdUi > div.videoAdUiSkipContainer.html5-stop-propagation > button'));
+      driver.wait(until.elementIsVisible(skipButton), 10000);
+
+      skipButton.click();
+
+      driver.wait(until.stalenessOf(skipButton), 10000);
+      driver.sleep();
+    });
+
+     test.it( 'VMAP: Preroll ' + browser.name, function(){
+      driver.get('http://localhost:8080/test/webdriver/index.html?ad=vmap_preroll');
+      driver.findElement(By.id('content_video')).click();
       driver.wait(until.elementIsVisible(driver.findElement(
         By.id('content_video_ima-controls-div'))), 10000);
       driver.sleep();
     });
-    test.it( 'Handles ad error: wrappers' + browser.name, function(){
-      driver.get('http://localhost:8080/test/webdriver/index.html?ad=2');
+
+    test.it( 'VMAP: Midroll ' + browser.name, function(){
+      driver.get('http://localhost:8080/test/webdriver/index.html?ad=vmap_midroll');
+      driver.findElement(By.id('content_video')).click();
+      driver.wait(until.elementIsVisible(driver.findElement(
+        By.id('content_video_ima-controls-div'))), 10000);
+      driver.sleep();
+    });
+
+    test.it( 'Handles ad error: wrappers ' + browser.name, function(){
+      driver.get('http://localhost:8080/test/webdriver/index.html?ad=error_303');
       let log = driver.findElement(By.id('log'));
       driver.wait(until.elementTextContains(log, '303'), 10000);
       driver.sleep();

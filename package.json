@@ -19,7 +19,7 @@
     "rollup:min": "rollup -c configs/rollup.config.min.js",
     "pretest": "npm run rollup",
     "test": "npm-run-all -p -r testServer webdriver",
-    "testServer": "http-server",
+    "testServer": "http-server --cors",
     "preversion": "npm run lint",
     "version": "node scripts/version.js",
     "postversion": "node scripts/postversion.js",
