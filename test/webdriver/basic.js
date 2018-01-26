@@ -19,23 +19,32 @@
 
 var test = require('selenium-webdriver/testing');
 var browsers = require('./content/capabilities');
+var browserstack = require('./content/capabilities');
 
-for (var i = 0; i < browsers.browsers.length; i++) {
-  test.describe('Basic Tests ' + browsers.browsers[i].name, function() {
+test.describe('Basic Tests', function() {
+  this.timeout(10 * 1000);
 
-    this.timeout(10 * 1000);
+  browsers.browsers.forEach(function(browser) {
 
     var webdriver = require('selenium-webdriver'),
         until = webdriver.until;
         By = webdriver.By;
 
-    var driver = new webdriver.Builder()
-          .forBrowser('chrome')
-          .usingServer(browsers.browsers[i].server)
-          .withCapabilities(browsers.browsers[i].capabilities)
-          .build();
+    var driver;
 
-    test.it( 'Displays ad UI', function(){ 
+    test.before(function() {
+      driver = new webdriver.Builder()
+            .forBrowser(browser.capabilities.browserName)
+            .usingServer(browser.server)
+            .withCapabilities(browser.capabilities)
+            .build();
+    });
+
+    test.after(function() {
+      driver.quit();
+    });
+
+    test.it( 'Displays ad UI ' + browser.name, function(){
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=0');
       driver.findElement(By.id('content_video')).click();
       driver.wait(until.elementLocated(
@@ -45,7 +54,7 @@ for (var i = 0; i < browsers.browsers.length; i++) {
       driver.sleep();
     });
 
-    test.it( 'Displays skippable ad UI', function(){ 
+    test.it( 'Displays skippable ad UI' + browser.name, function(){
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=1');
       driver.findElement(By.id('content_video')).click();
       driver.wait(until.elementLocated(
@@ -54,15 +63,11 @@ for (var i = 0; i < browsers.browsers.length; i++) {
         By.id('content_video_ima-controls-div'))), 10000);
       driver.sleep();
     });
-    test.it( 'Handles ad error: wrappers', function(){ 
+    test.it( 'Handles ad error: wrappers' + browser.name, function(){
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=2');
       let log = driver.findElement(By.id('log'));
       driver.wait(until.elementTextContains(log, '303'), 10000);
       driver.sleep();
     });
-
-    test.after(function() {
-      driver.quit();
-    });
   });
-}
+});
