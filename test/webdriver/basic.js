@@ -19,7 +19,6 @@
 
 var test = require('selenium-webdriver/testing');
 var browsers = require('./content/capabilities');
-var browserstack = require('./content/capabilities');
 
 test.describe('Basic Tests', function() {
   this.timeout(15 * 1000);
@@ -104,13 +103,6 @@ test.describe('Basic Tests', function() {
         By.css('#content_video_ima-ad-container > div:nth-child(1) > iframe')));
       driver.wait(until.elementIsVisible(driver.findElement(
         By.id('GDFP'))), 10000);
-      driver.sleep();
-    });
-
-    test.it( 'Handles ad error 100: malformed VAST ' + browser.name, function(){
-      driver.get('http://localhost:8080/test/webdriver/index.html?ad=error_100');
-      let log = driver.findElement(By.id('log'));
-      driver.wait(until.elementTextContains(log, '100'), 10000);
       driver.sleep();
     });
 

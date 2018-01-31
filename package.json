@@ -38,7 +38,7 @@
   ],
   "dependencies": {
     "video.js": ">=5.19.2",
-    "videojs-contrib-ads": "~5.1.0"
+    "videojs-contrib-ads": "^5.1.6"
   },
   "devDependencies": {
     "child_process": "^1.0.2",
