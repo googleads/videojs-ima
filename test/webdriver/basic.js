@@ -48,7 +48,7 @@ test.describe('Basic Tests', function() {
       driver.findElement(By.id('content_video')).click();
       driver.sleep(1000);
       driver.wait(until.elementIsVisible(driver.findElement(
-        By.id('content_video_ima-controls-div'))), 30000);
+        By.id('content_video_ima-controls-div'))), 10000);
       driver.sleep();
     });
 
