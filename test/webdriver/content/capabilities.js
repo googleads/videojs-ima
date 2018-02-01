@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+require('chromedriver');
+require('geckodriver');
+
 var browsers = [
   { 
     name: 'chrome-local',
