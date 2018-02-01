@@ -18,10 +18,16 @@
  */
 
 var test = require('selenium-webdriver/testing');
+var logging = require('selenium-webdriver/lib/logging');
 var browsers = require('./content/capabilities');
 
 test.describe('Basic Tests', function() {
   this.timeout(15 * 1000);
+
+  console.log(logging.getLogger().getLevel());
+  logging.getLogger().setLevel(logging.Level.FINE);
+  logging.installConsoleHandler();
+  console.log(logging.getLogger().getLevel());
 
   browsers.browsers.forEach(function(browser) {
 
