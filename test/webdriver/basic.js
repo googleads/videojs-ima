@@ -51,6 +51,9 @@ test.describe('Basic Tests', function() {
 
     test.it( 'Displays ad UI ' + browser.name, function(){
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
+      driver.getPageSource().then(function(value) {
+        console.log(value);
+      });
       driver.findElement(By.id('content_video')).click();
       driver.sleep(1000);
       driver.wait(until.elementIsVisible(driver.findElement(
