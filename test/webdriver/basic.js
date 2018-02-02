@@ -47,8 +47,8 @@ test.describe('Basic Tests', function() {
      test.it( 'Displays title ' + browser.name, function(){
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
       driver.findElement(By.id('content_video')).click();
-      driver.sleep(2000);
-      driver.getTitle().then(function(title) {
+      driver.sleep(1000);
+      /*driver.getTitle().then(function(title) {
         if (title === 'Video.js Test') {
           console.log('Test passed');
         } else {
@@ -63,7 +63,13 @@ test.describe('Basic Tests', function() {
               });
           });
         driver.sleep(1000);
-      }
+      }*/
+      driver.takeScreenshot().then(function(image, err) {
+        /*require('fs').writeFile('out.png', image, 'base64', function(err) {
+            console.log(err);
+        });*/
+        console.log(image);
+      });
       driver.sleep();
     });
 
