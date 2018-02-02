@@ -30,7 +30,6 @@ var browsers = [
     name: 'firefox-local',
     server: '', //local
     capabilities: {
-        'acceptInsecureCerts' : true,
         'browserName' : 'firefox',
         'moz:firefoxOptions' : {args: ['-headless']}
     }
