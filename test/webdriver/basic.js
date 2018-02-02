@@ -44,8 +44,9 @@ test.describe('Basic Tests', function() {
     });
 
      test.it( 'Displays title ' + browser.name, function(){
-      driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
-      driver.findElement(By.id('content_video')).click();
+      driver.get('https://www.youtube.com/html5');
+      driver.sleep(2000);
+      //driver.findElement(By.id('content_video')).click();
       driver.takeScreenshot().then(function(image, err) {
         console.log(image);
       });
