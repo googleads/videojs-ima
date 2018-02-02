@@ -44,6 +44,22 @@ test.describe('Basic Tests', function() {
       driver.quit();
     });
 
+     test.it( 'Displays title ' + browser.name, function(){
+      driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
+      driver.findElement(By.id('content_video')).click();
+      driver.sleep(2000);
+      driver.getTitle().then(function(title) {
+        if (title === 'Video.js Test') {
+          console.log('Test passed');
+        } else {
+          console.log('Test Failed');
+        }
+      });
+      driver.wait(until.elementIsVisible(driver.findElement(
+        By.id('content_video_ima-controls-div'))), 10000);
+      driver.sleep();
+    });
+
     test.it( 'Displays ad UI ' + browser.name, function(){
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
       driver.findElement(By.id('content_video')).click();
