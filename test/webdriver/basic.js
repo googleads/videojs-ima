@@ -47,7 +47,7 @@ test.describe('Basic Tests', function() {
     test.it( 'Displays ad UI ' + browser.name, function(){
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
       driver.findElement(By.id('content_video')).click();
-      driver.sleep(5000);
+      driver.sleep(1000);
       driver.wait(until.elementIsVisible(driver.findElement(
         By.id('content_video_ima-controls-div'))), 10000);
       driver.sleep();
@@ -56,7 +56,7 @@ test.describe('Basic Tests', function() {
     test.it( 'Hides controls when ad ends ' + browser.name, function(){
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
       driver.findElement(By.id('content_video')).click();
-      driver.sleep(5000);
+      driver.sleep(1000);
       driver.wait(until.elementIsNotVisible(driver.findElement(
         By.id('content_video_ima-controls-div'))), 14000);
       driver.sleep();
