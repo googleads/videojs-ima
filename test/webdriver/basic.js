@@ -55,8 +55,15 @@ test.describe('Basic Tests', function() {
           console.log('Test Failed');
         }
       });
-      driver.wait(until.elementIsVisible(driver.findElement(
-        By.id('content_video_ima-controls-div'))), 10000);
+      for (var ii = 0; ii < 10; ii++) {
+        driver.findElement(By.id('content_video_ima-controls-div'))
+          .then(function(element) {
+            element.isDisplayed().then(function(result) {
+                console.log('Element displayed? ' + result);
+              });
+          });
+        driver.sleep(1000);
+      }
       driver.sleep();
     });
 
