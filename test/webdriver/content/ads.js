@@ -47,6 +47,8 @@ var player = videojs('content_video');
 
 var options = {
   id: 'content_video',
+  adsRenderingSettings: { mimeTypes: ['video/mp4']},
+  disableFlagAds: true,
   adTagUrl: adTags[adTagName]
 };
 

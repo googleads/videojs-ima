@@ -44,9 +44,9 @@ test.describe('Basic Tests', function() {
     });
 
      test.it( 'Displays title ' + browser.name, function(){
-      driver.get('https://www.youtube.com/html5');
-      driver.sleep(2000);
-      //driver.findElement(By.id('content_video')).click();
+      driver.get('http://googleads.github.io/videojs-ima/examples/simple/');
+      driver.findElement(By.id('content_video')).click();
+      driver.sleep(4000);      
       driver.takeScreenshot().then(function(image, err) {
         console.log(image);
       });
