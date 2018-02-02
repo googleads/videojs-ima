@@ -18,7 +18,6 @@
  */
 
 var test = require('selenium-webdriver/testing');
-var logging = require('selenium-webdriver/lib/logging');
 var browsers = require('./content/capabilities');
 
 test.describe('Basic Tests', function() {
@@ -48,26 +47,7 @@ test.describe('Basic Tests', function() {
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
       driver.findElement(By.id('content_video')).click();
       driver.sleep(1000);
-      /*driver.getTitle().then(function(title) {
-        if (title === 'Video.js Test') {
-          console.log('Test passed');
-        } else {
-          console.log('Test Failed');
-        }
-      });
-      for (var ii = 0; ii < 10; ii++) {
-        driver.findElement(By.id('content_video_ima-controls-div'))
-          .then(function(element) {
-            element.isDisplayed().then(function(result) {
-                console.log('Element displayed? ' + result);
-              });
-          });
-        driver.sleep(1000);
-      }*/
       driver.takeScreenshot().then(function(image, err) {
-        /*require('fs').writeFile('out.png', image, 'base64', function(err) {
-            console.log(err);
-        });*/
         console.log(image);
       });
       driver.sleep();
