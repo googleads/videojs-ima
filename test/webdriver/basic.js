@@ -46,7 +46,8 @@ test.describe('Basic Tests', function() {
      test.it( 'Displays title ' + browser.name, function(){
       driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
       driver.findElement(By.id('content_video')).click();
-      driver.sleep(4000);      
+      let log = driver.findElement(By.id('log'));
+      driver.wait(until.elementTextContains(log, 'start'), 10000);  
       driver.takeScreenshot().then(function(image, err) {
         console.log(image);
       });

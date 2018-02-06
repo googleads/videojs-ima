@@ -20,14 +20,14 @@ require('geckodriver');
 var proxy = {proxyType: 'manual', httpProxy: 'localhost:8888'};
 
 var browsers = [
- /* { 
+  {
     name: 'chrome-local',
     server: '', //local
     capabilities: {
       'browserName' : 'chrome',
-      'chromeOptions' : {args: ['--headless']}
+   //   'chromeOptions' : {args: ['--headless']}
     }
-  },*/
+  },
   {
     name: 'firefox-local',
     server: '', //local
