@@ -82,9 +82,14 @@ if (navigator.userAgent.match(/iPhone/i) ||
   startEvent = 'touchend';
 }
 
-player.on("adserror", function(event){
+player.on("adserror", function(event) {
   var log = document.getElementById('log');
   log.innerHTML = event.data.AdError;
+});
+
+player.on("playing", function(event) {
+  var log = document.getElementById('log');
+  log.innerHTML = event.type;
 });
 
 player.one(startEvent, function() {
