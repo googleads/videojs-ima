@@ -47,13 +47,13 @@ var player = videojs('content_video');
 
 var onAdsManagerLoaded = function() {
   player.ima.addEventListener(google.ima.AdEvent.Type.STARTED, onAdStarted);
-}
+};
 
 var onAdStarted = function(event) {
   var message = event.type;
   var log = document.getElementById('log');
   log.innerHTML = message;
-}
+};
 
 var options = {
   id: 'content_video',
