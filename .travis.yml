@@ -2,8 +2,13 @@ language: node_js
 node_js:
   - "node"
 dist: trusty
+sudo: required
+env:
+  - MOZ_HEADLESS=1
 addons:
   chrome: stable
+  firefox: latest
 scripts:
   - npm run lint
   - npm test
+

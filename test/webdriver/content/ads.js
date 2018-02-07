@@ -17,24 +17,49 @@ var onAdErrorEvent = function(event) {
   console.log(event);
 };
 
-var adTags = [
-  'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator=',
-  'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dskippablelinear&correlator=',
-  'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dredirecterror&nofb=1&correlator='
-];
+var adTags = {
+  linear: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/' +
+    '124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&' +
+    'env=vp&output=vast&unviewed_position_start=1&cust_params=' +
+    'deployment%3Ddevsite%26sample_ct%3Dlinear&correlator=',
+  skippable: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/' +
+    '124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&' +
+    'env=vp&output=vast&unviewed_position_start=1&cust_params=' +
+    'deployment%3Ddevsite%26sample_ct%3Dskippablelinear&correlator=',
+  vmap_preroll: 'http://localhost:8080/test/webdriver/content/canned_ads/' +
+    'vmap_preroll.xml',
+  vmap_midroll: 'http://localhost:8080/test/webdriver/content/canned_ads/' +
+    'vmap_midroll.xml',
+  nonlinear: 'http://pubads.g.doubleclick.net/gampad/ads?sz=480x70&iu=/' +
+    '124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&' +
+    'env=vp&output=vast&unviewed_position_start=1&cust_params=' + 
+    'deployment%3Ddevsite%26sample_ct%3Dnonlinear&correlator=',
+  error_303: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/' +
+    '124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&' +
+    'env=vp&output=vast&unviewed_position_start=1&cust_params=' +
+    'deployment%3Ddevsite%26sample_ct%3Dredirecterror&nofb=1&correlator='
+};
 
 var searchParams = new URLSearchParams(location.search);
-var adTagIdx = parseInt(searchParams.get('ad'));
-
-if (isNaN(adTagIdx) || adTags.length <= adTagIdx) {
-  adTagIdx = 0;
-}
+var adTagName = searchParams.get('ad');
 
 var player = videojs('content_video');
 
+var onAdsManagerLoaded = function() {
+  player.ima.addEventListener(google.ima.AdEvent.Type.STARTED, onAdStarted);
+};
+
+var onAdStarted = function(event) {
+  var message = event.type;
+  var log = document.getElementById('log');
+  log.innerHTML = message;
+};
+
 var options = {
   id: 'content_video',
-  adTagUrl: adTags[adTagIdx]
+  disableFlagAds: true,
+  adTagUrl: adTags[adTagName],
+  adsManagerLoadedCallback: onAdsManagerLoaded
 };
 
 player.ima(options);
@@ -57,9 +82,14 @@ if (navigator.userAgent.match(/iPhone/i) ||
   startEvent = 'touchend';
 }
 
-player.on("adserror", function(event){
+player.on("adserror", function(event) {
   var log = document.getElementById('log');
   log.innerHTML = event.data.AdError;
+});
+
+player.on("playing", function(event) {
+  var log = document.getElementById('log');
+  log.innerHTML = event.type;
 });
 
 player.one(startEvent, function() {
