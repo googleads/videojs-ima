@@ -1,0 +1,40 @@
+<!--
+  Copyright 2017 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<html>
+  <head>
+    <title>Video.js Test</title>
+    <link rel="stylesheet" href="../../node_modules/video.js/dist/video-js.min.css">
+    <link rel="stylesheet" href="../../node_modules/videojs-contrib-ads/dist/videojs.ads.css" />
+    <link rel="stylesheet" href="../../dist/videojs.ima.css" />
+  </head>
+
+  <body>
+    <video id="content_video" class="video-js vjs-default-skin"
+        controls preload="auto" width="640" height="360">
+      <source src="http://rmcdn.2mdn.net/Demo/vast_inspector/android.webm"
+          type="video/webm"></source>
+      <source src="http://rmcdn.2mdn.net/Demo/vast_inspector/android.mp4"
+          type="video/mp4"></source>
+    </video>
+    <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+    <script src="../../node_modules/video.js/dist/video.min.js"></script>
+    <script src="../../node_modules/videojs-contrib-ads/dist/videojs.ads.min.js"></script>
+    <script src="../../dist/videojs.ima.min.js"></script>
+    <script src="content/ads.js"></script>
+    <div><p id="log"/></div>
+  </body>
+</html>
