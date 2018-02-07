@@ -8,3 +8,7 @@ env:
 addons:
   chrome: stable
   firefox: latest
+scripts:
+  - npm run lint
+  - npm test
+
