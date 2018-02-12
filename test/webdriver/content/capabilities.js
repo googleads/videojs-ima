@@ -80,7 +80,8 @@ for (let browser of browsers) {
 }
 
 // Remove if we don't have browserstack credentials.
-if (process.env.BROWSERSTACK_USER === undefined ||
+if (process.env.TRAVIS_PULL_REQUEST ||
+    process.env.BROWSERSTACK_USER === undefined ||
     process.env.BROWSERSTACK_ACCESS_KEY === undefined) {
   browsers = browsers.filter(browser =>
     browser.server != 'http://hub-cloud.browserstack.com/wd/hub');
