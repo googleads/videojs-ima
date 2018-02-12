@@ -17,6 +17,15 @@
 require('chromedriver');
 require('geckodriver');
 
+var browserstackCapabilities = {
+  'build' : '1.0.5',
+  'project' : 'videojs_ima',
+  'browserstack.local' : 'true',
+  'browserstack.localIdentifier' : 'Test001',
+  'browserstack.user' : process.env.BROWSERSTACK_USER,
+  'browserstack.key' : process.env.BROWSERSTACK_KEY
+}
+
 var browsers = [
   {
     name: 'chrome-local',
@@ -34,6 +43,41 @@ var browsers = [
       'moz:firefoxOptions' : {args: ['-headless']}
     }
   },
+  {
+    name: 'browserstack-win10-chrome',
+    server: 'http://hub-cloud.browserstack.com/wd/hub',
+    capabilities: {
+      'browserName' : 'Chrome',
+      'browser_version' : '62.0',
+      'os' : 'Windows',
+      'os_version' : '10',
+      'resolution' : '1024x768',
+    }
+  },
+  {
+    name: 'browserstack-win10-firefox',
+    server: 'http://hub-cloud.browserstack.com/wd/hub',
+    capabilities: {
+      'browserName' : 'Firefox',
+      'browser_version' : '58.0',
+      'os' : 'Windows',
+      'os_version' : '10',
+      'resolution' : '1024x768',
+    }
+  },
 ];
+
+for (let browser of browsers) {
+  if (browser.server == 'http://hub-cloud.browserstack.com/wd/hub') {
+    browser.capabilities =
+        Object.assign(browser.capabilities, browserstackCapabilities);
+  }
+}
+
+if (process.env.BROWSERSTACK_USER === undefined ||
+    process.env.BROWSERSTACK_KEY === undefined) {
+  browsers = browsers.filter(browser =>
+    browser.server != 'http://hub-cloud.browserstack.com/wd/hub');
+}
 
 exports.browsers = browsers;
