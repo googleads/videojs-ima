@@ -52,7 +52,7 @@ var onAdsManagerLoaded = function() {
 var onAdStarted = function(event) {
   var message = event.type;
   var log = document.getElementById('log');
-  log.innerHTML = message;
+  log.innerHTML += message + "<br>";
 };
 
 var options = {
@@ -84,12 +84,12 @@ if (navigator.userAgent.match(/iPhone/i) ||
 
 player.on("adserror", function(event) {
   var log = document.getElementById('log');
-  log.innerHTML = event.data.AdError;
+  log.innerHTML += event.data.AdError + "<br>";
 });
 
 player.on("playing", function(event) {
   var log = document.getElementById('log');
-  log.innerHTML = event.type;
+  log.innerHTML += event.type + "<br>";
 });
 
 player.one(startEvent, function() {
