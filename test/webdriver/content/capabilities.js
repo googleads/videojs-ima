@@ -21,7 +21,7 @@ var browserstackCapabilities = {
   'build' : '1.0.5',
   'project' : 'videojs_ima',
   'browserstack.local' : 'true',
-  'browserstack.localIdentifier' : 'Test001',
+  'browserstack.localIdentifier' : process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
   'browserstack.user' : process.env.BROWSERSTACK_USER,
   'browserstack.key' : process.env.BROWSERSTACK_KEY
 }
@@ -67,6 +67,11 @@ var browsers = [
   },
 ];
 
+// For running locally.
+if (process.env.BROWSERSTACK_LOCAL_IDENTIFIER === undefined) {
+  browserstackCapabilities['browserstack.localIdentifier'] = "Test001";
+}
+
 for (let browser of browsers) {
   if (browser.server == 'http://hub-cloud.browserstack.com/wd/hub') {
     browser.capabilities =
@@ -74,8 +79,9 @@ for (let browser of browsers) {
   }
 }
 
+// Remove if we don't have browserstack credentials.
 if (process.env.BROWSERSTACK_USER === undefined ||
-    process.env.BROWSERSTACK_KEY === undefined) {
+    process.env.BROWSERSTACK_ACCESS_KEY === undefined) {
   browsers = browsers.filter(browser =>
     browser.server != 'http://hub-cloud.browserstack.com/wd/hub');
 }
