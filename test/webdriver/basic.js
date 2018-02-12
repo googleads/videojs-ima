@@ -17,7 +17,6 @@
  * https://www.github.com/googleads/videojs-ima
  */
 
-var test = require('selenium-webdriver/testing');
 var browsers = require('./content/capabilities');
 
 browsers.browsers.forEach(function(browser) {
