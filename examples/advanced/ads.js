@@ -78,6 +78,7 @@ Ads.prototype.adsManagerLoadedCallback = function() {
     google.ima.AdEvent.Type.LOADED,
     google.ima.AdEvent.Type.MIDPOINT,
     google.ima.AdEvent.Type.PAUSED,
+    google.ima.AdEvent.Type.RESUMED,
     google.ima.AdEvent.Type.STARTED,
     google.ima.AdEvent.Type.THIRD_QUARTILE
   ];
@@ -91,5 +92,9 @@ Ads.prototype.adsManagerLoadedCallback = function() {
 
 Ads.prototype.onAdEvent = function(event) {
   var message = 'Ad event: ' + event.type;
-  this.console.innerHTML = this.console.innerHTML + '<br/>' + message;
+  this.log(message);
 };
+
+Ads.prototype.log = function(message) {
+  this.console.innerHTML = this.console.innerHTML + '<br/>' + message;
+}
