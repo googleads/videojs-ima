@@ -8,6 +8,10 @@ env:
 addons:
   chrome: stable
   firefox: latest
+  browserstack:
+    username: "adsdevrel1"
+    access_key:
+      secure: "KJVna2yQYeX9dwNLzNSTjMxjCxLa8d5wuxlq414TP+gKPlMjcLohi05C0nno73qlsYkPw+w7leG9tSP3gPFfylCKKGUqX6oXPEjo59SysTz+MQMnwglvdiAB5kVW5/AGdhWfnOGM5bsDHYVoDKe5M+xANOxIsQA3tMgUdV+gVVs="
 scripts:
   - npm run lint
   - npm test
