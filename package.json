@@ -37,7 +37,7 @@
     "src/"
   ],
   "dependencies": {
-    "video.js": ">=5.19.2",
+    "video.js": "^5.19.2",
     "videojs-contrib-ads": "^5.1.6"
   },
   "devDependencies": {
