@@ -20,7 +20,7 @@
     "pretest": "npm run rollup",
     "test": "npm-run-all -p -r testServer webdriver",
     "testServer": "http-server --cors",
-    "preversion": "npm run lint",
+    "preversion": "node scripts/preversion.js && npm run lint && npm test",
     "version": "node scripts/version.js",
     "postversion": "node scripts/postversion.js",
     "webdriver": "mocha test/webdriver/*.js --no-timeouts"
