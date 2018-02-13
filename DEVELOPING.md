@@ -28,3 +28,9 @@ To create a new release, run the following:
 npm version [major|minor|patch]
 npm publish
 ```
+Be sure to run the tests with Browserstack. To do so you'll need to set the
+`BROWSERSTACK_USER` and `BROWSERSTACK_ACCESS_KEY` environment variables. Then run:
+
+```
+npm test
+```
