@@ -1,10 +1,27 @@
-<a name="1.0.4"></a>
-## [1.0.4](https://github.com/googleads/videojs-ima/compare/v1.0.3...v1.0.4) (2018-01-17)
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/googleads/videojs-ima/compare/v1.0.3...v1.1.0) (2018-02-14)
+
+### Features
+
+* Add support for full slot ads by changing the default non-linear ad slot height from 1/3 player height to 100% player height. ([#501](https://github.com/googleads/videojs-ima/issues/501)) ([9532a7f](https://github.com/googleads/videojs-ima/commit/9532a7f))
+* Auto-populate setAdWillPlayMuted if not provided in settings. ([b313873](https://github.com/googleads/videojs-ima/commit/b313873))
+* Use font relative units in CSS instead of pixels. ([#503](https://github.com/googleads/videojs-ima/issues/503)) ([aff9e5e](https://github.com/googleads/videojs-ima/commit/aff9e5e)), closes [#492](https://github.com/googleads/videojs-ima/issues/492)
+
+### Bug Fixes
+
+* Actually use adWillPlayMuted variable I created. ([#520](https://github.com/googleads/videojs-ima/issues/520)) ([f2837c4](https://github.com/googleads/videojs-ima/commit/f2837c4))
+* Fix preversion script. ([#516](https://github.com/googleads/videojs-ima/issues/516)) ([c370e72](https://github.com/googleads/videojs-ima/commit/c370e72))
 
 ### Documentation
 
 * Add keywords to package.json. This should list us on the videoj… ([#486](https://github.com/googleads/videojs-ima/issues/486)) ([7af46cf](https://github.com/googleads/videojs-ima/commit/7af46cf))
 * Update README with new snippet and codepen link. ([#483](https://github.com/googleads/videojs-ima/issues/483)) ([2d40f74](https://github.com/googleads/videojs-ima/commit/2d40f74))
+
+### Tests
+
+* **webdriver:** Adds browserstack config (local only). ([#510](https://github.com/googleads/videojs-ima/issues/510)) ([d7d7939](https://github.com/googleads/videojs-ima/commit/d7d7939))
+* Added Travis CI credentials for browserstack. ([#511](https://github.com/googleads/videojs-ima/issues/511)) ([6b6f124](https://github.com/googleads/videojs-ima/commit/6b6f124))
+* Fix error with BrowserStack tests. ([#519](https://github.com/googleads/videojs-ima/issues/519)) ([e4722d0](https://github.com/googleads/videojs-ima/commit/e4722d0))
 
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/googleads/videojs-ima/compare/v1.0.2...v1.0.3) (2018-01-03)
