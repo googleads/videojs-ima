@@ -23,7 +23,7 @@ var browserstackCapabilities = {
   'browserstack.local' : 'true',
   'browserstack.localIdentifier' : process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
   'browserstack.user' : process.env.BROWSERSTACK_USER,
-  'browserstack.key' : process.env.BROWSERSTACK_KEY
+  'browserstack.key' : process.env.BROWSERSTACK_ACCESS_KEY
 }
 
 var browsers = [
@@ -66,11 +66,6 @@ var browsers = [
     }
   },
 ];
-
-// For running locally.
-if (process.env.BROWSERSTACK_LOCAL_IDENTIFIER === undefined) {
-  browserstackCapabilities['browserstack.localIdentifier'] = "Test001";
-}
 
 for (let browser of browsers) {
   if (browser.server == 'http://hub-cloud.browserstack.com/wd/hub') {
