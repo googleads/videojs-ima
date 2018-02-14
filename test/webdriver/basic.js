@@ -24,6 +24,7 @@ browsers.browsers.forEach(function(browser) {
     describe('Basic Tests ' + browser.name, function() {
 
     this.timeout(0);
+    this.slow(15000);
 
     var webdriver = require('selenium-webdriver'),
         until = webdriver.until;
@@ -57,9 +58,6 @@ browsers.browsers.forEach(function(browser) {
       await driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
-      log.getText().then( (text) => {
-        console.log(text);
-      });
       await driver.wait(until.elementTextContains(log, 'start'), 10000);
       await driver.wait(until.elementIsNotVisible(driver.findElement(
         By.id('content_video_ima-controls-div'))), 14000);
