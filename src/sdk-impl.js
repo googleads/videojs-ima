@@ -225,7 +225,7 @@ SdkImpl.prototype.requestAds = function() {
       this.controller.getSettings().adWillPlayMuted !== undefined ?
       this.controller.getSettings().adWillPlayMuted :
       (this.controller.getPlayerVolume() == 0);
-  adsRequest.setAdWillPlayMuted(this.controller.getSettings().adWillPlayMuted);
+  adsRequest.setAdWillPlayMuted(adWillPlayMuted);
 
   this.adsLoader.requestAds(adsRequest);
 };
