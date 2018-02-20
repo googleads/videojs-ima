@@ -18,7 +18,7 @@ require('chromedriver');
 require('geckodriver');
 
 var browserstackCapabilities = {
-  'build' : '1.0.5',
+  'build' : '1.1.0',
   'project' : 'videojs_ima',
   'browserstack.local' : 'true',
   'browserstack.localIdentifier' : process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
