@@ -306,13 +306,15 @@ Controller.prototype.onAdsResumed = function() {
  * Takes data from the sdk impl and passes it to the ad UI to update the UI.
  *
  * @param {number} currentTime Current time of the ad.
+ * @param {number} remainingTime Remaining time of the ad.
  * @param {number} duration Duration of the ad.
  * @param {number} adPosition Index of the ad in the pod.
  * @param {number} totalAds Total number of ads in the pod.
  */
 Controller.prototype.onAdPlayheadUpdated =
-    function(currentTime, duration, adPosition, totalAds) {
-  this.adUi.updateAdUi(currentTime, duration, adPosition, totalAds);
+    function(currentTime, remainingTime, duration, adPosition, totalAds) {
+  this.adUi.updateAdUi(
+      currentTime, remainingTime, duration, adPosition, totalAds);
 };
 
 

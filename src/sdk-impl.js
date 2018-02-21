@@ -484,7 +484,7 @@ SdkImpl.prototype.onAdPlayheadTrackerInterval = function() {
   }
 
   this.controller.onAdPlayheadUpdated(
-      currentTime, duration, adPosition, totalAds);
+      currentTime, remainingTime, duration, adPosition, totalAds);
 };
 
 
