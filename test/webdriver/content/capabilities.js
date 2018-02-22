@@ -81,6 +81,4 @@ if (process.env.BROWSERSTACK_USER === undefined ||
     browser.server != 'http://hub-cloud.browserstack.com/wd/hub');
 }
 
-console.log('TRAVIS_PULL_REQUEST:' + process.env.TRAVIS_PULL_REQUEST);
-
 exports.browsers = browsers;
