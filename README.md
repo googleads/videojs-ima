@@ -133,3 +133,5 @@ The IMA SDK plugin for Video.js uses the IMA SDK, and as such is subject to the
 
 ## How do I contribute?
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=N1g3U09HWEhZR09OSVc2YmhiWFlGaExMQmswMmo0Z1F3NVRjT0VvZCtWST0tLUo0QUdnZ1gyMmhJUHZsRGJ3dTBpWWc9PQ==--b8066916a46dd2f255b416f80f40ca7c3518ad46)](https://www.browserstack.com/automate/public-build/N1g3U09HWEhZR09OSVc2YmhiWFlGaExMQmswMmo0Z1F3NVRjT0VvZCtWST0tLUo0QUdnZ1gyMmhJUHZsRGJ3dTBpWWc9PQ==--b8066916a46dd2f255b416f80f40ca7c3518ad46)
