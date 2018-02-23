@@ -17,6 +17,7 @@
 var player = videojs('content_video');
 
 var options = {
+  fluid: true,
   id: 'content_video',
   adTagUrl: 'http://pubads.g.doubleclick.net/gampad/ads?sz=640x480&' +
       'iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&' +
