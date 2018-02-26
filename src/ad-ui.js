@@ -253,13 +253,13 @@ AdUi.prototype.onAdsPlaying = function() {
  * Takes data from the controller to update the UI.
  *
  * @param {number} currentTime Current time of the ad.
+ * @param {number} remainingTime Remaining time of the ad.
  * @param {number} duration Duration of the ad.
  * @param {number} adPosition Index of the ad in the pod.
  * @param {number} totalAds Total number of ads in the pod.
  */
 AdUi.prototype.updateAdUi =
-    function(currentTime, duration, adPosition, totalAds) {
-  const remainingTime = duration - currentTime;
+    function(currentTime, remainingTime, duration, adPosition, totalAds) {
   // Update countdown timer data
   const remainingMinutes = Math.floor(remainingTime / 60);
   let remainingSeconds = Math.floor(remainingTime % 60);
