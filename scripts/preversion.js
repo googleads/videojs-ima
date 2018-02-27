@@ -1,4 +1,6 @@
+const execSync = require('child_process').execSync;
 const rimraf = require('rimraf');
+
 // Remove the node_modules directory on master and re-install.
 console.log('Removing old node_modules on gh-pages.');
 rimraf.sync('node_modules');
