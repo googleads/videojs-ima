@@ -12,7 +12,8 @@ process.chdir(path.resolve(__dirname, '..'));
 const preNpmInstallCommands = [
   'git push origin master',
   'git push --tags',
-  'git checkout gh-pages',
+  'git branch -D gh-pages',
+  'git checkout -b gh-pages origin/gh-pages',
   'git merge -X theirs master -m "Syncing gh-pages to master v' + pkg.version + '"'
 ];
 console.log('Executing pre npm install commands');
@@ -43,7 +44,7 @@ const postNpmInstallCommands = [
   'git add -f node_modules/videojs-contrib-ads/dist/videojs.ads.css',
   'git add -f node_modules/videojs-contrib-ads/dist/videojs.ads.min.js',
   'git commit -m "Build for samples at v' + pkg.version + '"',
-  'git push origin gh-pages',
+  'git push -f origin gh-pages',
   'git checkout master'
 ];
 console.log('Running install and pushing new gh-pages.');
