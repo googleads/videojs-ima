@@ -1,3 +1,14 @@
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/googleads/videojs-ima/compare/v1.1.0...v1.1.1) (2018-02-27)
+
+### Bug Fixes
+
+* Fix redundant calculation of remainingTime for ad UI. ([#527](https://github.com/googleads/videojs-ima/issues/527)) ([d8d70a4](https://github.com/googleads/videojs-ima/commit/d8d70a4)), closes [#526](https://github.com/googleads/videojs-ima/issues/526)
+
+### Tests
+
+* removed pull request check ([#522](https://github.com/googleads/videojs-ima/issues/522)) ([e9b5490](https://github.com/googleads/videojs-ima/commit/e9b5490))
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/googleads/videojs-ima/compare/v1.0.3...v1.1.0) (2018-02-14)
 
