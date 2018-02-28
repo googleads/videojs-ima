@@ -18,16 +18,16 @@ var onAdErrorEvent = function(event) {
 };
 
 var adTags = {
-  linear: 'http://localhost:8080/test/webdriver/content/canned_ads/linear.xml',
-  skippable: 'http://localhost:8080/test/webdriver/content/canned_ads/' +
+  linear: 'http://localhost:8000/test/webdriver/content/canned_ads/linear.xml',
+  skippable: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
       'skippable_linear.xml',
-  vmap_preroll: 'http://localhost:8080/test/webdriver/content/canned_ads/' +
+  vmap_preroll: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
     'vmap_preroll.xml',
-  vmap_midroll: 'http://localhost:8080/test/webdriver/content/canned_ads/' +
+  vmap_midroll: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
     'vmap_midroll.xml',
-  nonlinear: 'http://localhost:8080/test/webdriver/content/canned_ads/' +
+  nonlinear: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
       'nonlinear.xml',
-  error_303: 'http://localhost:8080/test/webdriver/content/canned_ads/' +
+  error_303: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
       'empty_wrapper.xml'
 };
 

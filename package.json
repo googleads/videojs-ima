@@ -11,7 +11,8 @@
   },
   "scripts": {
     "contBuild": "watch 'npm run rollup:max' src",
-    "devServer": "forever start ./node_modules/http-server/bin/http-server && npm run contBuild",
+    "predevServer": "echo \"Starting up server on localhost:8000.\"",
+    "devServer": "forever start ./node_modules/http-server/bin/http-server -p 8000 && npm run contBuild",
     "postdevServer": "forever stop ./node_modules/http-server/bin/http-server",
     "lint": "eslint \"src/*.js\"",
     "rollup": "npm-run-all rollup:*",
@@ -19,7 +20,7 @@
     "rollup:min": "rollup -c configs/rollup.config.min.js",
     "pretest": "npm run rollup",
     "test": "npm-run-all -p -r testServer webdriver",
-    "testServer": "http-server --cors",
+    "testServer": "http-server --cors -p 8000",
     "preversion": "node scripts/preversion.js && npm run lint && npm test",
     "version": "node scripts/version.js",
     "postversion": "node scripts/postversion.js",
