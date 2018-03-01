@@ -1,3 +1,18 @@
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/googleads/videojs-ima/compare/v1.1.1...v1.2.0) (2018-03-01)
+
+### Features
+
+* Add support for contrib-ads 6 and by extension VJS 6. ([#538](https://github.com/googleads/videojs-ima/issues/538)) ([d8edd05](https://github.com/googleads/videojs-ima/commit/d8edd05))
+
+### Bug Fixes
+
+* Fix undefined isMobile in sdk-impl. Fixes [#541](https://github.com/googleads/videojs-ima/issues/541) ([#542](https://github.com/googleads/videojs-ima/issues/542)) ([e7dd9c8](https://github.com/googleads/videojs-ima/commit/e7dd9c8))
+
+### Documentation
+
+* Move README badges to the top. It's what everyone else does. ([#540](https://github.com/googleads/videojs-ima/issues/540)) ([23d01fb](https://github.com/googleads/videojs-ima/commit/23d01fb))
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/googleads/videojs-ima/compare/v1.1.0...v1.1.1) (2018-02-27)
 
