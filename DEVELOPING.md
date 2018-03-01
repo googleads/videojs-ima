@@ -9,7 +9,7 @@ npm install
 npm run devServer
 ```
 
-and open http://localhost:8080 in your browser. This will take you to our list
+and open http://localhost:8000 in your browser. This will take you to our list
 of samples. When you save source files, the development server will re-compile
 the JavaScript and you can refresh the page to see your changes.
 

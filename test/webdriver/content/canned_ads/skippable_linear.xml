@@ -31,8 +31,8 @@
        <ClickTracking id=""><![CDATA[http://www.example.com]]></ClickTracking>
       </VideoClicks>
       <MediaFiles>
-       <MediaFile id="GDFP" delivery="progressive" width="640" height="360" type="video/mp4" bitrate="118"><![CDATA[http://localhost:8080/test/webdriver/content/canned_ads/media/long_linear_ad.mp4]]></MediaFile>
-       <MediaFile id="GDFP" delivery="progressive" width="640" height="360" type="video/webm" bitrate="445"><![CDATA[http://localhost:8080/test/webdriver/content/canned_ads/media/long_linear_ad.webm]]></MediaFile>
+       <MediaFile id="GDFP" delivery="progressive" width="640" height="360" type="video/mp4" bitrate="118"><![CDATA[http://localhost:8000/test/webdriver/content/canned_ads/media/long_linear_ad.mp4]]></MediaFile>
+       <MediaFile id="GDFP" delivery="progressive" width="640" height="360" type="video/webm" bitrate="445"><![CDATA[http://localhost:8000/test/webdriver/content/canned_ads/media/long_linear_ad.webm]]></MediaFile>
       </MediaFiles>
      </Linear>
     </Creative>
