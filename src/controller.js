@@ -115,6 +115,17 @@ Controller.prototype.getSettings = function() {
   return this.settings;
 };
 
+
+/**
+ * Return whether or not we're in a mobile environment.
+ *
+ * @return {boolean} True if running on mobile, false otherwise.
+ */
+Controller.prototype.getIsMobile = function() {
+  return this.isMobile;
+};
+
+
 /**
  * Inject the ad container div into the DOM.
  *
