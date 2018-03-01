@@ -277,7 +277,7 @@ SdkImpl.prototype.onAdsManagerLoaded = function(adsManagerLoadedEvent) {
       google.ima.AdEvent.Type.SKIPPED,
       this.onAdComplete.bind(this));
 
-  if (this.isMobile) {
+  if (this.controller.getIsMobile()) {
     // Show/hide controls on pause and resume (triggered by tap).
     this.adsManager.addEventListener(
         google.ima.AdEvent.Type.PAUSED,
