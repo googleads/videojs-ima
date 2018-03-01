@@ -38,8 +38,8 @@
     "src/"
   ],
   "dependencies": {
-    "video.js": "^5.19.2",
-    "videojs-contrib-ads": "^5.1.6"
+    "video.js": "^6",
+    "videojs-contrib-ads": "^5.19.2 || ^6"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
