@@ -19,8 +19,10 @@
     "rollup:max": "rollup -c configs/rollup.config.js",
     "rollup:min": "rollup -c configs/rollup.config.min.js",
     "pretest": "npm run rollup",
-    "test": "npm-run-all -p -r testServer webdriver",
-    "testServer": "http-server --cors -p 8000",
+    "test": "npm-run-all test:*",
+    "test:vjs5": "npm install video.js@5.19.2 --no-save && npm-run-all -p -r testServer webdriver",
+    "test:vjs6": "npm install video.js@6 --no-save && npm-run-all -p -r testServer webdriver",
+    "testServer": "http-server --cors -p 8000 --silent",
     "preversion": "node scripts/preversion.js && npm run lint && npm test",
     "version": "node scripts/version.js",
     "postversion": "node scripts/postversion.js",
@@ -38,8 +40,8 @@
     "src/"
   ],
   "dependencies": {
-    "video.js": "^6",
-    "videojs-contrib-ads": "^5.19.2 || ^6"
+    "video.js": "^5.19.2 || ^6",
+    "videojs-contrib-ads": "^6"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
