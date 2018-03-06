@@ -150,7 +150,7 @@ const ImaPlugin = function(player, options) {
    *     break playback.
    */
   this.setAdBreakReadyListener = function(listener) {
-    this.controller.setAdBreakReadyListener();
+    this.controller.setAdBreakReadyListener(listener);
   }.bind(this);
 
 
