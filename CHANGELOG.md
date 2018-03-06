@@ -1,3 +1,14 @@
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/googleads/videojs-ima/compare/v1.2.0...v1.2.1) (2018-03-06)
+
+### Bug Fixes
+
+* Fix setAdBreakReadyListener. ([#551](https://github.com/googleads/videojs-ima/issues/551)) ([a835fd8](https://github.com/googleads/videojs-ima/commit/a835fd8)), closes [#550](https://github.com/googleads/videojs-ima/issues/550)
+
+### Tests
+
+* Test against both video.js 5 and 6. ([#548](https://github.com/googleads/videojs-ima/issues/548)) ([60dabe5](https://github.com/googleads/videojs-ima/commit/60dabe5))
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/googleads/videojs-ima/compare/v1.1.1...v1.2.0) (2018-03-01)
 
