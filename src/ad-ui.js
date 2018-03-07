@@ -431,23 +431,6 @@ AdUi.prototype.onNonLinearAdLoad = function() {
 };
 
 
-/**
- * Called when the player wrapper detects that the player has been resized.
- *
- * @param {number} width The post-resize width of the player.
- * @param {number} height The post-resize height of the player.
- */
-AdUi.prototype.onPlayerResize = function(width, height) {
-  if (this.adsManager) {
-    this.adsManagerDimensions.width = width;
-    this.adsManagerDimensions.height = height;
-    /* global google */
-    /* eslint no-undef: 'error' */
-    this.adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
-  }
-};
-
-
 AdUi.prototype.onPlayerEnterFullscreen = function() {
   this.addClass(this.fullscreenDiv, 'ima-fullscreen');
   this.removeClass(this.fullscreenDiv, 'ima-non-fullscreen');
