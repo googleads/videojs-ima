@@ -406,7 +406,7 @@ Controller.prototype.onAdsReady = function() {
  * @param {number} height The post-resize height of the player.
  */
 Controller.prototype.onPlayerResize = function(width, height) {
-  this.adUi.onPlayerResize(width, height);
+  this.sdkImpl.onPlayerResize(width, height);
 };
 
 

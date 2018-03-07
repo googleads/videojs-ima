@@ -198,7 +198,7 @@ PlayerWrapper.prototype.checkForResize = function() {
       currentHeight != this.vjsPlayerDimensions.height) {
     this.vjsPlayerDimensions.width = currentWidth;
     this.vjsPlayerDimensions.height = currentHeight;
-    this.controller.onPlayerResize();
+    this.controller.onPlayerResize(currentWidth, currentHeight);
   }
 };
 
