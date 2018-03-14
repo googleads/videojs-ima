@@ -384,6 +384,14 @@ PlayerWrapper.prototype.getPlayerHeight = function() {
 
 
 /**
+ * @return {Object} The vjs player's options object.
+ */
+PlayerWrapper.prototype.getPlayerOptions = function() {
+  return this.vjsPlayer.options_;
+};
+
+
+/**
  * Toggle fullscreen state.
  */
 PlayerWrapper.prototype.toggleFullscreen = function() {
