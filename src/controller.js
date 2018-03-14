@@ -681,7 +681,7 @@ Controller.prototype.adsWillAutoplay = function() {
   } else if (this.settings.adWillAutoplay !== undefined) {
     return this.settings.adWillAutoplay;
   } else {
-    return !!this.playerWrapper.vjsPlayer.options_.autoplay;
+    return !!this.playerWrapper.getPlayerOptions().autoplay;
   }
 }
 
