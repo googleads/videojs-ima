@@ -115,9 +115,9 @@ Controller.prototype.warnAboutDeprecatedSettings = function() {
     'adWillAutoplay',
     'adsWillAutoplay',
     'adWillPlayMuted',
-    'adsWillPlayMuted'
+    'adsWillPlayMuted',
   ];
-  deprecatedSettings.forEach(setting => {
+  deprecatedSettings.forEach((setting) => {
     if (this.settings[setting] !== undefined) {
       console.warn(
         'WARNING: videojs.ima setting ' + setting + ' is deprecated');
@@ -683,7 +683,7 @@ Controller.prototype.adsWillAutoplay = function() {
   } else {
     return !!this.playerWrapper.getPlayerOptions().autoplay;
   }
-}
+};
 
 
 /**
