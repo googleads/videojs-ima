@@ -46,7 +46,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Displays ad UI ' + browser.name, async function(){
-      await driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
+      await driver.get('http://localhost:8000/test/webdriver/index.html?ad=linear');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, 'start'), 10000);
@@ -55,7 +55,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Hides controls when ad ends ' + browser.name, async function(){
-      await driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
+      await driver.get('http://localhost:8000/test/webdriver/index.html?ad=linear');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, 'start'), 10000);
@@ -65,7 +65,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Plays content when ad ends ' + browser.name, async function(){
-      await driver.get('http://localhost:8080/test/webdriver/index.html?ad=linear');
+      await driver.get('http://localhost:8000/test/webdriver/index.html?ad=linear');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, 'start'), 10000);
@@ -76,7 +76,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Displays skip ad button ' + browser.name, async function(){
-      await driver.get('http://localhost:8080/test/webdriver/index.html?ad=skippable');
+      await driver.get('http://localhost:8000/test/webdriver/index.html?ad=skippable');
       await driver.findElement(By.id('content_video')).click();
       let log = driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, 'start'), 10000);
@@ -90,7 +90,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
      it( 'VMAP: Preroll ' + browser.name, async function(){
-      await driver.get('http://localhost:8080/test/webdriver/index.html?ad=vmap_preroll');
+      await driver.get('http://localhost:8000/test/webdriver/index.html?ad=vmap_preroll');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, 'start'), 10000);
@@ -100,7 +100,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'VMAP: Midroll ' + browser.name, async function(){
-      await driver.get('http://localhost:8080/test/webdriver/index.html?ad=vmap_midroll');
+      await driver.get('http://localhost:8000/test/webdriver/index.html?ad=vmap_midroll');
       await driver.findElement(By.id('content_video')).click();
       await driver.wait(until.elementIsVisible(driver.findElement(
         By.id('content_video_ima-controls-div'))), 10000);
@@ -108,7 +108,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Nonlinear ' + browser.name, async function(){
-      await driver.get('http://localhost:8080/test/webdriver/index.html?ad=nonlinear');
+      await driver.get('http://localhost:8000/test/webdriver/index.html?ad=nonlinear');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, 'start'), 10000);
@@ -120,7 +120,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Handles ad error 303: wrappers ' + browser.name, async function(){
-      await driver.get('http://localhost:8080/test/webdriver/index.html?ad=error_303');
+      await driver.get('http://localhost:8000/test/webdriver/index.html?ad=error_303');
       let log = await driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, '303'), 10000);
       await driver.sleep();

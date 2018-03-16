@@ -51,10 +51,10 @@ const ImaPlugin = function(player, options) {
 
 
   /**
-   * Adds a listener for the 'ended' event of the video player. This should be
-   * used instead of setting an 'ended' listener directly to ensure that the
-   * ima can do proper cleanup of the SDK before other event listeners
-   * are called.
+   * Adds a listener for the 'contentended' event of the video player. This
+   * should be used instead of setting an 'contentended' listener directly to
+   * ensure that the ima can do proper cleanup of the SDK before other event
+   * listeners are called.
    * @param {listener} listener The listener to be called when content
    *     completes.
    */
@@ -150,7 +150,7 @@ const ImaPlugin = function(player, options) {
    *     break playback.
    */
   this.setAdBreakReadyListener = function(listener) {
-    this.controller.setAdBreakReadyListener();
+    this.controller.setAdBreakReadyListener(listener);
   }.bind(this);
 
 

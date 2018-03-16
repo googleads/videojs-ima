@@ -115,6 +115,17 @@ Controller.prototype.getSettings = function() {
   return this.settings;
 };
 
+
+/**
+ * Return whether or not we're in a mobile environment.
+ *
+ * @return {boolean} True if running on mobile, false otherwise.
+ */
+Controller.prototype.getIsMobile = function() {
+  return this.isMobile;
+};
+
+
 /**
  * Inject the ad container div into the DOM.
  *
@@ -306,13 +317,15 @@ Controller.prototype.onAdsResumed = function() {
  * Takes data from the sdk impl and passes it to the ad UI to update the UI.
  *
  * @param {number} currentTime Current time of the ad.
+ * @param {number} remainingTime Remaining time of the ad.
  * @param {number} duration Duration of the ad.
  * @param {number} adPosition Index of the ad in the pod.
  * @param {number} totalAds Total number of ads in the pod.
  */
 Controller.prototype.onAdPlayheadUpdated =
-    function(currentTime, duration, adPosition, totalAds) {
-  this.adUi.updateAdUi(currentTime, duration, adPosition, totalAds);
+    function(currentTime, remainingTime, duration, adPosition, totalAds) {
+  this.adUi.updateAdUi(
+      currentTime, remainingTime, duration, adPosition, totalAds);
 };
 
 
@@ -393,7 +406,7 @@ Controller.prototype.onAdsReady = function() {
  * @param {number} height The post-resize height of the player.
  */
 Controller.prototype.onPlayerResize = function(width, height) {
-  this.adUi.onPlayerResize(width, height);
+  this.sdkImpl.onPlayerResize(width, height);
 };
 
 
@@ -518,10 +531,10 @@ Controller.prototype.reset = function() {
 
 
 /**
- * Adds a listener for the 'ended' event of the video player. This should be
- * used instead of setting an 'ended' listener directly to ensure that the
- * ima can do proper cleanup of the SDK before other event listeners
- * are called.
+ * Adds a listener for the 'contentended' event of the video player. This should
+ * be used instead of setting an 'contentended' listener directly to ensure that
+ * the ima can do proper cleanup of the SDK before other event listeners are
+ * called.
  * @param {listener} listener The listener to be called when content
  *     completes.
  */

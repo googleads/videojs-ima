@@ -1,3 +1,40 @@
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/googleads/videojs-ima/compare/v1.2.0...v1.2.1) (2018-03-06)
+
+### Bug Fixes
+
+* Fix setAdBreakReadyListener. ([#551](https://github.com/googleads/videojs-ima/issues/551)) ([a835fd8](https://github.com/googleads/videojs-ima/commit/a835fd8)), closes [#550](https://github.com/googleads/videojs-ima/issues/550)
+
+### Tests
+
+* Test against both video.js 5 and 6. ([#548](https://github.com/googleads/videojs-ima/issues/548)) ([60dabe5](https://github.com/googleads/videojs-ima/commit/60dabe5))
+
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/googleads/videojs-ima/compare/v1.1.1...v1.2.0) (2018-03-01)
+
+### Features
+
+* Add support for contrib-ads 6 and by extension VJS 6. ([#538](https://github.com/googleads/videojs-ima/issues/538)) ([d8edd05](https://github.com/googleads/videojs-ima/commit/d8edd05))
+
+### Bug Fixes
+
+* Fix undefined isMobile in sdk-impl. Fixes [#541](https://github.com/googleads/videojs-ima/issues/541) ([#542](https://github.com/googleads/videojs-ima/issues/542)) ([e7dd9c8](https://github.com/googleads/videojs-ima/commit/e7dd9c8))
+
+### Documentation
+
+* Move README badges to the top. It's what everyone else does. ([#540](https://github.com/googleads/videojs-ima/issues/540)) ([23d01fb](https://github.com/googleads/videojs-ima/commit/23d01fb))
+
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/googleads/videojs-ima/compare/v1.1.0...v1.1.1) (2018-02-27)
+
+### Bug Fixes
+
+* Fix redundant calculation of remainingTime for ad UI. ([#527](https://github.com/googleads/videojs-ima/issues/527)) ([d8d70a4](https://github.com/googleads/videojs-ima/commit/d8d70a4)), closes [#526](https://github.com/googleads/videojs-ima/issues/526)
+
+### Tests
+
+* removed pull request check ([#522](https://github.com/googleads/videojs-ima/issues/522)) ([e9b5490](https://github.com/googleads/videojs-ima/commit/e9b5490))
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/googleads/videojs-ima/compare/v1.0.3...v1.1.0) (2018-02-14)
 

@@ -20,7 +20,7 @@
                      <Tracking event="creativeView"><![CDATA[http://www.example.com]]></Tracking>
                   </TrackingEvents>
                   <NonLinear id="GDFP" width="480" height="70" minSuggestedDuration="00:00:05">
-                     <StaticResource creativeType="image/png"><![CDATA[http://localhost:8080/test/webdriver/content/canned_ads/media/nonlinear_ad.png]]></StaticResource>
+                     <StaticResource creativeType="image/png"><![CDATA[http://localhost:8000/test/webdriver/content/canned_ads/media/nonlinear_ad.png]]></StaticResource>
                      <NonLinearClickThrough><![CDATA[http://www.example.com]]></NonLinearClickThrough>
                      <NonLinearClickTracking id="GDFP"><![CDATA[http://www.example.com]]></NonLinearClickTracking>
                   </NonLinear>

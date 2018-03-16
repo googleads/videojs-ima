@@ -277,7 +277,7 @@ SdkImpl.prototype.onAdsManagerLoaded = function(adsManagerLoadedEvent) {
       google.ima.AdEvent.Type.SKIPPED,
       this.onAdComplete.bind(this));
 
-  if (this.isMobile) {
+  if (this.controller.getIsMobile()) {
     // Show/hide controls on pause and resume (triggered by tap).
     this.adsManager.addEventListener(
         google.ima.AdEvent.Type.PAUSED,
@@ -484,7 +484,7 @@ SdkImpl.prototype.onAdPlayheadTrackerInterval = function() {
   }
 
   this.controller.onAdPlayheadUpdated(
-      currentTime, duration, adPosition, totalAds);
+      currentTime, remainingTime, duration, adPosition, totalAds);
 };
 
 
@@ -566,6 +566,23 @@ SdkImpl.prototype.onPlayerVolumeChanged = function(volume) {
     this.adMuted = true;
   } else {
     this.adMuted = false;
+  }
+};
+
+
+/**
+ * Called when the player wrapper detects that the player has been resized.
+ *
+ * @param {number} width The post-resize width of the player.
+ * @param {number} height The post-resize height of the player.
+ */
+SdkImpl.prototype.onPlayerResize = function(width, height) {
+  if (this.adsManager) {
+    this.adsManagerDimensions.width = width;
+    this.adsManagerDimensions.height = height;
+    /* global google */
+    /* eslint no-undef: 'error' */
+    this.adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
   }
 };
 

@@ -3,7 +3,7 @@
   <Ad id="11111">
     <Wrapper followAdditionalWrappers="true" allowMultipleAds="true" fallbackOnNoAd="true">
       <AdSystem>HandCrafted</AdSystem>
-      <VASTAdTagURI><![CDATA[http://localhost:8080/test/webdriver/content/canned_ads/empty_vast.xml]]></VASTAdTagURI>
+      <VASTAdTagURI><![CDATA[http://localhost:8000/test/webdriver/content/canned_ads/empty_vast.xml]]></VASTAdTagURI>
       <Error><![CDATA[http://www.example.com]]></Error>
       <Impression><![CDATA[http://www.example.com]]></Impression>
       <Creatives>

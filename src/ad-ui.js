@@ -253,13 +253,13 @@ AdUi.prototype.onAdsPlaying = function() {
  * Takes data from the controller to update the UI.
  *
  * @param {number} currentTime Current time of the ad.
+ * @param {number} remainingTime Remaining time of the ad.
  * @param {number} duration Duration of the ad.
  * @param {number} adPosition Index of the ad in the pod.
  * @param {number} totalAds Total number of ads in the pod.
  */
 AdUi.prototype.updateAdUi =
-    function(currentTime, duration, adPosition, totalAds) {
-  const remainingTime = duration - currentTime;
+    function(currentTime, remainingTime, duration, adPosition, totalAds) {
   // Update countdown timer data
   const remainingMinutes = Math.floor(remainingTime / 60);
   let remainingSeconds = Math.floor(remainingTime % 60);
@@ -428,23 +428,6 @@ AdUi.prototype.onNonLinearAdLoad = function() {
   this.adContainerDiv.style.display = 'block';
   // Bump container when controls are shown
   this.addClass(this.adContainerDiv, 'bumpable-ima-ad-container');
-};
-
-
-/**
- * Called when the player wrapper detects that the player has been resized.
- *
- * @param {number} width The post-resize width of the player.
- * @param {number} height The post-resize height of the player.
- */
-AdUi.prototype.onPlayerResize = function(width, height) {
-  if (this.adsManager) {
-    this.adsManagerDimensions.width = width;
-    this.adsManagerDimensions.height = height;
-    /* global google */
-    /* eslint no-undef: 'error' */
-    this.adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
-  }
 };
 
 
