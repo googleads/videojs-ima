@@ -99,6 +99,17 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   this.contentSource = '';
 
   /**
+   * Tracks that the play event has been fired by the player.
+   */
+  this.playTriggered = false;
+
+  /**
+   * Tracks when we hit a hard timeout on the pre-roll. Used to prevent a
+   * delayed pre-roll ad from playing as a mid-roll.
+   */
+  this.prerollHardTimedOut = false;
+
+  /**
    * Stores data for the content playhead tracker.
    */
   this.contentPlayheadTracker = {
@@ -134,9 +145,11 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
     this.controller.setSetting('adWillAutoPlay', true);
   }
 
-  this.vjsPlayer.one('play', this.setUpPlayerIntervals.bind(this));
+  this.vjsPlayer.one('play', this.onFirstPlay.bind(this));
   this.boundContentEndedListener = this.localContentEndedListener.bind(this);
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
+  this.boundAdTimeoutListener = this.onFirstAdTimeout.bind(this);
+  this.vjsPlayer.one('adtimeout', this.boundAdTimeoutListener);
   this.vjsPlayer.on('dispose', this.playerDisposedListener.bind(this));
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
@@ -146,15 +159,18 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
 
 
 /**
- * Set up the intervals we use on the player.
+ * Triggered the first time the player plays. Set up the intervals we use on the
+ * player and record that we've started playback, for use in firing adsready.
  */
-PlayerWrapper.prototype.setUpPlayerIntervals = function() {
+PlayerWrapper.prototype.onFirstPlay = function() {
   this.updateTimeIntervalHandle =
       setInterval(this.updateCurrentTime.bind(this), this.updateTimeInterval);
   this.seekCheckIntervalHandle =
       setInterval(this.checkForSeeking.bind(this), this.seekCheckInterval);
   this.resizeCheckIntervalHandle =
       setInterval(this.checkForResize.bind(this), this.resizeCheckInterval);
+
+  this.playTriggered = true;
 };
 
 /**
@@ -221,7 +237,7 @@ PlayerWrapper.prototype.localContentEndedListener = function() {
   clearInterval(this.seekCheckIntervalHandle);
   clearInterval(this.resizeCheckIntervalHandle);
   if (this.vjsPlayer.el()) {
-    this.vjsPlayer.one('play', this.setUpPlayerIntervals.bind(this));
+    this.vjsPlayer.one('play', this.onFirstPlay.bind(this));
   }
 };
 
@@ -292,6 +308,14 @@ PlayerWrapper.prototype.onFullscreenChange = function() {
 PlayerWrapper.prototype.onVolumeChange = function() {
   const newVolume = this.vjsPlayer.muted() ? 0 : this.vjsPlayer.volume();
   this.controller.onPlayerVolumeChanged(newVolume);
+};
+
+
+/**
+ * Called when the first adtimeout event fires.
+ */
+PlayerWrapper.prototype.onFirstAdTimeout = function() {
+  this.prerollHardTimedOut = true;
 };
 
 /**
@@ -406,6 +430,16 @@ PlayerWrapper.prototype.getContentPlayheadTracker = function() {
 
 
 /**
+ * Returns whether or not we hit a hard timeout on the pre-roll.
+ *
+ * @return {boolean} True if we hit a hard pre-roll timeout. False otherwise.
+ */
+PlayerWrapper.prototype.didPrerollHardTimeout = function() {
+  return this.prerollHardTimedOut;
+};
+
+
+/**
  * Handles ad errors.
  *
  * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
@@ -429,6 +463,7 @@ PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
  */
 PlayerWrapper.prototype.onAdBreakStart = function(adEvent) {
   this.contentSource = this.vjsPlayer.currentSrc();
+  this.vjsPlayer.off('adtimeout', this.boundAdTimeoutListener);
   this.vjsPlayer.off('contentended', this.boundContentEndedListener);
   if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
     // Skip this call for post-roll ads
@@ -474,7 +509,40 @@ PlayerWrapper.prototype.onAllAdsCompleted = function() {
  * Triggers adsready for contrib-ads.
  */
 PlayerWrapper.prototype.onAdsReady = function() {
-  this.vjsPlayer.trigger('adsready');
+  if (this.controller.getSettings().hardPrerollTimeout) {
+    // Only trigger adsready if:
+    //   - content is not yet playing
+    //   OR
+    //   - content is playing and we are not in ad mode.
+    // Without this check, we'll see the pre-roll play after content starts,
+    // even after the prerollTimeout has expired. This only really affects slow
+    // (slow 3G) connections. See #558 for more info.
+    if (!this.playTriggered) {
+      this.vjsPlayer.trigger('adsready');
+    } else if (this.vjsPlayer.ads.isInAdMode()) {
+      this.vjsPlayer.trigger('adsready');
+    } else {
+      this.prerollHardTimedOut = true;
+      // This is ugly, but if we don't fire adsready, contrib-ads will never
+      // fire readyforpreroll, and we will never call adsManager.init() and
+      // start(). So let's pretend they *did* fire readyforpreroll, which will
+      // trigger init and start, which will start the pre-roll, which will be
+      // killed in onContentPauseRequested because we just set
+      // prerollHardTimeout to true.
+      this.controller.onPlayerReadyForPreroll();
+    }
+
+    /*if (this.vjsPlayer.ads.isInAdMode() && this.playTriggered) {
+      this.vjsPlayer.trigger('adsready');
+    } else if (!this.playTriggered) {
+      this.vjsPlayer.trigger('adsready');
+    } else {
+      this.controller.onPrerollHardTimeout();
+    }*/
+  } else {
+    this.vjsPlayer.trigger('adsready');
+  }
+  console.log('Exited onAdsReady');
 };
 
 
@@ -555,6 +623,9 @@ PlayerWrapper.prototype.reset = function() {
   // the first playthrough of the video passed the second response's
   // mid-roll time.
   this.contentPlayheadTracker.currentTime = 0;
+  this.playTriggered = false;
+  this.prerollHardTimedOut = false;
+  this.firstAdTimedOut = false;
 };
 
 export default PlayerWrapper;

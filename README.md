@@ -92,7 +92,7 @@ the previous snippet. A summary of all settings follows:
 | adsRenderingSettings   | object       | JSON object with ads rendering settings as defined in the IMA SDK,Docs(1). |
 | autoPlayAdBreaks       | boolean      | Whether or not to automatically play VMAP or ad rules ad breaks. Defaults,to true. |
 | adWillPlayMuted        | boolean      | Notifies the SDK whether the player intends to start ad while muted. Changing this setting will have no impact on ad playback. Defaults,to false. |
-| contribAdsSettings     | object       | Additional settings to be passed to the contrib-ads plugin(2), used by,this IMA plugin. |
+| contribAdsSettings     | object       | Additional settings to be passed to the contrib-ads plugin(2), used by,this IMA plugin. These will override duplicate settings provided by the IMA plugin (e.g. contribAdsSettings.prerollTimeout will override imaOptions.prerollTimeout). |
 | debug                  | boolean      | True to load the debug version of the plugin, false to load the non-debug version.,Defaults to false. |
 | disableFlashAds        | boolean      | True to disable Flash ads - Flash ads will be considered an unsupported ad type. Defaults to false. |
 | disableCustomPlaybackForIOS10Plus | boolean      | Sets whether to disable custom playback on iOS 10+ browsers. If true, ads will play inline if the content video is inline. Defaults to false. |
@@ -103,6 +103,7 @@ the previous snippet. A summary of all settings follows:
 | numRedirects           | number       | Maximum number of VAST redirects before the subsequent redirects will be denied,,and the ad load aborted. The number of redirects directly affects latency and thus user experience.,This applies to all VAST wrapper ads. |
 | showControlsForJSAds   | boolean      | Whether or not to show the control bar for VPAID JavaScript ads. Defaults to true. |
 | showCountdown          | boolean      | Whether or not to show the ad countdown timer. Defaults to true. |
+| hardPrerollTimeout     | boolean      | When true, a pre-roll ad will never play once the prerollTimeout has been reached. When false, the prerollTimeout will trigger content to start, but the ad will still play once it is ready. Defaults to false. |
 | vpaidAllowed           | boolean      | (DEPRECATED, please use vpaidMode). |
 | vpaidMode              | VpaidMode(4) | VPAID Mode. Defaults to ENABLED. This setting,overrides vpaidAllowed. |
 

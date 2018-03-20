@@ -163,6 +163,16 @@ Controller.prototype.getContentPlayheadTracker = function() {
 
 
 /**
+ * Returns whether or not we hit a hard timeout on the pre-roll.
+ *
+ * @return {boolean} True if we hit a hard pre-roll timeout. False otherwise.
+ */
+Controller.prototype.didPrerollHardTimeout = function() {
+  return this.playerWrapper.didPrerollHardTimeout();
+}
+
+
+/**
  * Requests ads.
  */
 Controller.prototype.requestAds = function() {
