@@ -444,7 +444,9 @@ PlayerWrapper.prototype.onAdBreakStart = function(adEvent) {
  */
 PlayerWrapper.prototype.onAdBreakEnd = function() {
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
-  this.vjsPlayer.ads.endLinearAdMode();
+  if (this.vjsPlayer.ads.inAdBreak()) {
+    this.vjsPlayer.ads.endLinearAdMode();
+  }
   this.vjsControls.show();
 };
 
