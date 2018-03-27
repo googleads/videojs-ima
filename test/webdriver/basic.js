@@ -80,7 +80,6 @@ browsers.browsers.forEach(function(browser) {
       await driver.findElement(By.id('content_video')).click();
       let log = driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, 'start'), 10000);
-      await driver.sleep(6000);
       await driver.switchTo().frame(driver.findElement(
         By.css('#content_video_ima-ad-container > div:nth-child(1) > iframe')));
       let skipButton = await driver.findElement(
