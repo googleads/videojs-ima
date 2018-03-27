@@ -11,7 +11,7 @@ addons:
   browserstack:
     username: "adsdevrel1"
     access_key:
-      secure: "KJVna2yQYeX9dwNLzNSTjMxjCxLa8d5wuxlq414TP+gKPlMjcLohi05C0nno73qlsYkPw+w7leG9tSP3gPFfylCKKGUqX6oXPEjo59SysTz+MQMnwglvdiAB5kVW5/AGdhWfnOGM5bsDHYVoDKe5M+xANOxIsQA3tMgUdV+gVVs="
+      secure: "CD76OVHjif8tBfkULJASD84oFh0bAoYpZJkRIy6f5+gi46iPS7GA/t2++Fatuxi11XZ6EDH3y0eFrGeXau0/3Ut6Et2br2TWzwpt/TSbfpjkGGXKy6IJb0Jbsy/HMEJrmr8krkF9rALND1geJMgy2RVF9u3ri21JQqA2uMCOpYs="
 script:
   - npm run lint
   - npm test
