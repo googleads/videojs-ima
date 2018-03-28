@@ -175,12 +175,12 @@ SdkImpl.prototype.initAdObjects = function() {
 
   if (this.controller.getSettings().locale) {
     this.adsLoader.getSettings().setLocale(
-        this.controller.getSettings.locale);
+        this.controller.getSettings().locale);
   }
 
   if (this.controller.getSettings().numRedirects) {
     this.adsLoader.getSettings().setNumRedirects(
-        this.controller.getSettings.numRedirects);
+        this.controller.getSettings().numRedirects);
   }
 
   this.adsLoader.getSettings().setPlayerType('videojs-ima');
