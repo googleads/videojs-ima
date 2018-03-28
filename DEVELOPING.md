@@ -6,7 +6,7 @@ manually test changes as you make them. To start developing, run the following:
 
 ```
 npm install
-npm run devServer
+npm start
 ```
 
 and open http://localhost:8000 in your browser. This will take you to our list
