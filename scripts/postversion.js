@@ -43,6 +43,7 @@ const postNpmInstallCommands = [
   'git add -f node_modules/video.js/dist/video.min.js',
   'git add -f node_modules/videojs-contrib-ads/dist/videojs.ads.css',
   'git add -f node_modules/videojs-contrib-ads/dist/videojs.ads.min.js',
+  'git add -f node_modules/can-autoplay/build/can-autoplay.min.js',
   'git commit -m "Build for samples at v' + pkg.version + '"',
   'git push -f origin gh-pages',
   'git checkout master'
