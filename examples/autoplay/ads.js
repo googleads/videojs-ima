@@ -72,4 +72,4 @@ function initPlayer() {
   player.ima(imaOptions);
 }
 
-checkMutedAutoplaySupport();
+checkUnmutedAutoplaySupport();
