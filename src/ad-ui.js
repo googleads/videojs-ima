@@ -89,7 +89,7 @@ const AdUi = function(controller) {
   /**
    * Bound event handler for onMouseMove.
    */
-  this.boundOnMouseUp = this.onMouseMove.bind(this);
+  this.boundOnMouseMove = this.onMouseMove.bind(this);
 
   /**
    * Stores data for the ad playhead tracker.

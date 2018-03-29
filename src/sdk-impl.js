@@ -175,12 +175,12 @@ SdkImpl.prototype.initAdObjects = function() {
 
   if (this.controller.getSettings().locale) {
     this.adsLoader.getSettings().setLocale(
-        this.controller.getSettings.locale);
+        this.controller.getSettings().locale);
   }
 
   if (this.controller.getSettings().numRedirects) {
     this.adsLoader.getSettings().setNumRedirects(
-        this.controller.getSettings.numRedirects);
+        this.controller.getSettings().numRedirects);
   }
 
   this.adsLoader.getSettings().setPlayerType('videojs-ima');
@@ -219,13 +219,8 @@ SdkImpl.prototype.requestAds = function() {
   adsRequest.nonLinearAdSlotHeight =
       this.controller.getSettings().nonLinearHeight ||
       this.controller.getPlayerHeight();
-
-  adsRequest.setAdWillAutoPlay(this.controller.getSettings().adWillAutoPlay);
-  const adWillPlayMuted =
-      this.controller.getSettings().adWillPlayMuted !== undefined ?
-      this.controller.getSettings().adWillPlayMuted :
-      (this.controller.getPlayerVolume() == 0);
-  adsRequest.setAdWillPlayMuted(adWillPlayMuted);
+  adsRequest.setAdWillAutoPlay(this.controller.adsWillAutoplay());
+  adsRequest.setAdWillPlayMuted(this.controller.adsWillPlayMuted());
 
   this.adsLoader.requestAds(adsRequest);
 };

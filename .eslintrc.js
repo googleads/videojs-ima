@@ -10,6 +10,9 @@ module.exports = {
     'rules': {
         'jsdoc/check-types': 'error',
         'space-infix-ops': 'error',
+        'no-console': ['error', {
+          'allow': ['warn', 'error']
+        }],
     },
     'plugins': [
       'jsdoc',

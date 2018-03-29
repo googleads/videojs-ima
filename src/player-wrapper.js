@@ -384,6 +384,14 @@ PlayerWrapper.prototype.getPlayerHeight = function() {
 
 
 /**
+ * @return {Object} The vjs player's options object.
+ */
+PlayerWrapper.prototype.getPlayerOptions = function() {
+  return this.vjsPlayer.options_;
+};
+
+
+/**
  * Toggle fullscreen state.
  */
 PlayerWrapper.prototype.toggleFullscreen = function() {
@@ -444,7 +452,9 @@ PlayerWrapper.prototype.onAdBreakStart = function(adEvent) {
  */
 PlayerWrapper.prototype.onAdBreakEnd = function() {
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
-  this.vjsPlayer.ads.endLinearAdMode();
+  if (this.vjsPlayer.ads.inAdBreak()) {
+    this.vjsPlayer.ads.endLinearAdMode();
+  }
   this.vjsControls.show();
 };
 

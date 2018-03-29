@@ -46,9 +46,11 @@ var Ads = function() {
     adsManagerLoadedCallback: this.adsManagerLoadedCallback.bind(this)
   };
 
-  this.contents = ['http://rmcdn.2mdn.net/Demo/vast_inspector/android.mp4',
-                   'http://rmcdn.2mdn.net/Demo/html5/output.mp4'];
-  this.posters = ['../posters/android.png', '../posters/dfp.png'];
+  this.contents =
+      ['//commondatastorage.googleapis.com/gtv-videos-bucket/sample/' +
+          'BigBuckBunny.mp4',
+        '//s0.2mdn.net/4253510/google_ddm_animation_480P.mp4'];
+  this.posters = ['../posters/bbb_poster.jpg', '../posters/stock_poster.png'];
   this.currentContent = 0;
 
   this.console = document.getElementById('ima-sample-console');
