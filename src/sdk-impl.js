@@ -492,6 +492,12 @@ SdkImpl.prototype.onContentComplete = function() {
     this.contentCompleteCalled = true;
   }
 
+  if (this.adsManager &&
+      this.adsManager.getCuePoints() &&
+      !this.adsManager.getCuePoints().includes(-1)) {
+    this.controller.onNoPostroll();
+  }
+
   if (this.allAdsCompleted) {
     this.controller.onContentAndAdsCompleted();
   }
