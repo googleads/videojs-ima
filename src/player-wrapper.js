@@ -230,7 +230,7 @@ PlayerWrapper.prototype.localContentEndedListener = function() {
  */
 PlayerWrapper.prototype.onNoPostroll = function() {
   this.vjsPlayer.trigger('nopostroll');
-}
+};
 
 /**
  * Detects when the video.js player has been disposed.
