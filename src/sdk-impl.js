@@ -353,6 +353,10 @@ SdkImpl.prototype.createAdsRenderingSettings = function() {
       }
     }
   }
+  if (this.controller.didPrerollHardTimeout()) {
+    // Skip the pre-roll
+    this.adsRenderingSettings.playAdsAfterTime = 0;
+  }
 };
 
 /**
@@ -384,32 +388,9 @@ SdkImpl.prototype.onAdBreakReady = function(adEvent) {
  * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
  */
 SdkImpl.prototype.onContentPauseRequested = function(adEvent) {
-  // If pre-roll hard timed out, don't trigger ad mode when the pre-roll finally
-  // loads. Stil trigger it for mid- and post- rolls, though.
-  if (this.controller.didPrerollHardTimeout()) {
-    // Pre-roll hard timed out.
-    if (adEvent.getAd().getAdPodInfo() &&
-        adEvent.getAd().getAdPodInfo().getPodIndex() != 0) {
-      // Mid- or post- roll. Play it.
-      this.adsActive = true;
-      this.adPlaying = true;
-      this.controller.onAdBreakStart(adEvent);
-    } else {
-      // Pre-roll. Kill it.
-      if (adEvent.getAd().getAdPodInfo()) {
-        // Pre-roll in a VMAP response.
-        this.adsManager.discardAdBreak();
-      } else {
-        // Pre-roll, single ad.
-        this.adsManager.destroy();
-      }
-    }
-  } else {
-    // Pre-roll didn't hard timeout, or we don't care if it did or not.
-    this.adsActive = true;
-    this.adPlaying = true;
-    this.controller.onAdBreakStart(adEvent);
-  }
+  this.adsActive = true;
+  this.adPlaying = true;
+  this.controller.onAdBreakStart(adEvent);
 };
 
 
@@ -541,6 +522,11 @@ SdkImpl.prototype.onPlayerDisposed = function() {
 
 
 SdkImpl.prototype.onPlayerReadyForPreroll = function() {
+  if (this.controller.didPrerollHardTimeout() &&
+      this.adsManager.getCuePoints().length == 0) {
+    // Pre-roll hard timed out on a single ad. Don't play it.
+    return;
+  }
   if (this.autoPlayAdBreaks) {
     this.initAdsManager();
     try {

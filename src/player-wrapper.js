@@ -525,20 +525,11 @@ PlayerWrapper.prototype.onAdsReady = function() {
       this.prerollHardTimedOut = true;
       // This is ugly, but if we don't fire adsready, contrib-ads will never
       // fire readyforpreroll, and we will never call adsManager.init() and
-      // start(). So let's pretend they *did* fire readyforpreroll, which will
-      // trigger init and start, which will start the pre-roll, which will be
-      // killed in onContentPauseRequested because we just set
-      // prerollHardTimeout to true.
+      // start(). So let's pretend they *did* fire readyforpreroll, and our
+      // readyForPreroll handler will take care of skipping the pre-roll if it
+      // hard timed out.
       this.controller.onPlayerReadyForPreroll();
     }
-
-    /*if (this.vjsPlayer.ads.isInAdMode() && this.playTriggered) {
-      this.vjsPlayer.trigger('adsready');
-    } else if (!this.playTriggered) {
-      this.vjsPlayer.trigger('adsready');
-    } else {
-      this.controller.onPrerollHardTimeout();
-    }*/
   } else {
     this.vjsPlayer.trigger('adsready');
   }
