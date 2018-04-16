@@ -268,7 +268,7 @@ AdUi.prototype.updateAdUi =
   }
   let podCount = ': ';
   if (totalAds > 1) {
-    podCount = ' (' + adPosition + ' of ' + totalAds + '): ';
+    podCount = ' (' + adPosition + ' ' + this.controller.getSettings().adLabelNofN + ' ' + totalAds + '): ';
   }
   this.countdownDiv.innerHTML =
       this.controller.getSettings().adLabel + podCount +

@@ -89,6 +89,7 @@ the previous snippet. A summary of all settings follows:
 | adTagUrl               | string       | REQUIRED IF adsResponse IS NOT PROVIDED A URL which returns a VAST, VMAP or ad rules,response. |
 | adsResponse            | string       | REQUIRED IF adTagUrl IS NOT PROVIDED The VAST, VMAP, or ad rules response to use,in lieu of fetching one an ad tag. |
 | adLabel                | string       | Replaces the "Advertisement" text in the ad label. Added for multilingual UI support. |
+| adLabelNofN            | string       | Replaces the "of" text in the ad label (e.g. ... (1 of 2) ...). Added for multilingual UI support. |
 | adsRenderingSettings   | object       | JSON object with ads rendering settings as defined in the IMA SDK,Docs(1). |
 | autoPlayAdBreaks       | boolean      | Whether or not to automatically play VMAP or ad rules ad breaks. Defaults,to true. |
 | **deprecated** adWillPlayMuted        | boolean      | Notifies the SDK whether the player intends to start ad while muted. Changing this setting will have no impact on ad playback. Defaults,to false. |
