@@ -78,6 +78,7 @@ Controller.IMA_DEFAULTS = {
   timeout: 5000,
   prerollTimeout: 1000,
   adLabel: 'Advertisement',
+  adLabelNofN: 'of',
   showControlsForJSAds: true,
 };
 
