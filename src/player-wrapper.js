@@ -226,6 +226,13 @@ PlayerWrapper.prototype.localContentEndedListener = function() {
 };
 
 /**
+ * Called when it's time to play a post-roll but we don't have one to play.
+ */
+PlayerWrapper.prototype.onNoPostroll = function() {
+  this.vjsPlayer.trigger('nopostroll');
+};
+
+/**
  * Detects when the video.js player has been disposed.
  */
 PlayerWrapper.prototype.playerDisposedListener = function() {

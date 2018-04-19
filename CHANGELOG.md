@@ -1,3 +1,24 @@
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/googleads/videojs-ima/compare/v1.2.1...v1.3.0) (2018-03-29)
+
+### Bug Fixes
+
+* Add nopostroll trigger. ([#585](https://github.com/googleads/videojs-ima/issues/585)) ([e790e6d](https://github.com/googleads/videojs-ima/commit/e790e6d))
+* Change source for examples to something that supports https. ([#566](https://github.com/googleads/videojs-ima/issues/566)) ([6810fb3](https://github.com/googleads/videojs-ima/commit/6810fb3))
+* Fix locale and numRedirects settings ([#584](https://github.com/googleads/videojs-ima/issues/584)) ([e4de93d](https://github.com/googleads/videojs-ima/commit/e4de93d))
+* Fix typo'd boundOnMouseMove property. ([#569](https://github.com/googleads/videojs-ima/issues/569)) ([4cc710b](https://github.com/googleads/videojs-ima/commit/4cc710b))
+* Resize handler now resizes ([#555](https://github.com/googleads/videojs-ima/issues/555)) ([a10e82f](https://github.com/googleads/videojs-ima/commit/a10e82f)), closes [#554](https://github.com/googleads/videojs-ima/issues/554)
+* Resolve dangling endLinearAdMode call in onAdBreakEnd. ([#574](https://github.com/googleads/videojs-ima/issues/574)) ([2158ba0](https://github.com/googleads/videojs-ima/commit/2158ba0))
+* Use contentended instead of ended as trigger for post-rolls. ([#559](https://github.com/googleads/videojs-ima/issues/559)) ([5046440](https://github.com/googleads/videojs-ima/commit/5046440)), closes [#539](https://github.com/googleads/videojs-ima/issues/539)
+
+### Code Refactoring
+
+* Update autoplay sample and how we report adsWillAutoplay an… ([#562](https://github.com/googleads/videojs-ima/issues/562)) ([b580e21](https://github.com/googleads/videojs-ima/commit/b580e21)), closes [#341](https://github.com/googleads/videojs-ima/issues/341)
+
+### Tests
+
+* Remove unnecessary sleep in test. ([#580](https://github.com/googleads/videojs-ima/issues/580)) ([a82c421](https://github.com/googleads/videojs-ima/commit/a82c421))
+
 <a name="1.2.1"></a>
 ## [1.2.1](https://github.com/googleads/videojs-ima/compare/v1.2.0...v1.2.1) (2018-03-06)
 
@@ -77,7 +98,7 @@
 
 ### Tests
 
-* Added basic webdriver tests ([#464](https://github.com/googleads/videojs-ima/issues/464)) ([8786de9](https://github.com/googleads/videojs-ima/commit/8786de9))
+* Added basic webdriver tests ([#464](https://github.com/googleads/videojs-ima/issues/464)) ([8786de9](https://github.com/googleads/videojs-ima/commit/8786de9)), closes [#445](https://github.com/googleads/videojs-ima/issues/445)
 
 <a name="1.0.1"></a>
 ## [1.0.1](https://github.com/googleads/videojs-ima/compare/v1.0.0...v1.0.1) (2017-12-13)

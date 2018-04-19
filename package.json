@@ -1,6 +1,6 @@
 {
   "name": "videojs-ima",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "license": "Apache-2.0",
   "main": "./dist/videojs.ima.js",
   "author": {
@@ -19,6 +19,7 @@
     "rollup:max": "rollup -c configs/rollup.config.js",
     "rollup:min": "rollup -c configs/rollup.config.min.js",
     "pretest": "npm run rollup",
+    "start": "npm run devServer",
     "test": "npm-run-all test:*",
     "test:vjs5": "npm install video.js@5.19.2 --no-save && npm-run-all -p -r testServer webdriver",
     "test:vjs6": "npm install video.js@6 --no-save && npm-run-all -p -r testServer webdriver",

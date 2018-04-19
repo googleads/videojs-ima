@@ -78,6 +78,7 @@ Controller.IMA_DEFAULTS = {
   timeout: 5000,
   prerollTimeout: 1000,
   adLabel: 'Advertisement',
+  adLabelNofN: 'of',
   showControlsForJSAds: true,
 };
 
@@ -435,6 +436,14 @@ Controller.prototype.onPlayerResize = function(width, height) {
  */
 Controller.prototype.onContentComplete = function() {
   this.sdkImpl.onContentComplete();
+};
+
+/**
+ * Called by the player wrapper when it's time to play a post-roll but we don't
+ * have one to play.
+ */
+Controller.prototype.onNoPostroll = function() {
+  this.playerWrapper.onNoPostroll();
 };
 
 /**
