@@ -124,15 +124,7 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   /**
    * Vanilla HTML5 video player underneath the video.js player.
    */
-  this.h5Player =
-      document.getElementById(
-          this.controller.getSettings().id).getElementsByClassName(
-              'vjs-tech')[0];
-
-  // Detect inline options
-  if (this.h5Player.hasAttribute('autoplay')) {
-    this.controller.setSetting('adWillAutoPlay', true);
-  }
+  this.h5Player = null;
 
   this.vjsPlayer.one('play', this.setUpPlayerIntervals.bind(this));
   this.boundContentEndedListener = this.localContentEndedListener.bind(this);
@@ -272,6 +264,16 @@ PlayerWrapper.prototype.onReadyForPreroll = function() {
  * Called when the player fires its 'ready' event.
  */
 PlayerWrapper.prototype.onPlayerReady = function() {
+  this.h5Player =
+      document.getElementById(
+          this.controller.getSettings().id).getElementsByClassName(
+              'vjs-tech')[0];
+
+  // Detect inline options
+  if (this.h5Player.hasAttribute('autoplay')) {
+    this.controller.setSetting('adWillAutoPlay', true);
+  }
+
   // Sync ad volume with player volume.
   this.onVolumeChange();
   this.vjsPlayer.on('fullscreenchange', this.onFullscreenChange.bind(this));
