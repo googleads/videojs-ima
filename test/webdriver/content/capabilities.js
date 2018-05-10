@@ -18,12 +18,13 @@ require('chromedriver');
 require('geckodriver');
 
 var browserstackCapabilities = {
-  'build' : '1.1.0',
-  'project' : 'videojs_ima',
+  'browserstack.key' : process.env.BROWSERSTACK_ACCESS_KEY,
   'browserstack.local' : 'true',
   'browserstack.localIdentifier' : process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
+  'browserstack.networkLogs': 'true',
   'browserstack.user' : process.env.BROWSERSTACK_USER,
-  'browserstack.key' : process.env.BROWSERSTACK_ACCESS_KEY
+  'build' : '1.1.0',
+  'project' : 'videojs_ima'
 }
 
 var browsers = [
