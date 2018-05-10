@@ -438,6 +438,14 @@ Controller.prototype.onContentComplete = function() {
 };
 
 /**
+ * Called by the player wrapper when it's time to play a post-roll but we don't
+ * have one to play.
+ */
+Controller.prototype.onNoPostroll = function() {
+  this.playerWrapper.onNoPostroll();
+};
+
+/**
  * Called when content and all ads have completed.
  */
 Controller.prototype.onContentAndAdsCompleted = function() {
