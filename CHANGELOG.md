@@ -1,3 +1,20 @@
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/googleads/videojs-ima/compare/v1.3.0...v1.4.0) (2018-05-16)
+
+### Features
+
+* Multilingual UI support for the adLabel "N of N" string ([#592](https://github.com/googleads/videojs-ima/issues/592)) ([4cba6d4](https://github.com/googleads/videojs-ima/commit/4cba6d4))
+
+### Bug Fixes
+
+* Updated samples to work on iOS. ([#613](https://github.com/googleads/videojs-ima/issues/613)) ([a21b544](https://github.com/googleads/videojs-ima/commit/a21b544))
+
+### Tests
+
+* Disable browserstack tests. To be re-enabled once we fix their flakiness. ([#615](https://github.com/googleads/videojs-ima/issues/615)) ([7d4b5a6](https://github.com/googleads/videojs-ima/commit/7d4b5a6))
+* Enable browserstack network logs. ([#597](https://github.com/googleads/videojs-ima/issues/597)) ([9cfbd08](https://github.com/googleads/videojs-ima/commit/9cfbd08))
+* Enable verbose browserstack logs. ([#614](https://github.com/googleads/videojs-ima/issues/614)) ([b87735f](https://github.com/googleads/videojs-ima/commit/b87735f))
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/googleads/videojs-ima/compare/v1.2.1...v1.3.0) (2018-03-29)
 
