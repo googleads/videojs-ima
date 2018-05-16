@@ -18,6 +18,7 @@ require('chromedriver');
 require('geckodriver');
 
 var browserstackCapabilities = {
+  'browserstack.console': 'verbose',
   'browserstack.key' : process.env.BROWSERSTACK_ACCESS_KEY,
   'browserstack.local' : 'true',
   'browserstack.localIdentifier' : process.env.BROWSERSTACK_LOCAL_IDENTIFIER,
