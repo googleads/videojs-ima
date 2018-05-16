@@ -45,7 +45,7 @@ var browsers = [
       'moz:firefoxOptions' : {args: ['-headless']}
     }
   },
-  {
+  /*{
     name: 'browserstack-win10-chrome',
     server: 'http://hub-cloud.browserstack.com/wd/hub',
     capabilities: {
@@ -66,7 +66,7 @@ var browsers = [
       'os_version' : '10',
       'resolution' : '1024x768',
     }
-  },
+  },*/
 ];
 
 for (let browser of browsers) {
