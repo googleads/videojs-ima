@@ -38,12 +38,18 @@ if ((navigator.userAgent.match(/iPad/i) ||
 
 // Initialize the ad container when the video player is clicked, but only the
 // first time it's clicked.
+var initAdDisplayContainer = function() {
+  player.ima.initializeAdDisplayContainer();
+  wrapperDiv.removeEventListener(startEvent, initAdDisplayContainer);
+}
+
 var startEvent = 'click';
 if (navigator.userAgent.match(/iPhone/i) ||
     navigator.userAgent.match(/iPad/i) ||
     navigator.userAgent.match(/Android/i)) {
   startEvent = 'touchend';
 }
-player.one(startEvent, function() {
-    player.ima.initializeAdDisplayContainer();
-});
+
+var wrapperDiv = document.getElementById('content_video');
+wrapperDiv.addEventListener(startEvent, initAdDisplayContainer);
+

@@ -22,7 +22,7 @@ function pause(id) {
 var Player = function(id) {
   this.id = id;
   this.init = function() {
-    var player = videojs(this.id);
+    this.player = videojs(this.id);
 
     var options = {
       id: id,
@@ -33,7 +33,7 @@ var Player = function(id) {
           'vid=short_onecue&correlator='
     };
 
-    player.ima(options);
+    this.player.ima(options);
 
     // Remove controls from the player on iPad to stop native controls from stealing
     // our click
@@ -46,16 +46,23 @@ var Player = function(id) {
 
     // Initialize the ad container when the video player is clicked, but only the
     // first time it's clicked.
-    var startEvent = 'click';
+    this.startEvent = 'click';
     if (navigator.userAgent.match(/iPhone/i) ||
         navigator.userAgent.match(/iPad/i) ||
         navigator.userAgent.match(/Android/i)) {
-      startEvent = 'touchend';
+      this.startEvent = 'touchend';
     }
 
-    player.one(startEvent, function() {
-        player.ima.initializeAdDisplayContainer();
-    });
+    this.wrapperDiv = document.getElementById(this.id);
+    this.boundInitAdDisplayContainer = this.initAdDisplayContainer.bind(this);
+    this.wrapperDiv.addEventListener(
+        this.startEvent, this.boundInitAdDisplayContainer);
+  }
+
+  this.initAdDisplayContainer = function() {
+    this.player.ima.initializeAdDisplayContainer();
+    this.wrapperDiv.removeEventListener(
+        this.startEvent, this.boundInitAdDisplayContainer);
   }
 }
 
