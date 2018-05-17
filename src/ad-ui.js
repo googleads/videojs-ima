@@ -176,6 +176,11 @@ AdUi.prototype.createControls = function() {
       this.onAdVolumeSliderMouseDown.bind(this),
       false);
 
+  // Hide volume slider controls on iOS as they aren't supported.
+  if (this.controller.getIsIos()) {
+    this.sliderDiv.style.display = 'none';
+  }
+
   this.assignControlAttributes(this.sliderLevelDiv, 'ima-slider-level-div');
 
   this.assignControlAttributes(this.fullscreenDiv, 'ima-fullscreen-div');
@@ -468,8 +473,11 @@ AdUi.prototype.showAdControls = function() {
   this.addClass(this.controlsDiv, 'ima-controls-div-showing');
   this.playPauseDiv.style.display = 'block';
   this.muteDiv.style.display = 'block';
-  this.sliderDiv.style.display = 'block';
   this.fullscreenDiv.style.display = 'block';
+  // Don't show on iOS.
+  if (!this.controller.getIsIos()) {
+    this.sliderDiv.style.display = 'block';
+  }
 };
 
 

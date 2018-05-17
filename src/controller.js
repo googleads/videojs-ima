@@ -54,6 +54,12 @@ const Controller = function(player, options) {
       navigator.userAgent.match(/iPad/i) ||
       navigator.userAgent.match(/Android/i));
 
+  /**
+   * Whether or not we are running on an iOS platform.
+   */
+  this.isIos = (navigator.userAgent.match(/iPhone/i) ||
+      navigator.userAgent.match(/iPad/i));
+
   this.initWithSettings(options);
 
   /**
@@ -144,6 +150,15 @@ Controller.prototype.getSettings = function() {
  */
 Controller.prototype.getIsMobile = function() {
   return this.isMobile;
+};
+
+/**
+ * Return whether or not we're in an iOS environment.
+ *
+ * @return {boolean} True if running on iOS, false otherwise.
+ */
+Controller.prototype.getIsIos = function() {
+  return this.isIos;
 };
 
 
