@@ -36,13 +36,17 @@ var Ads = function() {
 
   // Start ads when the video player is clicked, but only the first time it's
   // clicked.
-  var startEvent = 'click';
+  this.startEvent = 'click';
   if (navigator.userAgent.match(/iPhone/i) ||
       navigator.userAgent.match(/iPad/i) ||
       navigator.userAgent.match(/Android/i)) {
-    startEvent = 'touchend';
+    this.startEvent = 'touchend';
   }
-  this.player.one(startEvent, this.init.bind(this));
+
+
+  this.wrapperDiv = document.getElementById('content_video');
+  this.boundInit = this.init.bind(this);
+  this.wrapperDiv.addEventListener(this.startEvent, this.boundInit);
 
   var options = {
     id: 'content_video',
@@ -66,6 +70,7 @@ Ads.prototype.init = function() {
     this.player.ima.initializeAdDisplayContainer();
     this.player.ima.setContentWithAdTag(null, this.adTagInput.value, false);
     this.player.ima.requestAds();
+    this.wrapperDiv.removeEventListener(this.startEvent, this.boundInit);
   }
 };
 

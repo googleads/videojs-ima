@@ -18,6 +18,8 @@
 
 var autoplayAllowed = false;
 var autoplayRequiresMute = false;
+var player;
+var wrapperDiv;
 
 function checkUnmutedAutoplaySupport() {
   canAutoplay
@@ -58,7 +60,7 @@ function initPlayer() {
     muted: autoplayRequiresMute,
     debug: true
   }
-  var player = videojs('content_video', vjsOptions);
+  player = videojs('content_video', vjsOptions);
 
   var imaOptions = {
     id: 'content_video',
@@ -70,6 +72,23 @@ function initPlayer() {
 
   };
   player.ima(imaOptions);
+
+  if (!autoplayAllowed) {
+    if (navigator.userAgent.match(/iPhone/i) ||
+        navigator.userAgent.match(/iPad/i) ||
+        navigator.userAgent.match(/Android/i)) {
+      startEvent = 'touchend';
+    }
+
+    wrapperDiv = document.getElementById('content_video');
+    wrapperDiv.addEventListener(startEvent, initAdDisplayContainer);
+  }
 }
 
+function initAdDisplayContainer() {
+    player.ima.initializeAdDisplayContainer();
+    wrapperDiv.removeEventListener(startEvent, initAdDisplayContainer);
+}
+
+var startEvent = 'click';
 checkUnmutedAutoplaySupport();

@@ -50,7 +50,8 @@ var options = {
   id: 'content_video',
   disableFlagAds: true,
   adTagUrl: adTags[adTagName],
-  adsManagerLoadedCallback: onAdsManagerLoaded
+  adsManagerLoadedCallback: onAdsManagerLoaded,
+  debug: true
 };
 
 player.ima(options);
