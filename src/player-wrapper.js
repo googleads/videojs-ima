@@ -374,9 +374,13 @@ PlayerWrapper.prototype.play = function() {
  * @return {number} The player's width.
  */
 PlayerWrapper.prototype.getPlayerWidth = function() {
-  const boundingRect = this.vjsPlayer.el().getBoundingClientRect() || {};
+  let width = (getComputedStyle(this.vjsPlayer.el()) || {}).width;
 
-  return parseInt(boundingRect.width, 10) || this.vjsPlayer.width();
+  if (!width || parseInt(width, 10) === 0) {
+    width = (this.vjsPlayer.el().getBoundingClientRect() || {}).width;
+  }
+
+  return parseInt(width, 10) || this.vjsPlayer.width();
 };
 
 
@@ -386,9 +390,13 @@ PlayerWrapper.prototype.getPlayerWidth = function() {
  * @return {number} The player's height.
  */
 PlayerWrapper.prototype.getPlayerHeight = function() {
-  const boundingRect = this.vjsPlayer.el().getBoundingClientRect() || {};
+  let height = (getComputedStyle(this.vjsPlayer.el()) || {}).height;
 
-  return parseInt(boundingRect.height, 10) || this.vjsPlayer.height();
+  if (!height || parseInt(height, 10) === 0) {
+    height = (this.vjsPlayer.el().getBoundingClientRect() || {}).height;
+  }
+
+  return parseInt(height, 10) || this.vjsPlayer.height();
 };
 
 
