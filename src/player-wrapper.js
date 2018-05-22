@@ -413,7 +413,7 @@ PlayerWrapper.prototype.getPlayerOptions = function() {
  */
 PlayerWrapper.prototype.getPlayerId = function() {
   return this.vjsPlayer.id();
-}
+};
 
 /**
  * Toggle fullscreen state.

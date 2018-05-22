@@ -105,7 +105,7 @@ const AdUi = function(controller) {
   /**
    * Used to prefix videojs ima controls.
    */
-  this.controlPrefix = this.controller.getPlayerId() + "_";
+  this.controlPrefix = this.controller.getPlayerId() + '_';
 
   /**
    * Boolean flag to show or hide the ad countdown timer.

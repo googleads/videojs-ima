@@ -663,7 +663,7 @@ Controller.prototype.getAdsManager = function() {
  */
 Controller.prototype.getPlayerId = function() {
   return this.playerWrapper.getPlayerId();
-}
+};
 
 /**
  * Changes the ad tag. You will need to call requestAds after this method
