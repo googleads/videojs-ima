@@ -96,9 +96,6 @@ Controller.IMA_DEFAULTS = {
 Controller.prototype.initWithSettings = function(options) {
   this.settings = this.extend({}, Controller.IMA_DEFAULTS, options || {});
 
-  // Currently this isn't used but I can see it being needed in the future,
-  // so to avoid implementation problems with later updates I'm requiring
-  // it.
   if (!this.settings.id) {
     window.console.error('Error: must provide id of video.js div');
     return;
