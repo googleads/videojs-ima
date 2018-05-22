@@ -266,7 +266,7 @@ PlayerWrapper.prototype.onReadyForPreroll = function() {
 PlayerWrapper.prototype.onPlayerReady = function() {
   this.h5Player =
       document.getElementById(
-          this.controller.getSettings().id).getElementsByClassName(
+          this.controller.getPlayerId()).getElementsByClassName(
               'vjs-tech')[0];
 
   // Detect inline options
@@ -407,6 +407,13 @@ PlayerWrapper.prototype.getPlayerOptions = function() {
   return this.vjsPlayer.options_;
 };
 
+/**
+ * Returns the instance of the player id.
+ * @return {string} The player id.
+ */
+PlayerWrapper.prototype.getPlayerId = function() {
+  return this.vjsPlayer.id();
+}
 
 /**
  * Toggle fullscreen state.
