@@ -266,7 +266,7 @@ PlayerWrapper.prototype.onReadyForPreroll = function() {
 PlayerWrapper.prototype.onPlayerReady = function() {
   this.h5Player =
       document.getElementById(
-          this.controller.getPlayerId()).getElementsByClassName(
+          this.getPlayerId()).getElementsByClassName(
               'vjs-tech')[0];
 
   // Detect inline options
