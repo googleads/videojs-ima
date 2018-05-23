@@ -96,11 +96,6 @@ Controller.IMA_DEFAULTS = {
 Controller.prototype.initWithSettings = function(options) {
   this.settings = this.extend({}, Controller.IMA_DEFAULTS, options || {});
 
-  if (!this.settings.id) {
-    window.console.error('Error: must provide id of video.js div');
-    return;
-  }
-
   this.warnAboutDeprecatedSettings();
 
   // Default showing countdown timer to true.
@@ -662,6 +657,13 @@ Controller.prototype.getAdsManager = function() {
   return this.sdkImpl.getAdsManager();
 };
 
+/**
+ * Returns the instance of the player id.
+ * @return {string} The player id.
+ */
+Controller.prototype.getPlayerId = function() {
+  return this.playerWrapper.getPlayerId();
+};
 
 /**
  * Changes the ad tag. You will need to call requestAds after this method
