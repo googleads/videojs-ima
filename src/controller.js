@@ -294,7 +294,7 @@ Controller.prototype.onAdError = function(adErrorEvent) {
  * @param {Object} adEvent The event fired by the IMA SDK.
  */
 Controller.prototype.onAdBreakStart = function(adEvent) {
-  this.playerWrapper.onAdBreakStart(adEvent);
+  this.playerWrapper.onAdBreakStart();
   this.adUi.onAdBreakStart(adEvent);
 };
 
