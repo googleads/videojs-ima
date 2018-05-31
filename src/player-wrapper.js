@@ -456,16 +456,11 @@ PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
 
 /**
  * Handles ad break starting.
- *
- * @param {Object} adEvent The event fired by the IMA SDK.
  */
-PlayerWrapper.prototype.onAdBreakStart = function(adEvent) {
+PlayerWrapper.prototype.onAdBreakStart = function() {
   this.contentSource = this.vjsPlayer.currentSrc();
   this.vjsPlayer.off('contentended', this.boundContentEndedListener);
-  if (adEvent.getAd().getAdPodInfo().getPodIndex() != -1) {
-    // Skip this call for post-roll ads
-    this.vjsPlayer.ads.startLinearAdMode();
-  }
+  this.vjsPlayer.ads.startLinearAdMode();
   this.vjsControls.hide();
   this.vjsPlayer.pause();
 };
