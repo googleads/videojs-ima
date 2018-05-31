@@ -39,12 +39,6 @@ footer {
   width: 728px;
 }
 
-#ima-sample-placeholder {
-  background-image: url("posters/poster.jpg");
-  width: 640px;
-  height: 360px;
-}
-
 .urlLink {
   color: blue;
   text-decoration: underline;
@@ -66,70 +60,6 @@ footer {
 
 #content_video {
   overflow: hidden;
-}
-
-#ima-sample-content-wrapper {
-  position:relative;
-  top: 0px;
-  left: 0px
-}
-
-#ima-sample-playpause, #ima-sample-replay {
-  position: absolute;
-  left: 20px;
-  bottom: 20px;
-  height: 40px;
-  width: 100px;
-  border-style: none;
-  font-weight: bold;
-  font-size: 25px;
-  opacity: 0.5;
-  background-color: #fff;
-  border-radius: 5px;
-  border: 1px transparent solid;
-  color: #000;
-  cursor: pointer;
-  line-height: 0;
-}
-
-#ima-sample-replay {
-  display: none;
-}
-
-#ima-sample-playpause:hover, #ima-sample-replay:hover {
-  border: 1px #f00 solid;
-  color: #f00;
-}
-
-#ima-sample-fullscreen {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  height: 40px;
-  width: 100px;
-  border-style: none;
-  font-weight: bold;
-  font-size: 25px;
-  opacity: 0.5;
-  background-color: #fff;
-  border-radius: 5px;
-  border: 1px transparent solid;
-  color: #000;
-  cursor: pointer;
-  line-height: 0;
-}
-
-#ima-sample-fullscreen:hover {
-  border: 1px #f00 solid;
-  color: #f00;
-}
-
-#ima-sample-content, #ima-sample-adcontainer {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 640px;
-  height: 360px;
 }
 
 #ima-sample-playlistDiv {
