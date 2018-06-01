@@ -726,7 +726,7 @@ Controller.prototype.adsWillPlayMuted = function() {
 
 /**
  * Triggers an event on the VJS player
- * @param  {String} name The event name.
+ * @param  {string} name The event name.
  * @param  {Object} data The event data.
  */
 Controller.prototype.triggerPlayerEvent = function(name, data) {
