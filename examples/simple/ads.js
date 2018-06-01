@@ -25,6 +25,9 @@ var options = {
       'vid=short_onecue&correlator='
 };
 
+player.on('ads-request', function(event, data) {
+  console.log('ads-request:' + event.type + " " + data);
+});
 player.ima(options);
 
 // Remove controls from the player on iPad to stop native controls from stealing
