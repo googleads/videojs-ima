@@ -483,6 +483,14 @@ Controller.prototype.onPlayerReadyForPreroll = function() {
 
 
 /**
+ * Called when the player is ready.
+ */
+Controller.prototype.onPlayerReady = function() {
+  this.sdkImpl.onPlayerReady();
+};
+
+
+/**
  * Called when the player enters fullscreen.
  */
 Controller.prototype.onPlayerEnterFullscreen = function() {

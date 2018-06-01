@@ -142,13 +142,6 @@ const SdkImpl = function(controller) {
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(
         this.controller.getSettings().disableCustomPlaybackForIOS10Plus);
   }
-
-  this.initAdObjects();
-
-  if (this.controller.getSettings().adTagUrl ||
-      this.controller.getSettings().adsResponse) {
-    this.requestAds();
-  }
 };
 
 
@@ -529,6 +522,15 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function() {
     } catch (adError) {
       this.onAdError(adError);
     }
+  }
+};
+
+SdkImpl.prototype.onPlayerReady = function() {
+  this.initAdObjects();
+
+  if (this.controller.getSettings().adTagUrl ||
+      this.controller.getSettings().adsResponse) {
+    this.requestAds();
   }
 };
 

@@ -278,6 +278,8 @@ PlayerWrapper.prototype.onPlayerReady = function() {
   this.onVolumeChange();
   this.vjsPlayer.on('fullscreenchange', this.onFullscreenChange.bind(this));
   this.vjsPlayer.on('volumechange', this.onVolumeChange.bind(this));
+
+  this.controller.onPlayerReady();
 };
 
 
