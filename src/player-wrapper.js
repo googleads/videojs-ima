@@ -549,6 +549,15 @@ PlayerWrapper.prototype.playContentFromZero = function() {
   this.vjsPlayer.play();
 };
 
+/**
+ * Triggers an event on the VJS player
+ * @param  {string} name The event name.
+ * @param  {Object} data The event data.
+ */
+PlayerWrapper.prototype.triggerPlayerEvent = function(name, data) {
+  this.vjsPlayer.trigger(name, data);
+};
+
 
 /**
  * Listener JSDoc for ESLint. This listener can be passed to

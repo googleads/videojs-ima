@@ -223,6 +223,7 @@ SdkImpl.prototype.requestAds = function() {
   adsRequest.setAdWillPlayMuted(this.controller.adsWillPlayMuted());
 
   this.adsLoader.requestAds(adsRequest);
+  this.controller.triggerPlayerEvent('ads-request', adsRequest);
 };
 
 
