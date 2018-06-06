@@ -595,6 +595,7 @@ PlayerWrapper.prototype.reset = function() {
   // the first playthrough of the video passed the second response's
   // mid-roll time.
   this.contentPlayheadTracker.currentTime = 0;
+  this.contentComplete = false;
 };
 
 export default PlayerWrapper;
