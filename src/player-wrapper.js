@@ -278,6 +278,8 @@ PlayerWrapper.prototype.onPlayerReady = function() {
   this.onVolumeChange();
   this.vjsPlayer.on('fullscreenchange', this.onFullscreenChange.bind(this));
   this.vjsPlayer.on('volumechange', this.onVolumeChange.bind(this));
+
+  this.controller.onPlayerReady();
 };
 
 
@@ -551,7 +553,7 @@ PlayerWrapper.prototype.playContentFromZero = function() {
 
 /**
  * Triggers an event on the VJS player
- * @param  {String} name The event name.
+ * @param  {string} name The event name.
  * @param  {Object} data The event data.
  */
 PlayerWrapper.prototype.triggerPlayerEvent = function(name, data) {
@@ -593,6 +595,7 @@ PlayerWrapper.prototype.reset = function() {
   // the first playthrough of the video passed the second response's
   // mid-roll time.
   this.contentPlayheadTracker.currentTime = 0;
+  this.contentComplete = false;
 };
 
 export default PlayerWrapper;

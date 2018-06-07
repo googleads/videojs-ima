@@ -17,6 +17,7 @@ export default {
     json(),
     copy({
       'src/css/videojs.ima.css': 'dist/videojs.ima.css',
+      'src/css/videojs.ima.css': 'dist/videojs.ima.scss',
     }),
     babel({
       exclude: 'node_modules/**',
