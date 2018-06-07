@@ -204,6 +204,10 @@ SdkImpl.prototype.requestAds = function() {
     adsRequest.forceNonLinearFullSlot = true;
   }
 
+  if (this.controller.getSettings().vastLoadTimeout) {
+    adsRequest.vastLoadTimeout = this.controller.getSettings().vastLoadTimeout;
+  }
+
   adsRequest.linearAdSlotWidth = this.controller.getPlayerWidth();
   adsRequest.linearAdSlotHeight = this.controller.getPlayerHeight();
   adsRequest.nonLinearAdSlotWidth =
