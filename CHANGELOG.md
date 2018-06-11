@@ -1,0 +1,71 @@
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/googleads/videojs-ima/compare/0.8.0...1.5.0) (2018-06-11)
+
+### Features
+
+* Add support for contrib-ads 6 and by extension VJS 6. ([#538](https://github.com/googleads/videojs-ima/issues/538)) ([d8edd05](https://github.com/googleads/videojs-ima/commit/d8edd05))
+* Add support for full slot ads by changing the default non-linear ad slot height from 1/3 player height to 100% player height. ([#501](https://github.com/googleads/videojs-ima/issues/501)) ([9532a7f](https://github.com/googleads/videojs-ima/commit/9532a7f))
+* Added scss file. Fixes [#636](https://github.com/googleads/videojs-ima/issues/636). ([#637](https://github.com/googleads/videojs-ima/issues/637)) ([5e622a7](https://github.com/googleads/videojs-ima/commit/5e622a7))
+* Auto-populate setAdWillPlayMuted if not provided in settings. ([b313873](https://github.com/googleads/videojs-ima/commit/b313873))
+* expose vastLoadTimeout ([#644](https://github.com/googleads/videojs-ima/issues/644)) ([8222570](https://github.com/googleads/videojs-ima/commit/8222570))
+* Multilingual UI support for the adLabel "N of N" string ([#592](https://github.com/googleads/videojs-ima/issues/592)) ([4cba6d4](https://github.com/googleads/videojs-ima/commit/4cba6d4))
+* Use font relative units in CSS instead of pixels. ([#503](https://github.com/googleads/videojs-ima/issues/503)) ([aff9e5e](https://github.com/googleads/videojs-ima/commit/aff9e5e)), closes [#492](https://github.com/googleads/videojs-ima/issues/492)
+
+### Bug Fixes
+
+* Actually use adWillPlayMuted variable I created. ([#520](https://github.com/googleads/videojs-ima/issues/520)) ([f2837c4](https://github.com/googleads/videojs-ima/commit/f2837c4))
+* Add nopostroll trigger. ([#585](https://github.com/googleads/videojs-ima/issues/585)) ([e790e6d](https://github.com/googleads/videojs-ima/commit/e790e6d))
+* Add src to package.json ([#461](https://github.com/googleads/videojs-ima/issues/461)) ([8a94908](https://github.com/googleads/videojs-ima/commit/8a94908))
+* Added babel to build for ES2015, so older browsers are supported ([#478](https://github.com/googleads/videojs-ima/issues/478)) ([9b25179](https://github.com/googleads/videojs-ima/commit/9b25179))
+* Call startLinearAdMode on post-rolls. Fixes an issue where contrib-ads thought we were timing out on all post-rolls.\Fixes [#620](https://github.com/googleads/videojs-ima/issues/620). ([#631](https://github.com/googleads/videojs-ima/issues/631)) ([6088f86](https://github.com/googleads/videojs-ima/commit/6088f86))
+* Change source for examples to something that supports https. ([#566](https://github.com/googleads/videojs-ima/issues/566)) ([6810fb3](https://github.com/googleads/videojs-ima/commit/6810fb3))
+* Fix advanced sample for mobile. ([#469](https://github.com/googleads/videojs-ima/issues/469)) ([c0c4bee](https://github.com/googleads/videojs-ima/commit/c0c4bee))
+* Fix locale and numRedirects settings ([#584](https://github.com/googleads/videojs-ima/issues/584)) ([e4de93d](https://github.com/googleads/videojs-ima/commit/e4de93d))
+* Fix preversion script. ([#516](https://github.com/googleads/videojs-ima/issues/516)) ([c370e72](https://github.com/googleads/videojs-ima/commit/c370e72))
+* Fix redundant calculation of remainingTime for ad UI. ([#527](https://github.com/googleads/videojs-ima/issues/527)) ([d8d70a4](https://github.com/googleads/videojs-ima/commit/d8d70a4)), closes [#526](https://github.com/googleads/videojs-ima/issues/526)
+* Fix setAdBreakReadyListener. ([#551](https://github.com/googleads/videojs-ima/issues/551)) ([a835fd8](https://github.com/googleads/videojs-ima/commit/a835fd8)), closes [#550](https://github.com/googleads/videojs-ima/issues/550)
+* Fix typo'd boundOnMouseMove property. ([#569](https://github.com/googleads/videojs-ima/issues/569)) ([4cc710b](https://github.com/googleads/videojs-ima/commit/4cc710b))
+* Fix undefined isMobile in sdk-impl. Fixes [#541](https://github.com/googleads/videojs-ima/issues/541) ([#542](https://github.com/googleads/videojs-ima/issues/542)) ([e7dd9c8](https://github.com/googleads/videojs-ima/commit/e7dd9c8))
+* Fixed player version reporting. ([#459](https://github.com/googleads/videojs-ima/issues/459)) ([c176781](https://github.com/googleads/videojs-ima/commit/c176781))
+* removed incorrect comment ([#624](https://github.com/googleads/videojs-ima/issues/624)) ([30734c6](https://github.com/googleads/videojs-ima/commit/30734c6))
+* Resize handler now resizes ([#555](https://github.com/googleads/videojs-ima/issues/555)) ([a10e82f](https://github.com/googleads/videojs-ima/commit/a10e82f)), closes [#554](https://github.com/googleads/videojs-ima/issues/554)
+* Resolve dangling endLinearAdMode call in onAdBreakEnd. ([#574](https://github.com/googleads/videojs-ima/issues/574)) ([2158ba0](https://github.com/googleads/videojs-ima/commit/2158ba0))
+* Updated samples to work on iOS. ([#613](https://github.com/googleads/videojs-ima/issues/613)) ([a21b544](https://github.com/googleads/videojs-ima/commit/a21b544))
+* Use contentended instead of ended as trigger for post-rolls. ([#559](https://github.com/googleads/videojs-ima/issues/559)) ([5046440](https://github.com/googleads/videojs-ima/commit/5046440)), closes [#539](https://github.com/googleads/videojs-ima/issues/539)
+* **wrapper:** Resets contentComplete correctly ([#641](https://github.com/googleads/videojs-ima/issues/641)) ([2255a11](https://github.com/googleads/videojs-ima/commit/2255a11)), closes [#639](https://github.com/googleads/videojs-ima/issues/639)
+* Use getComputedStyle but fall back to boundingClientRect ([#623](https://github.com/googleads/videojs-ima/issues/623)) ([a017044](https://github.com/googleads/videojs-ima/commit/a017044))
+* Wait until PlayerWrapper ready before invoking SdkImpl.initAdObjects ([#638](https://github.com/googleads/videojs-ima/issues/638)) ([fd409d6](https://github.com/googleads/videojs-ima/commit/fd409d6))
+
+### Code Refactoring
+
+* Deprecated id setting, instead get the id from Vjs player. ([#625](https://github.com/googleads/videojs-ima/issues/625)) ([f08408a](https://github.com/googleads/videojs-ima/commit/f08408a))
+* Massive refactor of the plugin. ([a5cd819](https://github.com/googleads/videojs-ima/commit/a5cd819))
+* Remove unused CSS classes and IDs in the example stylesheet. Fixes [#565](https://github.com/googleads/videojs-ima/issues/565). ([#632](https://github.com/googleads/videojs-ima/issues/632)) ([b6dbc62](https://github.com/googleads/videojs-ima/commit/b6dbc62))
+* Update autoplay sample and how we report adsWillAutoplay an… ([#562](https://github.com/googleads/videojs-ima/issues/562)) ([b580e21](https://github.com/googleads/videojs-ima/commit/b580e21)), closes [#341](https://github.com/googleads/videojs-ima/issues/341)
+
+### Documentation
+
+* Add commit message guidelines to CONTRIBUTING.md. ([#480](https://github.com/googleads/videojs-ima/issues/480)) ([f6a982a](https://github.com/googleads/videojs-ima/commit/f6a982a))
+* Add keywords to package.json. This should list us on the videoj… ([#486](https://github.com/googleads/videojs-ima/issues/486)) ([7af46cf](https://github.com/googleads/videojs-ima/commit/7af46cf))
+* Move README badges to the top. It's what everyone else does. ([#540](https://github.com/googleads/videojs-ima/issues/540)) ([23d01fb](https://github.com/googleads/videojs-ima/commit/23d01fb))
+* Update README with new snippet and codepen link. ([#483](https://github.com/googleads/videojs-ima/issues/483)) ([2d40f74](https://github.com/googleads/videojs-ima/commit/2d40f74))
+
+### Tests
+
+* Added basic webdriver tests ([#464](https://github.com/googleads/videojs-ima/issues/464)) ([8786de9](https://github.com/googleads/videojs-ima/commit/8786de9)), closes [#445](https://github.com/googleads/videojs-ima/issues/445)
+* **webdriver:** Adds browserstack config (local only). ([#510](https://github.com/googleads/videojs-ima/issues/510)) ([d7d7939](https://github.com/googleads/videojs-ima/commit/d7d7939))
+* Added Travis CI credentials for browserstack. ([#511](https://github.com/googleads/videojs-ima/issues/511)) ([6b6f124](https://github.com/googleads/videojs-ima/commit/6b6f124))
+* Disable browserstack tests. To be re-enabled once we fix their flakiness. ([#615](https://github.com/googleads/videojs-ima/issues/615)) ([7d4b5a6](https://github.com/googleads/videojs-ima/commit/7d4b5a6))
+* Enable browserstack network logs. ([#597](https://github.com/googleads/videojs-ima/issues/597)) ([9cfbd08](https://github.com/googleads/videojs-ima/commit/9cfbd08))
+* Enable verbose browserstack logs. ([#614](https://github.com/googleads/videojs-ima/issues/614)) ([b87735f](https://github.com/googleads/videojs-ima/commit/b87735f))
+* Fix error with BrowserStack tests. ([#519](https://github.com/googleads/videojs-ima/issues/519)) ([e4722d0](https://github.com/googleads/videojs-ima/commit/e4722d0))
+* Remove unnecessary sleep in test. ([#580](https://github.com/googleads/videojs-ima/issues/580)) ([a82c421](https://github.com/googleads/videojs-ima/commit/a82c421))
+* removed pull request check ([#522](https://github.com/googleads/videojs-ima/issues/522)) ([e9b5490](https://github.com/googleads/videojs-ima/commit/e9b5490))
+* Test against both video.js 5 and 6. ([#548](https://github.com/googleads/videojs-ima/issues/548)) ([60dabe5](https://github.com/googleads/videojs-ima/commit/60dabe5))
+
+<a name="0.8.0"></a>
+# [0.8.0](https://github.com/googleads/videojs-ima/compare/0.6.0...0.8.0) (2017-11-16)
+
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/googleads/videojs-ima/compare/0.4.0...0.5.0) (2016-09-20)
+

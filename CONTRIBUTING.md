@@ -16,6 +16,7 @@ Follow either of the two links above to access the appropriate CLA and instructi
 - Sign a Contributor License Agreement (see above).
 - Join the [Google Media Framework discussion group](http://groups.google.com/d/forum/google-media-framework).
 - Fork the library, make the changes and send a [pull request](https://help.github.com/articles/using-pull-requests).
+  - When submitting a patch, please adhere to the [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit).
 - We will review your patch and add comments if any changes are required. Once any issues are resolved, we'll merge your request!
 
 # If you can't become a contributor

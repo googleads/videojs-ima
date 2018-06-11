@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "node"
+dist: trusty
+sudo: required
+env:
+  - MOZ_HEADLESS=1
+addons:
+  chrome: stable
+  firefox: latest
+  browserstack:
+    username: "adsdevrel1"
+    access_key:
+      secure: "CD76OVHjif8tBfkULJASD84oFh0bAoYpZJkRIy6f5+gi46iPS7GA/t2++Fatuxi11XZ6EDH3y0eFrGeXau0/3Ut6Et2br2TWzwpt/TSbfpjkGGXKy6IJb0Jbsy/HMEJrmr8krkF9rALND1geJMgy2RVF9u3ri21JQqA2uMCOpYs="
+script:
+  - npm run lint
+  - npm test
