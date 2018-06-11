@@ -1087,7 +1087,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.5.0";
+var version = "1.5.1";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var author = { "name": "Google Inc." };
@@ -1719,8 +1719,10 @@ SdkImpl.prototype.setVolume = function (volume) {
  * result of user action.
  */
 SdkImpl.prototype.initializeAdDisplayContainer = function () {
-  this.adDisplayContainerInitialized = true;
-  this.adDisplayContainer.initialize();
+  if (this.adDisplayContainer) {
+    this.adDisplayContainerInitialized = true;
+    this.adDisplayContainer.initialize();
+  }
 };
 
 /**
