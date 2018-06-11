@@ -697,8 +697,10 @@ SdkImpl.prototype.setVolume = function(volume) {
  * result of user action.
  */
 SdkImpl.prototype.initializeAdDisplayContainer = function() {
-  this.adDisplayContainerInitialized = true;
-  this.adDisplayContainer.initialize();
+  if (this.adDisplayContainer) {
+    this.adDisplayContainerInitialized = true;
+    this.adDisplayContainer.initialize();
+  }
 };
 
 /**
