@@ -60,11 +60,6 @@ const SdkImpl = function(controller) {
   this.adsRenderingSettings = null;
 
   /**
-   * Ad tag URL. Should return VAST, VMAP, or ad rules.
-   */
-  this.adTagUrl = null;
-
-  /**
    * VAST, VMAP, or ad rules response. Used in lieu of fetching a response
    * from an ad tag URL.
    */

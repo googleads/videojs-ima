@@ -86,12 +86,12 @@ the previous snippet. A summary of all settings follows:
 | Settings | Type | Description |
 |----------|------|-------------|
 | id                     | string       | REQUIRED The id of your video player |
-| adTagUrl               | string       | REQUIRED IF adsResponse IS NOT PROVIDED A URL which returns a VAST, VMAP or ad rules,response. |
-| adsResponse            | string       | REQUIRED IF adTagUrl IS NOT PROVIDED The VAST, VMAP, or ad rules response to use,in lieu of fetching one an ad tag. |
+| adTagUrl               | string       | A URL which returns a VAST, VMAP or ad rules,response. This will override adsResponse. |
+| adsResponse            | string       | The VAST, VMAP, or ad rules response to use,in lieu of fetching one an ad tag. This is overridden if adTagUrl is set. |
+| adsRequest             | object       | JSON object with ads request properties defined in the IMA SDK Docs(2). Propertied set here that can also be provided elsewhere (e.g. adTagUrl) will override those other settings. |
 | adLabel                | string       | Replaces the "Advertisement" text in the ad label. Added for multilingual UI support. |
 | adLabelNofN            | string       | Replaces the "of" text in the ad label (e.g. ... (1 of 2) ...). Added for multilingual UI support. |
 | adsRenderingSettings   | object       | JSON object with ads rendering settings as defined in the IMA SDK Docs(1). |
-| adsRequest             | object       | JSON object with ads request properties defined in the IMA SDK Docs(2). Propertied set here that can also be provided elsewhere (e.g. adTagUrl) will overide those other settings. |
 | autoPlayAdBreaks       | boolean      | Whether or not to automatically play VMAP or ad rules ad breaks. Defaults,to true. |
 | **deprecated** adWillPlayMuted        | boolean      | Notifies the SDK whether the player intends to start ad while muted. Changing this setting will have no impact on ad playback. Defaults,to false. |
 | contribAdsSettings     | object       | Additional settings to be passed to the contrib-ads plugin(3), used by,this IMA plugin. |
