@@ -219,6 +219,13 @@ SdkImpl.prototype.requestAds = function() {
   adsRequest.setAdWillAutoPlay(this.controller.adsWillAutoplay());
   adsRequest.setAdWillPlayMuted(this.controller.adsWillPlayMuted());
 
+  // Populate the adsRequestproperties with those provided in the AdsRequest
+  // object in the settings.
+  let providedAdsRequest = this.controller.getSettings().adsRequest;
+  Object.keys(providedAdsRequest).forEach((key) => {
+    adsRequest[key] = providedAdsRequest[key];
+  });
+
   this.adsLoader.requestAds(adsRequest);
   this.controller.triggerPlayerEvent('ads-request', adsRequest);
 };
