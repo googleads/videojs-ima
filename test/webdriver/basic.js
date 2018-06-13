@@ -51,7 +51,7 @@ browsers.browsers.forEach(function(browser) {
       let log = await driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, 'start'), 20000);
       await driver.wait(until.elementIsVisible(driver.findElement(
-        By.id('content_video_ima-controls-div'))), 20000);
+        By.id('content_video_ima-controls-div'))), 25000);
     });
 
     it( 'Hides controls when ad ends ' + browser.name, async function(){
