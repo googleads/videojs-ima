@@ -187,6 +187,7 @@ const ImaPlugin = function(player, options) {
         contentSrc, adsResponse, playOnLoad);
   }.bind(this);
 
+
   /**
    * Sets the content of the video player. You should use this method instead
    * of setting the content src directly to ensure the proper ads request is
@@ -203,7 +204,6 @@ const ImaPlugin = function(player, options) {
     this.controller.setContentWithAdsRequest(
         contentSrc, adsRequest, playOnLoad);
   }.bind(this);
-
 
 
   /**
