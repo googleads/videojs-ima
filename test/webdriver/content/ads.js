@@ -51,7 +51,8 @@ var options = {
   disableFlagAds: true,
   adTagUrl: adTags[adTagName],
   adsManagerLoadedCallback: onAdsManagerLoaded,
-  debug: true
+  debug: true,
+  vastLoadTimeout: 15000
 };
 
 player.ima(options);
