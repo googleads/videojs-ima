@@ -60,11 +60,6 @@ const SdkImpl = function(controller) {
   this.adsRenderingSettings = null;
 
   /**
-   * Ad tag URL. Should return VAST, VMAP, or ad rules.
-   */
-  this.adTagUrl = null;
-
-  /**
    * VAST, VMAP, or ad rules response. Used in lieu of fetching a response
    * from an ad tag URL.
    */
@@ -218,6 +213,15 @@ SdkImpl.prototype.requestAds = function() {
       this.controller.getPlayerHeight();
   adsRequest.setAdWillAutoPlay(this.controller.adsWillAutoplay());
   adsRequest.setAdWillPlayMuted(this.controller.adsWillPlayMuted());
+
+  // Populate the adsRequestproperties with those provided in the AdsRequest
+  // object in the settings.
+  let providedAdsRequest = this.controller.getSettings().adsRequest;
+  if (providedAdsRequest && typeof providedAdsRequest === 'object') {
+    Object.keys(providedAdsRequest).forEach((key) => {
+      adsRequest[key] = providedAdsRequest[key];
+    });
+  }
 
   this.adsLoader.requestAds(adsRequest);
   this.controller.triggerPlayerEvent('ads-request', adsRequest);
