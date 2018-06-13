@@ -88,7 +88,7 @@ the previous snippet. A summary of all settings follows:
 | id                     | string       | REQUIRED The id of your video player |
 | adTagUrl               | string       | A URL which returns a VAST, VMAP or ad rules,response. This will override adsResponse. |
 | adsResponse            | string       | The VAST, VMAP, or ad rules response to use,in lieu of fetching one an ad tag. This is overridden if adTagUrl is set. |
-| adsRequest             | object       | JSON object with ads request properties defined in the IMA SDK Docs(2). Propertied set here that can also be provided elsewhere (e.g. adTagUrl) will override those other settings. |
+| adsRequest             | object       | JSON object with ads request properties defined in the IMA SDK Docs(2). Properties set here that can also be provided elsewhere (e.g. adTagUrl) will override those other settings. |
 | adLabel                | string       | Replaces the "Advertisement" text in the ad label. Added for multilingual UI support. |
 | adLabelNofN            | string       | Replaces the "of" text in the ad label (e.g. ... (1 of 2) ...). Added for multilingual UI support. |
 | adsRenderingSettings   | object       | JSON object with ads rendering settings as defined in the IMA SDK Docs(1). |
