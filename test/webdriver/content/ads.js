@@ -51,7 +51,8 @@ var options = {
   disableFlagAds: true,
   adTagUrl: adTags[adTagName],
   adsManagerLoadedCallback: onAdsManagerLoaded,
-  debug: true
+  debug: true,
+  vastLoadTimeout: 10000
 };
 
 player.ima(options);
@@ -73,6 +74,11 @@ if (navigator.userAgent.match(/iPhone/i) ||
     navigator.userAgent.match(/Android/i)) {
   startEvent = 'touchend';
 }
+
+player.ready(function() {
+  var log = document.getElementById('log');
+  log.innerHTML += "ready<br>";
+});
 
 player.on("adserror", function(event) {
   var log = document.getElementById('log');
