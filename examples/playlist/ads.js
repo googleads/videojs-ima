@@ -134,8 +134,7 @@ Ads.prototype.onPlaylistItemClick = function(event) {
     }
     this.player.ima.setContentWithAdTag(
         this.contents[event.target.id],
-        null,
-        false);
+        null);
     this.player.poster(this.posters[event.target.id]);
     this.player.ima.requestAds();
   }
