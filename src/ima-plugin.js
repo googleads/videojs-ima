@@ -198,7 +198,7 @@ const ImaPlugin = function(player, options) {
    * @param {?boolean} playOnLoad True to play the content once it has loaded,
    *     false to only load the content but not start playback.
    */
-  this.setContentWithAdsResponse =
+  this.setContentWithAdsRequest =
       function(contentSrc, adsRequest, playOnLoad) {
     this.controller.setContentWithAdsRequest(
         contentSrc, adsRequest, playOnLoad);
