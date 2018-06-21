@@ -25,6 +25,8 @@ var options = {
       'vid=short_onecue&correlator='
 };
 
+player.ima(options);
+
 // Remove controls from the player on iPad to stop native controls from stealing
 // our click
 var contentPlayer =  document.getElementById('content_video_html5_api');
