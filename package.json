@@ -1,6 +1,6 @@
 {
   "name": "videojs-ima",
-  "version": "1.4.0",
+  "version": "1.5.1",
   "license": "Apache-2.0",
   "main": "./dist/videojs.ima.js",
   "author": {
@@ -12,8 +12,7 @@
   "scripts": {
     "contBuild": "watch 'npm run rollup:max' src",
     "predevServer": "echo \"Starting up server on localhost:8000.\"",
-    "devServer": "forever start ./node_modules/http-server/bin/http-server -p 8000 && npm run contBuild",
-    "postdevServer": "forever stop ./node_modules/http-server/bin/http-server",
+    "devServer": "npm-run-all -p testServer contBuild",
     "lint": "eslint \"src/*.js\"",
     "rollup": "npm-run-all rollup:*",
     "rollup:max": "rollup -c configs/rollup.config.js",
@@ -55,7 +54,6 @@
     "eslint": "^4.11.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-jsdoc": "^3.2.0",
-    "forever": "^0.15.3",
     "geckodriver": "^1.10.0",
     "http-server": "^0.10.0",
     "mocha": "^4.0.1",

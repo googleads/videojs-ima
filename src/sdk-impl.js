@@ -60,11 +60,6 @@ const SdkImpl = function(controller) {
   this.adsRenderingSettings = null;
 
   /**
-   * Ad tag URL. Should return VAST, VMAP, or ad rules.
-   */
-  this.adTagUrl = null;
-
-  /**
    * VAST, VMAP, or ad rules response. Used in lieu of fetching a response
    * from an ad tag URL.
    */
@@ -219,6 +214,15 @@ SdkImpl.prototype.requestAds = function() {
   adsRequest.setAdWillAutoPlay(this.controller.adsWillAutoplay());
   adsRequest.setAdWillPlayMuted(this.controller.adsWillPlayMuted());
 
+  // Populate the adsRequestproperties with those provided in the AdsRequest
+  // object in the settings.
+  let providedAdsRequest = this.controller.getSettings().adsRequest;
+  if (providedAdsRequest && typeof providedAdsRequest === 'object') {
+    Object.keys(providedAdsRequest).forEach((key) => {
+      adsRequest[key] = providedAdsRequest[key];
+    });
+  }
+
   this.adsLoader.requestAds(adsRequest);
   this.controller.triggerPlayerEvent('ads-request', adsRequest);
 };
@@ -358,10 +362,15 @@ SdkImpl.prototype.onAdError = function(adErrorEvent) {
       adErrorEvent.getError !== undefined ?
           adErrorEvent.getError() : adErrorEvent.stack;
   window.console.warn('Ad error: ' + errorMessage);
+
   this.adsManager.destroy();
   this.controller.onAdError(adErrorEvent);
-};
 
+  // reset these so consumers don't think we are still in an ad break,
+  // but reset them after any prior cleanup happens
+  this.adsActive = false;
+  this.adPlaying = false;
+};
 
 /**
  * Listener for AD_BREAK_READY. Passes event on to publisher's listener.
@@ -692,8 +701,10 @@ SdkImpl.prototype.setVolume = function(volume) {
  * result of user action.
  */
 SdkImpl.prototype.initializeAdDisplayContainer = function() {
-  this.adDisplayContainerInitialized = true;
-  this.adDisplayContainer.initialize();
+  if (this.adDisplayContainer) {
+    this.adDisplayContainerInitialized = true;
+    this.adDisplayContainer.initialize();
+  }
 };
 
 /**

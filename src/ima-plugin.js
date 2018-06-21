@@ -189,6 +189,24 @@ const ImaPlugin = function(player, options) {
 
 
   /**
+   * Sets the content of the video player. You should use this method instead
+   * of setting the content src directly to ensure the proper ads request is
+   * used when the video content is loaded.
+   * @param {?string} contentSrc The URI for the content to be played. Leave
+   *     blank to use the existing content.
+   * @param {?Object} adsRequest The ads request to be requested when the
+   *     content loads. Leave blank to use the existing ads request.
+   * @param {?boolean} playOnLoad True to play the content once it has loaded,
+   *     false to only load the content but not start playback.
+   */
+  this.setContentWithAdsRequest =
+      function(contentSrc, adsRequest, playOnLoad) {
+    this.controller.setContentWithAdsRequest(
+        contentSrc, adsRequest, playOnLoad);
+  }.bind(this);
+
+
+  /**
    * Changes the flag to show or hide the ad countdown timer.
    *
    * @param {boolean} showCountdownIn Show or hide the countdown timer.
