@@ -1,17 +1,20 @@
 language: node_js
 node_js:
-  - "node"
+- node
 dist: trusty
 sudo: required
 env:
+  matrix:
   - MOZ_HEADLESS=1
+  global:
+    secure: byXkN+FuQNpI15xX5TUjFHoZCpEPI4o8Ophb1OvaE10dwlN0tnS7rsFkWJD6u3Ipx7y5VmpTkvxYOtvWYVt3ZbpP8sJTB+bOSsp2zrgX5vByEvZ7z3W2mkDYW1nuwM9zBtv9lkhdKlNCjNNsvw4izoFhOZXoWWsPjMEkanWzkq0=
 addons:
   chrome: stable
   firefox: latest
   browserstack:
-    username: "adsdevrel1"
+    username: adsdevrel1
     access_key:
-      secure: "CD76OVHjif8tBfkULJASD84oFh0bAoYpZJkRIy6f5+gi46iPS7GA/t2++Fatuxi11XZ6EDH3y0eFrGeXau0/3Ut6Et2br2TWzwpt/TSbfpjkGGXKy6IJb0Jbsy/HMEJrmr8krkF9rALND1geJMgy2RVF9u3ri21JQqA2uMCOpYs="
+      secure: CD76OVHjif8tBfkULJASD84oFh0bAoYpZJkRIy6f5+gi46iPS7GA/t2++Fatuxi11XZ6EDH3y0eFrGeXau0/3Ut6Et2br2TWzwpt/TSbfpjkGGXKy6IJb0Jbsy/HMEJrmr8krkF9rALND1geJMgy2RVF9u3ri21JQqA2uMCOpYs=
 script:
-  - npm run lint
-  - npm test
+- npm run lint
+- npm test
