@@ -505,7 +505,7 @@ PlayerWrapper.prototype.onAllAdsCompleted = function() {
       this.vjsPlayer.autoplay(false);
       this.vjsPlayer.src({
         src: this.contentSource,
-        type: this.contentSourceType
+        type: this.contentSourceType,
       });
     }
     this.controller.onContentAndAdsCompleted();
