@@ -99,6 +99,12 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   this.contentSource = '';
 
   /**
+   * Stores the content source type so we can re-populate it manually after a
+   * post-roll.
+   */
+  this.contentSourceType = '';
+
+  /**
    * Stores data for the content playhead tracker.
    */
   this.contentPlayheadTracker = {
@@ -461,6 +467,7 @@ PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
  */
 PlayerWrapper.prototype.onAdBreakStart = function() {
   this.contentSource = this.vjsPlayer.currentSrc();
+  this.contentSourceType = this.player.currentType();
   this.vjsPlayer.off('contentended', this.boundContentEndedListener);
   this.vjsPlayer.ads.startLinearAdMode();
   this.vjsControls.hide();
@@ -494,7 +501,12 @@ PlayerWrapper.prototype.onAdStart = function() {
 PlayerWrapper.prototype.onAllAdsCompleted = function() {
   if (this.contentComplete == true) {
     if (this.h5Player.src != this.contentSource) {
-      this.vjsPlayer.src(this.contentSource);
+      // Avoid setted autoplay after the post-roll
+      this.vjsPlayer.autoplay(false);
+      this.vjsPlayer.src({
+        src: this.contentSource,
+        type: this.contentSourceType
+      });
     }
     this.controller.onContentAndAdsCompleted();
   }
