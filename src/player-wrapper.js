@@ -467,7 +467,7 @@ PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
  */
 PlayerWrapper.prototype.onAdBreakStart = function() {
   this.contentSource = this.vjsPlayer.currentSrc();
-  this.contentSourceType = this.player.currentType();
+  this.contentSourceType = this.vjsPlayer.currentType();
   this.vjsPlayer.off('contentended', this.boundContentEndedListener);
   this.vjsPlayer.ads.startLinearAdMode();
   this.vjsControls.hide();
