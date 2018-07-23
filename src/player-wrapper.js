@@ -455,6 +455,15 @@ PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
   }});
 };
 
+PlayerWrapper.prototype.onAdLog = function(adEvent) {
+  const adData = adEvent.getAdData();
+  if (adData['adError']) {
+    this.vjsPlayer.trigger({type: 'adslog', data: {
+      Message: adData['adError'].getMessage(),
+    }});
+  }
+}
+
 
 /**
  * Handles ad break starting.

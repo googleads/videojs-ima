@@ -356,6 +356,10 @@ Controller.prototype.onAdPlayheadUpdated =
       currentTime, remainingTime, duration, adPosition, totalAds);
 };
 
+Controller.prototype.onAdLog = function(adEvent) {
+  this.playerWrapper.onAdLog(adEvent);
+}
+
 
 /**
  * @return {Object} The current ad.

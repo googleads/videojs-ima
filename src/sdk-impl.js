@@ -273,6 +273,9 @@ SdkImpl.prototype.onAdsManagerLoaded = function(adsManagerLoadedEvent) {
   this.adsManager.addEventListener(
       google.ima.AdEvent.Type.SKIPPED,
       this.onAdComplete.bind(this));
+  this.adsManager.addEventListener(
+      google.ima.AdEvent.Type.LOG,
+      this.onAdLog.bind(this));
 
   if (this.controller.getIsMobile()) {
     // Show/hide controls on pause and resume (triggered by tap).
@@ -468,6 +471,10 @@ SdkImpl.prototype.onAdComplete = function() {
     clearInterval(this.adTrackingTimer);
   }
 };
+
+SdkImpl.prototype.onAdLog = function(adEvent) {
+  this.controller.onAdLog(adEvent);
+}
 
 /**
  * Gets the current time and duration of the ad and calls the method to
