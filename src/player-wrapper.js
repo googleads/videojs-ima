@@ -463,7 +463,7 @@ PlayerWrapper.prototype.onAdLog = function(adEvent) {
   const adData = adEvent.getAdData();
   const errorMessage =
       adData['adError'] !== undefined ?
-          adData['adError'].getMessage() : nil;
+          adData['adError'].getMessage() : undefined;
   this.vjsPlayer.trigger({type: 'adslog', data: {
     AdError: errorMessage,
     AdEvent: adEvent,
