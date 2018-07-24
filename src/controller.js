@@ -356,9 +356,13 @@ Controller.prototype.onAdPlayheadUpdated =
       currentTime, remainingTime, duration, adPosition, totalAds);
 };
 
+/**
+ * Handles ad log messages.
+ * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
+ */
 Controller.prototype.onAdLog = function(adEvent) {
   this.playerWrapper.onAdLog(adEvent);
-}
+};
 
 
 /**

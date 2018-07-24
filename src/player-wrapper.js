@@ -455,6 +455,10 @@ PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
   }});
 };
 
+/**
+ * Handles ad log messages.
+ * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
+ */
 PlayerWrapper.prototype.onAdLog = function(adEvent) {
   const adData = adEvent.getAdData();
   if (adData['adError']) {
@@ -462,7 +466,7 @@ PlayerWrapper.prototype.onAdLog = function(adEvent) {
       Message: adData['adError'].getMessage(),
     }});
   }
-}
+};
 
 
 /**

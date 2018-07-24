@@ -472,9 +472,13 @@ SdkImpl.prototype.onAdComplete = function() {
   }
 };
 
+/**
+ * Handles ad log messages.
+ * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+ */
 SdkImpl.prototype.onAdLog = function(adEvent) {
   this.controller.onAdLog(adEvent);
-}
+};
 
 /**
  * Gets the current time and duration of the ad and calls the method to
