@@ -461,11 +461,13 @@ PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
  */
 PlayerWrapper.prototype.onAdLog = function(adEvent) {
   const adData = adEvent.getAdData();
-  if (adData['adError']) {
-    this.vjsPlayer.trigger({type: 'adslog', data: {
-      Message: adData['adError'].getMessage(),
-    }});
-  }
+  const errorMessage =
+      adData['adError'] !== undefined ?
+          adData['adError'].getMessage() : nil;
+  this.vjsPlayer.trigger({type: 'adslog', data: {
+    AdError: errorMessage,
+    AdEvent: adEvent,
+  }});
 };
 
 

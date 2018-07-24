@@ -98,7 +98,7 @@ Ads.prototype.adsManagerLoadedCallback = function() {
 };
 
 Ads.prototype.onAdLog = function(data) {
-  this.log('Ad log: ' + data.data.Message);
+  this.log('Ad log: ' + data.data.AdError);
 };
 
 Ads.prototype.onAdEvent = function(event) {
