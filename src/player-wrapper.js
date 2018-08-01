@@ -93,6 +93,13 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   this.contentEndedListeners = [];
 
   /**
+   * Flag to track if the ad errors on load
+   * If ad errors, we don't need to add an event listener for `contentended`
+   * because it is still set
+   */
+  this.adError = false;
+
+  /**
    * Stores the content source so we can re-populate it manually after a
    * post-roll on iOS.
    */
@@ -451,6 +458,7 @@ PlayerWrapper.prototype.getContentPlayheadTracker = function() {
  * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
  */
 PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
+  this.adError = true;
   this.vjsControls.show();
   const errorMessage =
       adErrorEvent.getError !== undefined ?
@@ -612,7 +620,10 @@ PlayerWrapper.prototype.addContentEndedListener = function(listener) {
  * Reset the player.
  */
 PlayerWrapper.prototype.reset = function() {
-  this.vjsPlayer.on('contentended', this.boundContentEndedListener);
+  if (!this.adError) {
+    this.vjsPlayer.on('contentended', this.boundContentEndedListener);
+  }
+  this.adError = false;
   this.vjsControls.show();
   if (this.vjsPlayer.ads.inAdBreak()) {
     this.vjsPlayer.ads.endLinearAdMode();
