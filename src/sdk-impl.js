@@ -477,6 +477,11 @@ SdkImpl.prototype.onAdComplete = function() {
  * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
  */
 SdkImpl.prototype.onAdLog = function(adEvent) {
+  const adData = adEvent.getAdData();
+  // force the adError event when VAST 900:1021 occurs
+  if (adData.adError && adData.adError.getErrorCode() === 1021) {
+    this.onAdError(adData.adError.getInnerError());
+  }
   this.controller.onAdLog(adEvent);
 };
 
