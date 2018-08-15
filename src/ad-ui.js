@@ -493,6 +493,14 @@ AdUi.prototype.hideAdControls = function() {
 
 
 /**
+ * Reset the UI
+ */
+AdUi.prototype.reset = function() {
+  // Hide all the advert based UI
+  this.onAllAdsCompleted();
+};
+
+/**
  * Assigns the unique id and class names to the given element as well as the
  * style class.
  * @param {HTMLElement} element Element that needs the controlName assigned.
