@@ -515,13 +515,15 @@ PlayerWrapper.prototype.onAdStart = function() {
  */
 PlayerWrapper.prototype.onAllAdsCompleted = function() {
   if (this.contentComplete == true) {
-    if (this.h5Player.src != this.contentSource) {
-      // Avoid setted autoplay after the post-roll
-      this.vjsPlayer.autoplay(false);
-      this.vjsPlayer.src({
-        src: this.contentSource,
-        type: this.contentSourceType,
-      });
+    if ((typeof this.h5Player.src === 'string') && (this.h5Player.src.indexOf('blob:') === -1) ) {
+      if (this.h5Player.src != this.contentSource) {
+        // Avoid setted autoplay after the post-roll
+        this.vjsPlayer.autoplay(false);
+        this.vjsPlayer.src({
+          src: this.contentSource,
+          type: this.contentSourceType,
+        });
+      }
     }
     this.controller.onContentAndAdsCompleted();
   }
