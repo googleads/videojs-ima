@@ -515,7 +515,7 @@ PlayerWrapper.prototype.onAdStart = function() {
  */
 PlayerWrapper.prototype.onAllAdsCompleted = function() {
   if (this.contentComplete == true) {
-   if ((typeof this.h5Player.src === 'string') && (this.h5Player.src.indexOf('blob:') !== -1) ) {
+   if ((typeof this.h5Player.src === 'string') && (this.h5Player.src.indexOf('blob:') === -1) ) {
     if (this.h5Player.src != this.contentSource) {
        // Avoid setted autoplay after the post-roll
        this.vjsPlayer.autoplay(false);
