@@ -241,7 +241,11 @@ SdkImpl.prototype.onAdsManagerLoaded = function(adsManagerLoadedEvent) {
 
   this.adsManager = adsManagerLoadedEvent.getAdsManager(
       this.controller.getContentPlayheadTracker(), this.adsRenderingSettings);
-
+  
+  if (this.controller.getSettings().adsManagerInstantiationCallback) {
+    this.controller.getSettings().adsManagerInstantiationCallback(this.adsManager);
+  }
+ 
   this.adsManager.addEventListener(
       google.ima.AdErrorEvent.Type.AD_ERROR,
       this.onAdError.bind(this));
