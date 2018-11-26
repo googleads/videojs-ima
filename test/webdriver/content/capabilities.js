@@ -34,7 +34,7 @@ var browsers = [
     server: '', //local
     capabilities: {
       'browserName' : 'chrome',
-      'chromeOptions' : {args: ['--headless']}
+//      'chromeOptions' : {args: ['--headless']}
     }
   },
   {
