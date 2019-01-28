@@ -140,6 +140,10 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
 
   this.vjsPlayer.ads(adsPluginSettings);
+
+  if(this.controller.getSettings().requestMode === "onPlay"){
+    this.vjsPlayer.one('play', this.controller.requestAds.bind(this.controller));
+  }
 };
 
 
@@ -288,7 +292,6 @@ PlayerWrapper.prototype.onPlayerReady = function() {
   this.controller.onPlayerReady();
 };
 
-
 /**
  * Listens for the video.js player to change its fullscreen status. This
  * keeps the fullscreen-ness of the AdContainer in sync with the player.
@@ -326,6 +329,13 @@ PlayerWrapper.prototype.injectAdContainerDiv = function(adContainerDiv) {
  */
 PlayerWrapper.prototype.getContentPlayer = function() {
   return this.h5Player;
+};
+
+/**
+ * @return {Object} The VjsPlayer.
+ */
+PlayerWrapper.prototype.getPlayer = function() {
+  return this.vjsPlayer;
 };
 
 
