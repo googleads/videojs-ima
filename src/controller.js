@@ -86,6 +86,7 @@ Controller.IMA_DEFAULTS = {
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
   showControlsForJSAds: true,
+  requestMode: 'onLoad',
 };
 
 /**

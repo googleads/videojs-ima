@@ -553,9 +553,10 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function() {
 SdkImpl.prototype.onPlayerReady = function() {
   this.initAdObjects();
 
-  if (this.controller.getSettings().adTagUrl ||
-      this.controller.getSettings().adsResponse) {
-    this.requestAds();
+  if ((this.controller.getSettings().adTagUrl ||
+      this.controller.getSettings().adsResponse) &&
+      this.controller.getSettings().requestMode === 'onLoad') {
+        this.requestAds();
   }
 };
 

@@ -139,6 +139,11 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
 
+  if (this.controller.getSettings().requestMode === 'onPlay') {
+      this.vjsPlayer.one('play',
+      this.controller.requestAds.bind(this.controller));
+}
+
   this.vjsPlayer.ads(adsPluginSettings);
 };
 
