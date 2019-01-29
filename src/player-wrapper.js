@@ -332,14 +332,6 @@ PlayerWrapper.prototype.getContentPlayer = function() {
 };
 
 /**
- * @return {Object} The VjsPlayer.
- */
-PlayerWrapper.prototype.getPlayer = function() {
-  return this.vjsPlayer;
-};
-
-
-/**
  * @return {number} The volume, 0-1.
  */
 PlayerWrapper.prototype.getVolume = function() {
