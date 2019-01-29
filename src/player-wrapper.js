@@ -141,8 +141,9 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
 
   this.vjsPlayer.ads(adsPluginSettings);
 
-  if(this.controller.getSettings().requestMode === "onPlay"){
-    this.vjsPlayer.one('play', this.controller.requestAds.bind(this.controller));
+  if (this.controller.getSettings().requestMode === 'onPlay') {
+      this.vjsPlayer.one('play',
+      this.controller.requestAds.bind(this.controller));
   }
 };
 
