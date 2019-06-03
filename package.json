@@ -22,6 +22,7 @@
     "test": "npm-run-all test:*",
     "test:vjs5": "npm install video.js@5.19.2 --no-save && npm-run-all -p -r testServer webdriver",
     "test:vjs6": "npm install video.js@6 --no-save && npm-run-all -p -r testServer webdriver",
+    "test:vjs7": "npm install video.js@7 --no-save && npm-run-all -p -r testServer webdriver",
     "testServer": "http-server --cors -p 8000 --silent",
     "preversion": "node scripts/preversion.js && npm run lint && npm test",
     "version": "node scripts/version.js",
@@ -42,7 +43,7 @@
   "dependencies": {
     "can-autoplay": "^3.0.0",
     "cryptiles": "^4.1.2",
-    "video.js": "^5.19.2 || ^6",
+    "video.js": "^5.19.2 || ^6 || ^7",
     "videojs-contrib-ads": "^6"
   },
   "devDependencies": {
