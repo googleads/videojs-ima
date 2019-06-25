@@ -591,6 +591,7 @@ Controller.prototype.setContentWithAdsRequest =
 Controller.prototype.reset = function() {
   this.sdkImpl.reset();
   this.playerWrapper.reset();
+  this.adUi.reset();
 };
 
 
