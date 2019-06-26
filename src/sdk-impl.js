@@ -328,10 +328,7 @@ SdkImpl.prototype.initAdsManager = function() {
         initHeight,
         google.ima.ViewMode.NORMAL);
     this.adsManager.setVolume(this.controller.getPlayerVolume());
-    if (!this.adDisplayContainerInitialized) {
-      this.adDisplayContainer.initialize();
-      this.adDisplayContainerInitialized = true;
-    }
+    this.initializeAdDisplayContainer();
   } catch (adError) {
     this.onAdError(adError);
   }
