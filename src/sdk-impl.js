@@ -330,7 +330,7 @@ SdkImpl.prototype.initAdsManager = function() {
     this.adsManager.setVolume(this.controller.getPlayerVolume());
     if (!this.adDisplayContainerInitialized) {
       this.adDisplayContainer.initialize();
-      this.adDisplayContainer.initialized = true;
+      this.adDisplayContainerInitialized = true;
     }
   } catch (adError) {
     this.onAdError(adError);
@@ -713,8 +713,10 @@ SdkImpl.prototype.setVolume = function(volume) {
  */
 SdkImpl.prototype.initializeAdDisplayContainer = function() {
   if (this.adDisplayContainer) {
-    this.adDisplayContainerInitialized = true;
-    this.adDisplayContainer.initialize();
+    if (!this.adDisplayContainerInitialized) {
+      this.adDisplayContainer.initialize();
+      this.adDisplayContainerInitialized = true;
+    }
   }
 };
 
