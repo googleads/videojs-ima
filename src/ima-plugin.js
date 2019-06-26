@@ -224,3 +224,5 @@ const init = function(options) {
 
 const registerPlugin = videojs.registerPlugin || videojs.plugin;
 registerPlugin('ima', init);
+
+export default ImaPlugin;
