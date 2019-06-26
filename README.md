@@ -61,7 +61,6 @@ In player.js, load the ads library and set up the IMA plugin:
 var player = videojs('content_video');
 
 var options = {
-  id: 'content_video',
   adTagUrl: 'YOUR_AD_TAG'
 };
 
@@ -85,7 +84,6 @@ the previous snippet. A summary of all settings follows:
 
 | Settings | Type | Description |
 |----------|------|-------------|
-| id                     | string       | REQUIRED The id of your video player |
 | adTagUrl               | string       | A URL which returns a VAST, VMAP or ad rules,response. This will override adsResponse. |
 | adsResponse            | string       | The VAST, VMAP, or ad rules response to use,in lieu of fetching one an ad tag. This is overridden if adTagUrl is set. |
 | adsRequest             | object       | JSON object with ads request properties defined in the IMA SDK Docs(2). Properties set here that can also be provided elsewhere (e.g. adTagUrl) will override those other settings. |
@@ -99,6 +97,7 @@ the previous snippet. A summary of all settings follows:
 | disableFlashAds        | boolean      | True to disable Flash ads - Flash ads will be considered an unsupported ad type. Defaults to false. |
 | disableCustomPlaybackForIOS10Plus | boolean      | Sets whether to disable custom playback on iOS 10+ browsers. If true, ads will play inline if the content video is inline. Defaults to false. |
 | forceNonLinearFullSlot | boolean      | True to force non-linear AdSense ads to render as linear fullslot.,If set, the content video will be paused and the non-linear text or image ad will be rendered as,fullslot. The content video will resume once the ad has been skipped or closed. |
+| id                     | string       | **DEPRECATED** as of v.1.5.0, no longer used or required. |
 | locale                 | string       | Locale for ad localization. This may be any,ISO 639-1 (two-letter) or ISO 639-2,(three-letter) code(4). Defaults to 'en'. |
 | nonLinearWidth         | number       | Desired width of non-linear ads. Defaults to player width. |
 | nonLinearHeight        | number       | Desired height for non-linear ads. Defaults to 1/3 player height. |
@@ -106,7 +105,7 @@ the previous snippet. A summary of all settings follows:
 | showControlsForJSAds   | boolean      | Whether or not to show the control bar for VPAID JavaScript ads. Defaults to true. |
 | showCountdown          | boolean      | Whether or not to show the ad countdown timer. Defaults to true. |
 | vastLoadTimeout        | number       | Override for default VAST load timeout in milliseconds for a single wrapper. The default timeout is 5000ms. |
-| vpaidAllowed           | boolean      | (DEPRECATED, please use vpaidMode). |
+| vpaidAllowed           | boolean      | **DEPRECATED**, please use vpaidMode. |
 | vpaidMode              | VpaidMode(5) | VPAID Mode. Defaults to ENABLED. This setting,overrides vpaidAllowed. |
 
 
