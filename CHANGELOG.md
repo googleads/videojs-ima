@@ -19,11 +19,17 @@
 ### Features
 
 * adds ad log, fixes [#698](https://github.com/googleads/videojs-ima/issues/698) ([#704](https://github.com/googleads/videojs-ima/issues/704)) ([3b16758](https://github.com/googleads/videojs-ima/commit/3b16758))
+* Allow for an adsRequest object to be passed to the plugin. This allows us to support additional adRequest properties. Fixes [#653](https://github.com/googleads/videojs-ima/issues/653). ([9e0463a](https://github.com/googleads/videojs-ima/commit/9e0463a))
 * Allow for an adsRequest object to be passed to the plugin. This… ([#656](https://github.com/googleads/videojs-ima/issues/656)) ([80aba35](https://github.com/googleads/videojs-ima/commit/80aba35)), closes [#653](https://github.com/googleads/videojs-ima/issues/653)
 
 ### Bug Fixes
 
 * Added type to content source ([#680](https://github.com/googleads/videojs-ima/issues/680)) ([d8cb13d](https://github.com/googleads/videojs-ima/commit/d8cb13d))
+
+### Code Refactoring
+
+* Remove playOnLoad from setContentWith(AdTag|AdsResponse|adsRequest). This stopped working with the refactor, and due to how the player and contrib-ads handle autoplay, is no longer supported. Fixes [#524](https://github.com/googleads/videojs-ima/issues/524). ([c36dedf](https://github.com/googleads/videojs-ima/commit/c36dedf))
+* Remove playOnLoad from setContentWith(AdTag|AdsResponse|adsRequest). This stopped working with the refactor, and due to how the player and contrib-ads handle autoplay, is no longer supported. Fixes [#524](https://github.com/googleads/videojs-ima/issues/524)." ([722930a](https://github.com/googleads/videojs-ima/commit/722930a))
 
 ### Tests
 
