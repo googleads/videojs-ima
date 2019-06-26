@@ -510,10 +510,8 @@ PlayerWrapper.prototype.onAdsReady = function () {
  * Changes the player source.
  * @param {?string} contentSrc The URI for the content to be played. Leave
  *     blank to use the existing content.
- * @param {?boolean} playOnLoad True to play the content once it has loaded,
- *     false to only load the content but not start playback.
  */
-PlayerWrapper.prototype.changeSource = function (contentSrc, playOnLoad) {
+PlayerWrapper.prototype.changeSource = function (contentSrc) {
   // Only try to pause the player when initialised with a source already
   if (this.vjsPlayer.currentSrc()) {
     this.vjsPlayer.currentTime(0);
@@ -522,11 +520,7 @@ PlayerWrapper.prototype.changeSource = function (contentSrc, playOnLoad) {
   if (contentSrc) {
     this.vjsPlayer.src(contentSrc);
   }
-  if (playOnLoad) {
-    this.vjsPlayer.one('loadedmetadata', this.playContentFromZero.bind(this));
-  } else {
-    this.vjsPlayer.one('loadedmetadata', this.seekContentToZero.bind(this));
-  }
+  this.vjsPlayer.one('loadedmetadata', this.seekContentToZero.bind(this));
 };
 
 /**
@@ -536,16 +530,6 @@ PlayerWrapper.prototype.changeSource = function (contentSrc, playOnLoad) {
  */
 PlayerWrapper.prototype.seekContentToZero = function () {
   this.vjsPlayer.currentTime(0);
-};
-
-/**
- * Seeks content to 00:00:00 and starts playback. This is used as an event
- * handler for the loadedmetadata event, since seeking is not possible until
- * that event has fired.
- */
-PlayerWrapper.prototype.playContentFromZero = function () {
-  this.vjsPlayer.currentTime(0);
-  this.vjsPlayer.play();
 };
 
 /**
@@ -2323,13 +2307,11 @@ Controller.prototype.onPlayerVolumeChanged = function (volume) {
  *     blank to use the existing content.
  * @param {?string} adTag The ad tag to be requested when the content loads.
  *     Leave blank to use the existing ad tag.
- * @param {?boolean} playOnLoad True to play the content once it has loaded,
- *     false to only load the content but not start playback.
  */
-Controller.prototype.setContentWithAdTag = function (contentSrc, adTag, playOnLoad) {
+Controller.prototype.setContentWithAdTag = function (contentSrc, adTag) {
   this.reset();
   this.settings.adTagUrl = adTag ? adTag : this.settings.adTagUrl;
-  this.playerWrapper.changeSource(contentSrc, playOnLoad);
+  this.playerWrapper.changeSource(contentSrc);
 };
 
 /**
@@ -2340,13 +2322,11 @@ Controller.prototype.setContentWithAdTag = function (contentSrc, adTag, playOnLo
  *     blank to use the existing content.
  * @param {?string} adsResponse The ads response to be requested when the
  *     content loads. Leave blank to use the existing ads response.
- * @param {?boolean} playOnLoad True to play the content once it has loaded,
- *     false to only load the content but not start playback.
  */
-Controller.prototype.setContentWithAdsResponse = function (contentSrc, adsResponse, playOnLoad) {
+Controller.prototype.setContentWithAdsResponse = function (contentSrc, adsResponse) {
   this.reset();
   this.settings.adsResponse = adsResponse ? adsResponse : this.settings.adsResponse;
-  this.playerWrapper.changeSource(contentSrc, playOnLoad);
+  this.playerWrapper.changeSource(contentSrc);
 };
 
 /**
@@ -2357,13 +2337,11 @@ Controller.prototype.setContentWithAdsResponse = function (contentSrc, adsRespon
  *     blank to use the existing content.
  * @param {?Object} adsRequest The ads request to be requested when the
  *     content loads. Leave blank to use the existing ads request.
- * @param {?boolean} playOnLoad True to play the content once it has loaded,
- *     false to only load the content but not start playback.
  */
-Controller.prototype.setContentWithAdsRequest = function (contentSrc, adsRequest, playOnLoad) {
+Controller.prototype.setContentWithAdsRequest = function (contentSrc, adsRequest) {
   this.reset();
   this.settings.adsRequest = adsRequest ? adsRequest : this.settings.adsRequest;
-  this.playerWrapper.changeSource(contentSrc, playOnLoad);
+  this.playerWrapper.changeSource(contentSrc);
 };
 
 /**
@@ -2714,11 +2692,9 @@ var ImaPlugin = function ImaPlugin(player, options) {
    *     blank to use the existing content.
    * @param {?string} adTag The ad tag to be requested when the content loads.
    *     Leave blank to use the existing ad tag.
-   * @param {?boolean} playOnLoad True to play the content once it has loaded,
-   *     false to only load the content but not start playback.
    */
-  this.setContentWithAdTag = function (contentSrc, adTag, playOnLoad) {
-    this.controller.setContentWithAdTag(contentSrc, adTag, playOnLoad);
+  this.setContentWithAdTag = function (contentSrc, adTag) {
+    this.controller.setContentWithAdTag(contentSrc, adTag);
   }.bind(this);
 
   /**
@@ -2729,11 +2705,9 @@ var ImaPlugin = function ImaPlugin(player, options) {
    *     blank to use the existing content.
    * @param {?string} adsResponse The ads response to be requested when the
    *     content loads. Leave blank to use the existing ads response.
-   * @param {?boolean} playOnLoad True to play the content once it has loaded,
-   *     false to only load the content but not start playback.
    */
-  this.setContentWithAdsResponse = function (contentSrc, adsResponse, playOnLoad) {
-    this.controller.setContentWithAdsResponse(contentSrc, adsResponse, playOnLoad);
+  this.setContentWithAdsResponse = function (contentSrc, adsResponse) {
+    this.controller.setContentWithAdsResponse(contentSrc, adsResponse);
   }.bind(this);
 
   /**
@@ -2744,11 +2718,9 @@ var ImaPlugin = function ImaPlugin(player, options) {
    *     blank to use the existing content.
    * @param {?Object} adsRequest The ads request to be requested when the
    *     content loads. Leave blank to use the existing ads request.
-   * @param {?boolean} playOnLoad True to play the content once it has loaded,
-   *     false to only load the content but not start playback.
    */
-  this.setContentWithAdsRequest = function (contentSrc, adsRequest, playOnLoad) {
-    this.controller.setContentWithAdsRequest(contentSrc, adsRequest, playOnLoad);
+  this.setContentWithAdsRequest = function (contentSrc, adsRequest) {
+    this.controller.setContentWithAdsRequest(contentSrc, adsRequest);
   }.bind(this);
 
   /**
