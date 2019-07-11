@@ -126,14 +126,16 @@ AdUi.prototype.createAdContainer = function() {
       this.adContainerDiv, 'ima-ad-container');
   this.adContainerDiv.style.position = 'absolute';
   this.adContainerDiv.style.zIndex = 1111;
-  this.adContainerDiv.addEventListener(
+  if (!videojs.browser.IS_IOS) {
+    this.adContainerDiv.addEventListener(
       'mouseenter',
       this.showAdControls.bind(this),
       false);
-  this.adContainerDiv.addEventListener(
+    this.adContainerDiv.addEventListener(
       'mouseleave',
       this.hideAdControls.bind(this),
       false);
+  }
   this.createControls();
   this.controller.injectAdContainerDiv(this.adContainerDiv);
 };
