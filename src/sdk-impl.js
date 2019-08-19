@@ -482,6 +482,7 @@ SdkImpl.prototype.onAdLog = function(adEvent) {
  * update the ad UI.
  */
 SdkImpl.prototype.onAdPlayheadTrackerInterval = function() {
+  if (this.adsManager === null) return;
   const remainingTime = this.adsManager.getRemainingTime();
   const duration = this.currentAd.getDuration();
   let currentTime = duration - remainingTime;
