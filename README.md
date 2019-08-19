@@ -51,7 +51,7 @@ javascript file.
 </html>
 ```
 
-Three imports are required to use the videojs-ima module as seen in the player.js example below.
+Three imports are required to use the videojs-ima module, as seen in the player.js example below.
 
 ```javascript
 import videojs from 'video.js';
