@@ -26,8 +26,8 @@ The easiest way to get started is by using [npm](//www.npmjs.org/).
 npm install videojs-ima
 ```
 
-Your index.html should contain the video.js stylesheet (not included in the npm moduel),
-a video player to be used for playback, and a script tag for the ima3.js file and your own
+Your index.html should contain the video.js stylesheet (not included in the npm module),
+a video player to be used for playback, and a script tags for the IMA SDK and your own
 javascript file.
 
 ```html
@@ -40,7 +40,7 @@ javascript file.
   <body>
     <video id='content-player' class="video-js">
         <p class='vjs-no-js'>
-            To view this video please enable JavaScript, and consider upgrading to a web browser that
+            To view this video, please enable JavaScript and consider upgrading to a web browser that
             <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
         </p>
     </video>
@@ -51,8 +51,8 @@ javascript file.
 </html>
 ```
 
-Three imports are required to use the videojs-ima moduel, then the standard implementation
-of video.js with the ima player can be used. See the player.js exmaple below.
+Three imports are required to use the videojs-ima module, then the standard implementation
+of video.js with the ima player can be used. See the player.js example below.
 
 ```javascript
 import videojs from 'video.js';
