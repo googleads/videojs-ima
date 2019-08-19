@@ -27,7 +27,7 @@ npm install videojs-ima
 ```
 
 Your index.html should contain the video.js stylesheet (not included in the npm module),
-a video player to be used for playback, and a script tags for the IMA SDK and your own
+a video player to be used for playback, and script tags for the IMA SDK and your own
 javascript file.
 
 ```html
@@ -51,8 +51,7 @@ javascript file.
 </html>
 ```
 
-Three imports are required to use the videojs-ima module, then the standard implementation
-of video.js with the ima player can be used. See the player.js example below.
+Three imports are required to use the videojs-ima module as seen in the player.js example below.
 
 ```javascript
 import videojs from 'video.js';
