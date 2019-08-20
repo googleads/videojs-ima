@@ -18,12 +18,69 @@ your video content.
   - A JavaScript enabled browser
 
 ## Getting started
+
+### ES6 Imports
 The easiest way to get started is by using [npm](//www.npmjs.org/).
 
 ```
 npm install videojs-ima
 ```
 
+Your index.html should contain the video.js stylesheet (not included in the npm module),
+a video player to be used for playback, and script tags for the IMA SDK and your own
+javascript file.
+
+```html
+<html>
+  <head>
+    <!-- Load dependent stylesheets. -->
+    <link href="path/to/video-js.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <video id='content-player' class="video-js">
+        <p class='vjs-no-js'>
+            To view this video, please enable JavaScript and consider upgrading to a web browser that
+            <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+        </p>
+    </video>
+    <!-- Load dependent scripts -->
+    <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+    <script src="player.js"></script>
+  </body>
+</html>
+```
+
+Three imports are required to use the videojs-ima module, as seen in the player.js example below.
+
+```javascript
+import videojs from 'video.js';
+import 'videojs-contrib-ads';
+import 'videojs-ima';
+
+var videoOptions = {
+  controls: true,
+  sources: [{
+      src: 'PATH_TO_YOUR_CONTENT_VIDEO',
+      type: 'YOUR_CONTENT_VIDEO_TYPE',
+  }]
+};
+
+var player = videojs('content_video', videoOptions);
+
+var imaOptions = {
+  adTagUrl: 'YOUR_AD_TAG'
+};
+
+player.ima(imaOptions);
+// On mobile devices, you must call initializeAdDisplayContainer as the result
+// of a user action (e.g. button click). If you do not make this call, the SDK
+// will make it for you, but not as the result of a user action. For more info
+// see our examples, all of which are set up to work on mobile devices.
+// player.ima.initializeAdDisplayContainer();
+```
+
+### Alternative Setup
 If you don't use npm, you can download the source from the dist/ folder and
 include it directly in your project. You'll also need to download the source for
 the [videojs-contrib-ads plugin](//github.com/videojs/videojs-contrib-ads).
