@@ -1,3 +1,42 @@
+<a name="1.6.0"></a>
+# [1.6.0](https://github.com/googleads/videojs-ima/compare/v1.5.2...v1.6.0) (2019-06-26)
+
+### Bug Fixes
+
+* fix via npm audit, take two ([#771](https://github.com/googleads/videojs-ima/issues/771)) ([e0d59f5](https://github.com/googleads/videojs-ima/commit/e0d59f5))
+* fixes security issue with packages as per npm audit fix ([6daa9d5](https://github.com/googleads/videojs-ima/commit/6daa9d5))
+* issue with initialization of adDisplayContainer ([d711072](https://github.com/googleads/videojs-ima/commit/d711072))
+* update package.json for supporting video.js 7.x ([dbc87e6](https://github.com/googleads/videojs-ima/commit/dbc87e6))
+* update packages to latest versions ([#749](https://github.com/googleads/videojs-ima/issues/749)) ([6f94112](https://github.com/googleads/videojs-ima/commit/6f94112))
+
+### Tests
+
+* change test content video URL ([#766](https://github.com/googleads/videojs-ima/issues/766)) ([e64564b](https://github.com/googleads/videojs-ima/commit/e64564b))
+
+<a name="1.5.2"></a>
+## [1.5.2](https://github.com/googleads/videojs-ima/compare/v1.5.1...v1.5.2) (2018-07-25)
+
+### Features
+
+* adds ad log, fixes [#698](https://github.com/googleads/videojs-ima/issues/698) ([#704](https://github.com/googleads/videojs-ima/issues/704)) ([3b16758](https://github.com/googleads/videojs-ima/commit/3b16758))
+* Allow for an adsRequest object to be passed to the plugin. This allows us to support additional adRequest properties. Fixes [#653](https://github.com/googleads/videojs-ima/issues/653). ([9e0463a](https://github.com/googleads/videojs-ima/commit/9e0463a))
+* Allow for an adsRequest object to be passed to the plugin. This… ([#656](https://github.com/googleads/videojs-ima/issues/656)) ([80aba35](https://github.com/googleads/videojs-ima/commit/80aba35)), closes [#653](https://github.com/googleads/videojs-ima/issues/653)
+
+### Bug Fixes
+
+* Added type to content source ([#680](https://github.com/googleads/videojs-ima/issues/680)) ([d8cb13d](https://github.com/googleads/videojs-ima/commit/d8cb13d))
+
+### Code Refactoring
+
+* Remove playOnLoad from setContentWith(AdTag|AdsResponse|adsRequest). This stopped working with the refactor, and due to how the player and contrib-ads handle autoplay, is no longer supported. Fixes [#524](https://github.com/googleads/videojs-ima/issues/524). ([c36dedf](https://github.com/googleads/videojs-ima/commit/c36dedf))
+* Remove playOnLoad from setContentWith(AdTag|AdsResponse|adsRequest). This stopped working with the refactor, and due to how the player and contrib-ads handle autoplay, is no longer supported. Fixes [#524](https://github.com/googleads/videojs-ima/issues/524)." ([722930a](https://github.com/googleads/videojs-ima/commit/722930a))
+
+### Tests
+
+* Re-disable flaky browserstack tests. ([#669](https://github.com/googleads/videojs-ima/issues/669)) ([69659b8](https://github.com/googleads/videojs-ima/commit/69659b8))
+* Re-enable browserstack tests, 2nd attempt. ([#657](https://github.com/googleads/videojs-ima/issues/657)) ([02b9852](https://github.com/googleads/videojs-ima/commit/02b9852))
+* timeouts are now 60000 ms ([#672](https://github.com/googleads/videojs-ima/issues/672)). Re-enable bs tests. ([fc81aae](https://github.com/googleads/videojs-ima/commit/fc81aae))
+
 <a name="1.5.1"></a>
 ## [1.5.1](https://github.com/googleads/videojs-ima/compare/v1.5.0...v1.5.1) (2018-06-11)
 

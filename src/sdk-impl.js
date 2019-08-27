@@ -265,9 +265,6 @@ SdkImpl.prototype.onAdsManagerLoaded = function(adsManagerLoadedEvent) {
       google.ima.AdEvent.Type.STARTED,
       this.onAdStarted.bind(this));
   this.adsManager.addEventListener(
-      google.ima.AdEvent.Type.CLICK,
-      this.onAdPaused.bind(this));
-  this.adsManager.addEventListener(
       google.ima.AdEvent.Type.COMPLETE,
       this.onAdComplete.bind(this));
   this.adsManager.addEventListener(
@@ -328,10 +325,7 @@ SdkImpl.prototype.initAdsManager = function() {
         initHeight,
         google.ima.ViewMode.NORMAL);
     this.adsManager.setVolume(this.controller.getPlayerVolume());
-    if (!this.adDisplayContainerInitialized) {
-      this.adDisplayContainer.initialize();
-      this.adDisplayContainer.initialized = true;
-    }
+    this.initializeAdDisplayContainer();
   } catch (adError) {
     this.onAdError(adError);
   }
@@ -713,8 +707,10 @@ SdkImpl.prototype.setVolume = function(volume) {
  */
 SdkImpl.prototype.initializeAdDisplayContainer = function() {
   if (this.adDisplayContainer) {
-    this.adDisplayContainerInitialized = true;
-    this.adDisplayContainer.initialize();
+    if (!this.adDisplayContainerInitialized) {
+      this.adDisplayContainer.initialize();
+      this.adDisplayContainerInitialized = true;
+    }
   }
 };
 

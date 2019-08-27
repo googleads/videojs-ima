@@ -515,9 +515,7 @@ PlayerWrapper.prototype.onAdStart = function() {
  */
 PlayerWrapper.prototype.onAllAdsCompleted = function() {
   if (this.contentComplete == true) {
-    if (this.h5Player.src != this.contentSource) {
-      // Avoid setted autoplay after the post-roll
-      this.vjsPlayer.autoplay(false);
+    if (this.vjsPlayer.currentSrc() != this.contentSource) {
       this.vjsPlayer.src({
         src: this.contentSource,
         type: this.contentSourceType,
@@ -540,10 +538,8 @@ PlayerWrapper.prototype.onAdsReady = function() {
  * Changes the player source.
  * @param {?string} contentSrc The URI for the content to be played. Leave
  *     blank to use the existing content.
- * @param {?boolean} playOnLoad True to play the content once it has loaded,
- *     false to only load the content but not start playback.
  */
-PlayerWrapper.prototype.changeSource = function(contentSrc, playOnLoad) {
+PlayerWrapper.prototype.changeSource = function(contentSrc) {
   // Only try to pause the player when initialised with a source already
   if (this.vjsPlayer.currentSrc()) {
     this.vjsPlayer.currentTime(0);
@@ -552,11 +548,7 @@ PlayerWrapper.prototype.changeSource = function(contentSrc, playOnLoad) {
   if (contentSrc) {
     this.vjsPlayer.src(contentSrc);
   }
-  if (playOnLoad) {
-    this.vjsPlayer.one('loadedmetadata', this.playContentFromZero.bind(this));
-  } else {
-    this.vjsPlayer.one('loadedmetadata', this.seekContentToZero.bind(this));
-  }
+  this.vjsPlayer.one('loadedmetadata', this.seekContentToZero.bind(this));
 };
 
 /**
@@ -566,16 +558,6 @@ PlayerWrapper.prototype.changeSource = function(contentSrc, playOnLoad) {
  */
 PlayerWrapper.prototype.seekContentToZero = function() {
   this.vjsPlayer.currentTime(0);
-};
-
-/**
- * Seeks content to 00:00:00 and starts playback. This is used as an event
- * handler for the loadedmetadata event, since seeking is not possible until
- * that event has fired.
- */
-PlayerWrapper.prototype.playContentFromZero = function() {
-  this.vjsPlayer.currentTime(0);
-  this.vjsPlayer.play();
 };
 
 /**
