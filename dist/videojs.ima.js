@@ -1366,7 +1366,6 @@ SdkImpl.prototype.onAdsManagerLoaded = function (adsManagerLoadedEvent) {
 
   this.adsManager.addEventListener(google.ima.AdEvent.Type.LOADED, this.onAdLoaded.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.STARTED, this.onAdStarted.bind(this));
-  this.adsManager.addEventListener(google.ima.AdEvent.Type.CLICK, this.onAdPaused.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, this.onAdComplete.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.SKIPPED, this.onAdComplete.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.LOG, this.onAdLog.bind(this));
