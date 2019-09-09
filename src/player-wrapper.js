@@ -384,11 +384,11 @@ PlayerWrapper.prototype.play = function() {
 PlayerWrapper.prototype.getPlayerWidth = function() {
   let width = (getComputedStyle(this.vjsPlayer.el()) || {}).width;
 
-  if (!width || parseFloat(width, 10) === 0) {
+  if (!width || parseFloat(width) === 0) {
     width = (this.vjsPlayer.el().getBoundingClientRect() || {}).width;
   }
 
-  return parseFloat(width, 10) || this.vjsPlayer.width();
+  return parseFloat(width) || this.vjsPlayer.width();
 };
 
 
@@ -400,11 +400,11 @@ PlayerWrapper.prototype.getPlayerWidth = function() {
 PlayerWrapper.prototype.getPlayerHeight = function() {
   let height = (getComputedStyle(this.vjsPlayer.el()) || {}).height;
 
-  if (!height || parseFloat(height, 10) === 0) {
+  if (!height || parseFloat(height) === 0) {
     height = (this.vjsPlayer.el().getBoundingClientRect() || {}).height;
   }
 
-  return parseFloat(height, 10) || this.vjsPlayer.height();
+  return parseFloat(height) || this.vjsPlayer.height();
 };
 
 
