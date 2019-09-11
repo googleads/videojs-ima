@@ -370,11 +370,11 @@ PlayerWrapper.prototype.play = function () {
 PlayerWrapper.prototype.getPlayerWidth = function () {
   var width = (getComputedStyle(this.vjsPlayer.el()) || {}).width;
 
-  if (!width || parseInt(width, 10) === 0) {
+  if (!width || parseFloat(width) === 0) {
     width = (this.vjsPlayer.el().getBoundingClientRect() || {}).width;
   }
 
-  return parseInt(width, 10) || this.vjsPlayer.width();
+  return parseFloat(width) || this.vjsPlayer.width();
 };
 
 /**
@@ -385,11 +385,11 @@ PlayerWrapper.prototype.getPlayerWidth = function () {
 PlayerWrapper.prototype.getPlayerHeight = function () {
   var height = (getComputedStyle(this.vjsPlayer.el()) || {}).height;
 
-  if (!height || parseInt(height, 10) === 0) {
+  if (!height || parseFloat(height) === 0) {
     height = (this.vjsPlayer.el().getBoundingClientRect() || {}).height;
   }
 
-  return parseInt(height, 10) || this.vjsPlayer.height();
+  return parseFloat(height) || this.vjsPlayer.height();
 };
 
 /**
@@ -1108,7 +1108,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.6.1";
+var version = "1.6.2";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
