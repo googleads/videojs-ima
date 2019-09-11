@@ -1,9 +1,10 @@
-<a name="1.6.1"></a>
-## [1.6.1](https://github.com/googleads/videojs-ima/compare/v1.6.0...v1.6.1) (2019-09-10)
+<a name="1.6.2"></a>
+## [1.6.2](https://github.com/googleads/videojs-ima/compare/v1.6.0...v1.6.2) (2019-09-11)
 
 ### Bug Fixes
 
 * changed to parseFloat ([2b854a4](https://github.com/googleads/videojs-ima/commit/2b854a4))
+* fixed error in videojs.ima.min.js ([3d4e995](https://github.com/googleads/videojs-ima/commit/3d4e995))
 * fixed small errors in Readme update ([18186f9](https://github.com/googleads/videojs-ima/commit/18186f9))
 * removed second param from parseFloat ([4b5eef9](https://github.com/googleads/videojs-ima/commit/4b5eef9))
 
