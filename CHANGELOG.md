@@ -1,3 +1,6 @@
+<a name="1.6.3"></a>
+## [1.6.3](https://github.com/googleads/videojs-ima/compare/v1.6.2...v1.6.3) (2019-09-30)
+
 <a name="1.6.2"></a>
 ## [1.6.2](https://github.com/googleads/videojs-ima/compare/v1.6.0...v1.6.2) (2019-09-11)
 
@@ -10,6 +13,10 @@
 
 <a name="1.6.0"></a>
 # [1.6.0](https://github.com/googleads/videojs-ima/compare/v1.5.2...v1.6.0) (2019-06-26)
+
+### Features
+
+* adds a request mode for ad requests ([278556b](https://github.com/googleads/videojs-ima/commit/278556b))
 
 ### Bug Fixes
 
