@@ -141,6 +141,10 @@ var PlayerWrapper = function PlayerWrapper(player, adsPluginSettings, controller
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
 
+  if (this.controller.getSettings().requestMode === 'onPlay') {
+    this.vjsPlayer.one('play', this.controller.requestAds.bind(this.controller));
+  }
+
   this.vjsPlayer.ads(adsPluginSettings);
 };
 
@@ -1102,7 +1106,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.6.2";
+var version = "1.6.3";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1610,7 +1614,7 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function () {
 SdkImpl.prototype.onPlayerReady = function () {
   this.initAdObjects();
 
-  if (this.controller.getSettings().adTagUrl || this.controller.getSettings().adsResponse) {
+  if ((this.controller.getSettings().adTagUrl || this.controller.getSettings().adsResponse) && this.controller.getSettings().requestMode === 'onLoad') {
     this.requestAds();
   }
 };
@@ -1895,7 +1899,8 @@ Controller.IMA_DEFAULTS = {
   prerollTimeout: 1000,
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
-  showControlsForJSAds: true
+  showControlsForJSAds: true,
+  requestMode: 'onLoad'
 };
 
 /**
