@@ -155,7 +155,7 @@ the previous snippet. A summary of all settings follows:
 | disableCustomPlaybackForIOS10Plus | boolean      | Sets whether to disable custom playback on iOS 10+ browsers. If true, ads will play inline if the content video is inline. Defaults to false. |
 | forceNonLinearFullSlot | boolean      | True to force non-linear AdSense ads to render as linear fullslot.,If set, the content video will be paused and the non-linear text or image ad will be rendered as,fullslot. The content video will resume once the ad has been skipped or closed. |
 | id                     | string       | **DEPRECATED** as of v.1.5.0, no longer used or required. |
-| locale                 | string       | Locale for ad localization. This may be any,ISO 639-1 (two-letter) or ISO 639-2,(three-letter) code(4). Defaults to 'en'. |
+| locale                 | string       | Locale for ad localization. The supported locale codes can be found in [Localizing for Language and Locale](//developers.google.com/interactive-media-ads/docs/sdks/html5/localization)|
 | nonLinearWidth         | number       | Desired width of non-linear ads. Defaults to player width. |
 | nonLinearHeight        | number       | Desired height for non-linear ads. Defaults to 1/3 player height. |
 | numRedirects           | number       | Maximum number of VAST redirects before the subsequent redirects will be denied,,and the ad load aborted. The number of redirects directly affects latency and thus user experience.,This applies to all VAST wrapper ads. |
@@ -172,7 +172,7 @@ the previous snippet. A summary of all settings follows:
 <br />
 (3) [contrib-ads plugin](//github.com/videojs/videojs-contrib-ads)
 <br />
-(4) [Valid locale codes](http://www.loc.gov/standards/iso639-2/php/English_list.php)
+(4) [Valid locale codes](//developers.google.com/interactive-media-ads/docs/sdks/html5/localization)
 <br />
 (5) [google.ima.ImaSdkSettings.VpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.ImaSdkSettings.VpaidMode)
 
