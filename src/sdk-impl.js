@@ -229,7 +229,10 @@ SdkImpl.prototype.requestAds = function() {
   }
 
   this.adsLoader.requestAds(adsRequest);
-  this.controller.playerWrapper.vjsPlayer.trigger({ type: 'ads-request', AdsRequest: adsRequest });
+  this.controller.playerWrapper.vjsPlayer.trigger({
+    type: 'ads-request',
+    AdsRequest: adsRequest,
+  });
 };
 
 
