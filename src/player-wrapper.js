@@ -599,6 +599,11 @@ PlayerWrapper.prototype.addContentEndedListener = function(listener) {
  * Reset the player.
  */
 PlayerWrapper.prototype.reset = function() {
+  // Attempts to remove the contentEndedListener before adding it.
+  // This is to prevent an error where an erroring video caused multiple
+  // contentEndedListeners to be added.
+  this.vjsPlayer.off('contentended', this.boundContentEndedListener);
+
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   this.vjsControls.show();
   if (this.vjsPlayer.ads.inAdBreak()) {
