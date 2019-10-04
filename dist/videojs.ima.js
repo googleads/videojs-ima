@@ -567,6 +567,11 @@ PlayerWrapper.prototype.addContentEndedListener = function (listener) {
  * Reset the player.
  */
 PlayerWrapper.prototype.reset = function () {
+  // Attempts to remove the contentEndedListener before adding it.
+  // This is to prevent an error where an erroring video caused multiple
+  // contentEndedListeners to be added.
+  this.vjsPlayer.off('contentended', this.boundContentEndedListener);
+
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   this.vjsControls.show();
   if (this.vjsPlayer.ads.inAdBreak()) {
@@ -1112,7 +1117,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.6.3";
+var version = "1.7.0";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1309,6 +1314,11 @@ SdkImpl.prototype.initAdObjects = function () {
 
   this.adsLoader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, this.onAdsManagerLoaded.bind(this), false);
   this.adsLoader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, this.onAdsLoaderError.bind(this), false);
+
+  this.controller.playerWrapper.vjsPlayer.trigger({
+    type: 'ads-loader',
+    adsLoader: this.adsLoader
+  });
 };
 
 /**
@@ -1346,7 +1356,10 @@ SdkImpl.prototype.requestAds = function () {
   }
 
   this.adsLoader.requestAds(adsRequest);
-  this.controller.triggerPlayerEvent('ads-request', adsRequest);
+  this.controller.playerWrapper.vjsPlayer.trigger({
+    type: 'ads-request',
+    AdsRequest: adsRequest
+  });
 };
 
 /**
@@ -1379,6 +1392,11 @@ SdkImpl.prototype.onAdsManagerLoaded = function (adsManagerLoadedEvent) {
     this.adsManager.addEventListener(google.ima.AdEvent.Type.PAUSED, this.onAdPaused.bind(this));
     this.adsManager.addEventListener(google.ima.AdEvent.Type.RESUMED, this.onAdResumed.bind(this));
   }
+
+  this.controller.playerWrapper.vjsPlayer.trigger({
+    type: 'ads-manager',
+    adsManager: this.adsManager
+  });
 
   if (!this.autoPlayAdBreaks) {
     this.initAdsManager();
@@ -1558,6 +1576,7 @@ SdkImpl.prototype.onAdLog = function (adEvent) {
  * update the ad UI.
  */
 SdkImpl.prototype.onAdPlayheadTrackerInterval = function () {
+  if (this.adsManager === null) return;
   var remainingTime = this.adsManager.getRemainingTime();
   var duration = this.currentAd.getDuration();
   var currentTime = duration - remainingTime;
