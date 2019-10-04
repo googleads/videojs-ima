@@ -1,3 +1,14 @@
+<a name="1.7.0"></a>
+# [1.7.0](https://github.com/googleads/videojs-ima/compare/v1.6.3...v1.7.0) (2019-10-04)
+
+### Features
+
+* adds IMA events ([229b771](https://github.com/googleads/videojs-ima/commit/229b771))
+
+### Bug Fixes
+
+* fixes bug with multiple contentEndedListeners being registered ([2208d86](https://github.com/googleads/videojs-ima/commit/2208d86))
+
 <a name="1.6.3"></a>
 ## [1.6.3](https://github.com/googleads/videojs-ima/compare/v1.6.2...v1.6.3) (2019-09-30)
 
