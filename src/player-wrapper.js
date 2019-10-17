@@ -139,6 +139,11 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
 
+  if (this.controller.getSettings().requestMode === 'onPlay') {
+      this.vjsPlayer.one('play',
+      this.controller.requestAds.bind(this.controller));
+}
+
   this.vjsPlayer.ads(adsPluginSettings);
 };
 
@@ -384,11 +389,11 @@ PlayerWrapper.prototype.play = function() {
 PlayerWrapper.prototype.getPlayerWidth = function() {
   let width = (getComputedStyle(this.vjsPlayer.el()) || {}).width;
 
-  if (!width || parseInt(width, 10) === 0) {
+  if (!width || parseFloat(width) === 0) {
     width = (this.vjsPlayer.el().getBoundingClientRect() || {}).width;
   }
 
-  return parseInt(width, 10) || this.vjsPlayer.width();
+  return parseFloat(width) || this.vjsPlayer.width();
 };
 
 
@@ -400,11 +405,11 @@ PlayerWrapper.prototype.getPlayerWidth = function() {
 PlayerWrapper.prototype.getPlayerHeight = function() {
   let height = (getComputedStyle(this.vjsPlayer.el()) || {}).height;
 
-  if (!height || parseInt(height, 10) === 0) {
+  if (!height || parseFloat(height) === 0) {
     height = (this.vjsPlayer.el().getBoundingClientRect() || {}).height;
   }
 
-  return parseInt(height, 10) || this.vjsPlayer.height();
+  return parseFloat(height) || this.vjsPlayer.height();
 };
 
 
@@ -594,6 +599,11 @@ PlayerWrapper.prototype.addContentEndedListener = function(listener) {
  * Reset the player.
  */
 PlayerWrapper.prototype.reset = function() {
+  // Attempts to remove the contentEndedListener before adding it.
+  // This is to prevent an error where an erroring video caused multiple
+  // contentEndedListeners to be added.
+  this.vjsPlayer.off('contentended', this.boundContentEndedListener);
+
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   this.vjsControls.show();
   if (this.vjsPlayer.ads.inAdBreak()) {

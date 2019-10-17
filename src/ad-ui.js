@@ -486,13 +486,6 @@ AdUi.prototype.onPlayerVolumeChanged = function(volume) {
  */
 AdUi.prototype.showAdControls = function() {
   this.addClass(this.controlsDiv, 'ima-controls-div-showing');
-  this.playPauseDiv.style.display = 'block';
-  this.muteDiv.style.display = 'block';
-  this.fullscreenDiv.style.display = 'block';
-  // Don't show on iOS.
-  if (!this.controller.getIsIos()) {
-    this.sliderDiv.style.display = 'block';
-  }
 };
 
 
@@ -501,10 +494,6 @@ AdUi.prototype.showAdControls = function() {
  */
 AdUi.prototype.hideAdControls = function() {
   this.removeClass(this.controlsDiv, 'ima-controls-div-showing');
-  this.playPauseDiv.style.display = 'none';
-  this.muteDiv.style.display = 'none';
-  this.sliderDiv.style.display = 'none';
-  this.fullscreenDiv.style.display = 'none';
 };
 
 

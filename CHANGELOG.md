@@ -1,5 +1,36 @@
+<a name="1.7.1"></a>
+## [1.7.1](https://github.com/googleads/videojs-ima/compare/v1.7.0...v1.7.1) (2019-10-14)
+
+<a name="1.7.0"></a>
+# [1.7.0](https://github.com/googleads/videojs-ima/compare/v1.6.3...v1.7.0) (2019-10-04)
+
+### Features
+
+* adds IMA events ([229b771](https://github.com/googleads/videojs-ima/commit/229b771))
+
+### Bug Fixes
+
+* fixes bug with multiple contentEndedListeners being registered ([2208d86](https://github.com/googleads/videojs-ima/commit/2208d86))
+
+<a name="1.6.3"></a>
+## [1.6.3](https://github.com/googleads/videojs-ima/compare/v1.6.2...v1.6.3) (2019-09-30)
+
+<a name="1.6.2"></a>
+## [1.6.2](https://github.com/googleads/videojs-ima/compare/v1.6.0...v1.6.2) (2019-09-11)
+
+### Bug Fixes
+
+* changed to parseFloat ([2b854a4](https://github.com/googleads/videojs-ima/commit/2b854a4))
+* fixed error in videojs.ima.min.js ([3d4e995](https://github.com/googleads/videojs-ima/commit/3d4e995))
+* fixed small errors in Readme update ([18186f9](https://github.com/googleads/videojs-ima/commit/18186f9))
+* removed second param from parseFloat ([4b5eef9](https://github.com/googleads/videojs-ima/commit/4b5eef9))
+
 <a name="1.6.0"></a>
 # [1.6.0](https://github.com/googleads/videojs-ima/compare/v1.5.2...v1.6.0) (2019-06-26)
+
+### Features
+
+* adds a request mode for ad requests ([278556b](https://github.com/googleads/videojs-ima/commit/278556b))
 
 ### Bug Fixes
 

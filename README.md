@@ -1,6 +1,6 @@
 # IMA SDK Plugin for Video.js
 
-[![Build Status](https://travis-ci.org/googleads/videojs-ima.svg?branch=master)](https://travis-ci.org/googleads/videojs-ima) [![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=N1g3U09HWEhZR09OSVc2YmhiWFlGaExMQmswMmo0Z1F3NVRjT0VvZCtWST0tLUo0QUdnZ1gyMmhJUHZsRGJ3dTBpWWc9PQ==--b8066916a46dd2f255b416f80f40ca7c3518ad46)](https://www.browserstack.com/automate/public-build/N1g3U09HWEhZR09OSVc2YmhiWFlGaExMQmswMmo0Z1F3NVRjT0VvZCtWST0tLUo0QUdnZ1gyMmhJUHZsRGJ3dTBpWWc9PQ==--b8066916a46dd2f255b416f80f40ca7c3518ad46)
+[![Build Status](https://travis-ci.org/googleads/videojs-ima.svg?branch=master)](https://travis-ci.org/googleads/videojs-ima)
 
 ## Introduction
 The IMA SDK Plugin for Video.js provides a quick and easy IMA SDK integration
@@ -155,7 +155,7 @@ the previous snippet. A summary of all settings follows:
 | disableCustomPlaybackForIOS10Plus | boolean      | Sets whether to disable custom playback on iOS 10+ browsers. If true, ads will play inline if the content video is inline. Defaults to false. |
 | forceNonLinearFullSlot | boolean      | True to force non-linear AdSense ads to render as linear fullslot.,If set, the content video will be paused and the non-linear text or image ad will be rendered as,fullslot. The content video will resume once the ad has been skipped or closed. |
 | id                     | string       | **DEPRECATED** as of v.1.5.0, no longer used or required. |
-| locale                 | string       | Locale for ad localization. This may be any,ISO 639-1 (two-letter) or ISO 639-2,(three-letter) code(4). Defaults to 'en'. |
+| locale                 | string       | Locale for ad localization. The supported locale codes can be found in [Localizing for Language and Locale](//developers.google.com/interactive-media-ads/docs/sdks/html5/localization)|
 | nonLinearWidth         | number       | Desired width of non-linear ads. Defaults to player width. |
 | nonLinearHeight        | number       | Desired height for non-linear ads. Defaults to 1/3 player height. |
 | numRedirects           | number       | Maximum number of VAST redirects before the subsequent redirects will be denied,,and the ad load aborted. The number of redirects directly affects latency and thus user experience.,This applies to all VAST wrapper ads. |
@@ -172,9 +172,30 @@ the previous snippet. A summary of all settings follows:
 <br />
 (3) [contrib-ads plugin](//github.com/videojs/videojs-contrib-ads)
 <br />
-(4) [Valid locale codes](http://www.loc.gov/standards/iso639-2/php/English_list.php)
+(4) [Valid locale codes](//developers.google.com/interactive-media-ads/docs/sdks/html5/localization)
 <br />
 (5) [google.ima.ImaSdkSettings.VpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.ImaSdkSettings.VpaidMode)
+
+## IMA Plugin Ad Events
+The IMA Plugin will fire events that can be listened for. Ad lifecycle events can be listened for by following our [Advanced Example](https://github.com/googleads/videojs-ima/blob/master/examples/advanced/ads.js). Other events are emited from the videojs player. Please see the below example to set up listeners for these events.
+
+```javascript
+this.player = videojs('content_video');
+
+this.player.on('ads-manager', function(response){
+  var adsManager = response.adsManager;
+  // Your code in response to the `ads-manager` event.
+})
+```
+
+Below are the events added by the videojs-ima plugin to the videojs player.
+
+| Event | Event String | Payload |
+|-------|--------------|---------|
+| Ad Started | 'ads-ad-started' | none |
+| Ads Manager | 'ads-manager' | [google.ima.AdsManager](https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsManager) |
+| Ads Loader | 'ads-loader' | [google.ima.AdsLoader](https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsLoader) |
+| Ads Request | 'ads-request' | [google.ima.AdsRequest](https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRequest) |
 
 ## Disable automatic ad break playback
 In some circumstances you may want to prevent the SDK from playing ad breaks

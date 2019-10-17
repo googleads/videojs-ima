@@ -183,6 +183,11 @@ SdkImpl.prototype.initAdObjects = function() {
     google.ima.AdErrorEvent.Type.AD_ERROR,
     this.onAdsLoaderError.bind(this),
     false);
+
+    this.controller.playerWrapper.vjsPlayer.trigger({
+      type: 'ads-loader',
+      adsLoader: this.adsLoader,
+    });
 };
 
 /**
@@ -224,7 +229,10 @@ SdkImpl.prototype.requestAds = function() {
   }
 
   this.adsLoader.requestAds(adsRequest);
-  this.controller.triggerPlayerEvent('ads-request', adsRequest);
+  this.controller.playerWrapper.vjsPlayer.trigger({
+    type: 'ads-request',
+    AdsRequest: adsRequest,
+  });
 };
 
 
@@ -283,6 +291,11 @@ SdkImpl.prototype.onAdsManagerLoaded = function(adsManagerLoadedEvent) {
         google.ima.AdEvent.Type.RESUMED,
         this.onAdResumed.bind(this));
   }
+
+  this.controller.playerWrapper.vjsPlayer.trigger({
+    type: 'ads-manager',
+    adsManager: this.adsManager,
+  });
 
   if (!this.autoPlayAdBreaks) {
     this.initAdsManager();
@@ -479,6 +492,7 @@ SdkImpl.prototype.onAdLog = function(adEvent) {
  * update the ad UI.
  */
 SdkImpl.prototype.onAdPlayheadTrackerInterval = function() {
+  if (this.adsManager === null) return;
   const remainingTime = this.adsManager.getRemainingTime();
   const duration = this.currentAd.getDuration();
   let currentTime = duration - remainingTime;
@@ -547,9 +561,10 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function() {
 SdkImpl.prototype.onPlayerReady = function() {
   this.initAdObjects();
 
-  if (this.controller.getSettings().adTagUrl ||
-      this.controller.getSettings().adsResponse) {
-    this.requestAds();
+  if ((this.controller.getSettings().adTagUrl ||
+      this.controller.getSettings().adsResponse) &&
+      this.controller.getSettings().requestMode === 'onLoad') {
+        this.requestAds();
   }
 };
 
