@@ -86,6 +86,7 @@ Controller.IMA_DEFAULTS = {
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
   showControlsForJSAds: true,
+  requestMode: 'onLoad',
 };
 
 /**
@@ -356,6 +357,14 @@ Controller.prototype.onAdPlayheadUpdated =
       currentTime, remainingTime, duration, adPosition, totalAds);
 };
 
+/**
+ * Handles ad log messages.
+ * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
+ */
+Controller.prototype.onAdLog = function(adEvent) {
+  this.playerWrapper.onAdLog(adEvent);
+};
+
 
 /**
  * @return {Object} The current ad.
@@ -527,14 +536,12 @@ Controller.prototype.onPlayerVolumeChanged = function(volume) {
  *     blank to use the existing content.
  * @param {?string} adTag The ad tag to be requested when the content loads.
  *     Leave blank to use the existing ad tag.
- * @param {?boolean} playOnLoad True to play the content once it has loaded,
- *     false to only load the content but not start playback.
  */
 Controller.prototype.setContentWithAdTag =
-    function(contentSrc, adTag, playOnLoad) {
+    function(contentSrc, adTag) {
   this.reset();
   this.settings.adTagUrl = adTag ? adTag : this.settings.adTagUrl;
-  this.playerWrapper.changeSource(contentSrc, playOnLoad);
+  this.playerWrapper.changeSource(contentSrc);
 };
 
 
@@ -546,15 +553,30 @@ Controller.prototype.setContentWithAdTag =
  *     blank to use the existing content.
  * @param {?string} adsResponse The ads response to be requested when the
  *     content loads. Leave blank to use the existing ads response.
- * @param {?boolean} playOnLoad True to play the content once it has loaded,
- *     false to only load the content but not start playback.
  */
 Controller.prototype.setContentWithAdsResponse =
-    function(contentSrc, adsResponse, playOnLoad) {
+    function(contentSrc, adsResponse) {
   this.reset();
   this.settings.adsResponse =
       adsResponse ? adsResponse : this.settings.adsResponse;
-  this.playerWrapper.changeSource(contentSrc, playOnLoad);
+  this.playerWrapper.changeSource(contentSrc);
+};
+
+/**
+ * Sets the content of the video player. You should use this method instead
+ * of setting the content src directly to ensure the proper ads request is
+ * used when the video content is loaded.
+ * @param {?string} contentSrc The URI for the content to be played. Leave
+ *     blank to use the existing content.
+ * @param {?Object} adsRequest The ads request to be requested when the
+ *     content loads. Leave blank to use the existing ads request.
+ */
+Controller.prototype.setContentWithAdsRequest =
+    function(contentSrc, adsRequest) {
+  this.reset();
+  this.settings.adsRequest =
+      adsRequest ? adsRequest : this.settings.adsRequest;
+  this.playerWrapper.changeSource(contentSrc);
 };
 
 
@@ -564,6 +586,7 @@ Controller.prototype.setContentWithAdsResponse =
 Controller.prototype.reset = function() {
   this.sdkImpl.reset();
   this.playerWrapper.reset();
+  this.adUi.reset();
 };
 
 

@@ -45,28 +45,6 @@ var browsers = [
       'moz:firefoxOptions' : {args: ['-headless']}
     }
   },
-  /*{
-    name: 'browserstack-win10-chrome',
-    server: 'http://hub-cloud.browserstack.com/wd/hub',
-    capabilities: {
-      'browserName' : 'Chrome',
-      'browser_version' : '62.0',
-      'os' : 'Windows',
-      'os_version' : '10',
-      'resolution' : '1024x768',
-    }
-  },
-  {
-    name: 'browserstack-win10-firefox',
-    server: 'http://hub-cloud.browserstack.com/wd/hub',
-    capabilities: {
-      'browserName' : 'Firefox',
-      'browser_version' : '58.0',
-      'os' : 'Windows',
-      'os_version' : '10',
-      'resolution' : '1024x768',
-    }
-  },*/
 ];
 
 for (let browser of browsers) {

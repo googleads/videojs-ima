@@ -365,10 +365,26 @@ AdUi.prototype.showAdContainer = function() {
 
 
 /**
+ * Hide the ad container
+ */
+AdUi.prototype.hideAdContainer = function() {
+  this.adContainerDiv.style.display = 'none';
+};
+
+
+/**
+ * Resets the state of the ad ui.
+ */
+AdUi.prototype.reset = function() {
+  this.hideAdContainer();
+};
+
+
+/**
  * Handles ad errors.
  */
 AdUi.prototype.onAdError = function() {
-  this.adContainerDiv.style.display = 'none';
+  this.hideAdContainer();
 };
 
 
@@ -378,7 +394,7 @@ AdUi.prototype.onAdError = function() {
  * @param {Object} adEvent The event fired by the IMA SDK.
  */
 AdUi.prototype.onAdBreakStart = function(adEvent) {
-  this.adContainerDiv.style.display = 'block';
+  this.showAdContainer();
 
   const contentType = adEvent.getAd().getContentType();
   if ((contentType === 'application/javascript') &&
@@ -400,7 +416,7 @@ AdUi.prototype.onAdBreakEnd = function() {
   const currentAd = this.controller.getCurrentAd();
   if (currentAd == null || // hide for post-roll only playlist
       currentAd.isLinear()) { // don't hide for non-linear ads
-    this.adContainerDiv.style.display = 'none';
+    this.hideAdContainer();
   }
   this.controlsDiv.style.display = 'none';
   this.countdownDiv.innerHTML = '';
@@ -411,7 +427,7 @@ AdUi.prototype.onAdBreakEnd = function() {
  * Handles when all ads have finished playing.
  */
 AdUi.prototype.onAllAdsCompleted = function() {
-  this.adContainerDiv.style.display = 'none';
+  this.hideAdContainer();
 };
 
 
@@ -470,13 +486,6 @@ AdUi.prototype.onPlayerVolumeChanged = function(volume) {
  */
 AdUi.prototype.showAdControls = function() {
   this.addClass(this.controlsDiv, 'ima-controls-div-showing');
-  this.playPauseDiv.style.display = 'block';
-  this.muteDiv.style.display = 'block';
-  this.fullscreenDiv.style.display = 'block';
-  // Don't show on iOS.
-  if (!this.controller.getIsIos()) {
-    this.sliderDiv.style.display = 'block';
-  }
 };
 
 
@@ -485,10 +494,6 @@ AdUi.prototype.showAdControls = function() {
  */
 AdUi.prototype.hideAdControls = function() {
   this.removeClass(this.controlsDiv, 'ima-controls-div-showing');
-  this.playPauseDiv.style.display = 'none';
-  this.muteDiv.style.display = 'none';
-  this.sliderDiv.style.display = 'none';
-  this.fullscreenDiv.style.display = 'none';
 };
 
 

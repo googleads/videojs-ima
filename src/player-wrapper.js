@@ -99,6 +99,12 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   this.contentSource = '';
 
   /**
+   * Stores the content source type so we can re-populate it manually after a
+   * post-roll.
+   */
+  this.contentSourceType = '';
+
+  /**
    * Stores data for the content playhead tracker.
    */
   this.contentPlayheadTracker = {
@@ -132,6 +138,11 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   this.vjsPlayer.on('dispose', this.playerDisposedListener.bind(this));
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
+
+  if (this.controller.getSettings().requestMode === 'onPlay') {
+      this.vjsPlayer.one('play',
+      this.controller.requestAds.bind(this.controller));
+}
 
   this.vjsPlayer.ads(adsPluginSettings);
 };
@@ -378,11 +389,11 @@ PlayerWrapper.prototype.play = function() {
 PlayerWrapper.prototype.getPlayerWidth = function() {
   let width = (getComputedStyle(this.vjsPlayer.el()) || {}).width;
 
-  if (!width || parseInt(width, 10) === 0) {
+  if (!width || parseFloat(width) === 0) {
     width = (this.vjsPlayer.el().getBoundingClientRect() || {}).width;
   }
 
-  return parseInt(width, 10) || this.vjsPlayer.width();
+  return parseFloat(width) || this.vjsPlayer.width();
 };
 
 
@@ -394,11 +405,11 @@ PlayerWrapper.prototype.getPlayerWidth = function() {
 PlayerWrapper.prototype.getPlayerHeight = function() {
   let height = (getComputedStyle(this.vjsPlayer.el()) || {}).height;
 
-  if (!height || parseInt(height, 10) === 0) {
+  if (!height || parseFloat(height) === 0) {
     height = (this.vjsPlayer.el().getBoundingClientRect() || {}).height;
   }
 
-  return parseInt(height, 10) || this.vjsPlayer.height();
+  return parseFloat(height) || this.vjsPlayer.height();
 };
 
 
@@ -455,12 +466,28 @@ PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
   }});
 };
 
+/**
+ * Handles ad log messages.
+ * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
+ */
+PlayerWrapper.prototype.onAdLog = function(adEvent) {
+  const adData = adEvent.getAdData();
+  const errorMessage =
+      adData['adError'] !== undefined ?
+          adData['adError'].getMessage() : undefined;
+  this.vjsPlayer.trigger({type: 'adslog', data: {
+    AdError: errorMessage,
+    AdEvent: adEvent,
+  }});
+};
+
 
 /**
  * Handles ad break starting.
  */
 PlayerWrapper.prototype.onAdBreakStart = function() {
   this.contentSource = this.vjsPlayer.currentSrc();
+  this.contentSourceType = this.vjsPlayer.currentType();
   this.vjsPlayer.off('contentended', this.boundContentEndedListener);
   this.vjsPlayer.ads.startLinearAdMode();
   this.vjsControls.hide();
@@ -493,8 +520,11 @@ PlayerWrapper.prototype.onAdStart = function() {
  */
 PlayerWrapper.prototype.onAllAdsCompleted = function() {
   if (this.contentComplete == true) {
-    if (this.h5Player.src != this.contentSource) {
-      this.vjsPlayer.src(this.contentSource);
+    if (this.vjsPlayer.currentSrc() != this.contentSource) {
+      this.vjsPlayer.src({
+        src: this.contentSource,
+        type: this.contentSourceType,
+      });
     }
     this.controller.onContentAndAdsCompleted();
   }
@@ -513,10 +543,8 @@ PlayerWrapper.prototype.onAdsReady = function() {
  * Changes the player source.
  * @param {?string} contentSrc The URI for the content to be played. Leave
  *     blank to use the existing content.
- * @param {?boolean} playOnLoad True to play the content once it has loaded,
- *     false to only load the content but not start playback.
  */
-PlayerWrapper.prototype.changeSource = function(contentSrc, playOnLoad) {
+PlayerWrapper.prototype.changeSource = function(contentSrc) {
   // Only try to pause the player when initialised with a source already
   if (this.vjsPlayer.currentSrc()) {
     this.vjsPlayer.currentTime(0);
@@ -525,11 +553,7 @@ PlayerWrapper.prototype.changeSource = function(contentSrc, playOnLoad) {
   if (contentSrc) {
     this.vjsPlayer.src(contentSrc);
   }
-  if (playOnLoad) {
-    this.vjsPlayer.one('loadedmetadata', this.playContentFromZero.bind(this));
-  } else {
-    this.vjsPlayer.one('loadedmetadata', this.seekContentToZero.bind(this));
-  }
+  this.vjsPlayer.one('loadedmetadata', this.seekContentToZero.bind(this));
 };
 
 /**
@@ -539,16 +563,6 @@ PlayerWrapper.prototype.changeSource = function(contentSrc, playOnLoad) {
  */
 PlayerWrapper.prototype.seekContentToZero = function() {
   this.vjsPlayer.currentTime(0);
-};
-
-/**
- * Seeks content to 00:00:00 and starts playback. This is used as an event
- * handler for the loadedmetadata event, since seeking is not possible until
- * that event has fired.
- */
-PlayerWrapper.prototype.playContentFromZero = function() {
-  this.vjsPlayer.currentTime(0);
-  this.vjsPlayer.play();
 };
 
 /**
@@ -585,6 +599,11 @@ PlayerWrapper.prototype.addContentEndedListener = function(listener) {
  * Reset the player.
  */
 PlayerWrapper.prototype.reset = function() {
+  // Attempts to remove the contentEndedListener before adding it.
+  // This is to prevent an error where an erroring video caused multiple
+  // contentEndedListeners to be added.
+  this.vjsPlayer.off('contentended', this.boundContentEndedListener);
+
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   this.vjsControls.show();
   if (this.vjsPlayer.ads.inAdBreak()) {

@@ -93,6 +93,12 @@ Ads.prototype.adsManagerLoadedCallback = function() {
         events[index],
         this.onAdEvent.bind(this));
   }
+
+  this.player.on('adslog', this.onAdLog.bind(this));
+};
+
+Ads.prototype.onAdLog = function(data) {
+  this.log('Ad log: ' + data.data.AdError);
 };
 
 Ads.prototype.onAdEvent = function(event) {
