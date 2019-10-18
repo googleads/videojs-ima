@@ -500,7 +500,7 @@ PlayerWrapper.prototype.onAdBreakStart = function() {
  */
 PlayerWrapper.prototype.onAdBreakEnd = function() {
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
-  if (this.vjsPlayer.ads.inAdBreak()) {
+  if (this.vjsPlayer.ads._inLinearAdMode) {
     this.vjsPlayer.ads.endLinearAdMode();
   }
   this.vjsControls.show();
