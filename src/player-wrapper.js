@@ -520,8 +520,10 @@ PlayerWrapper.prototype.onAdStart = function() {
  */
 PlayerWrapper.prototype.onAllAdsCompleted = function() {
   if (this.contentComplete == true) {
-    // The null check on this.contentSource was added to fix an error when the post-roll was an empty VAST tag.
-    if (this.contentSource && this.vjsPlayer.currentSrc() != this.contentSource) {
+    // The null check on this.contentSource was added to fix
+    // an error when the post-roll was an empty VAST tag.
+    if (this.contentSource &&
+      this.vjsPlayer.currentSrc() != this.contentSource) {
       this.vjsPlayer.src({
         src: this.contentSource,
         type: this.contentSourceType,
