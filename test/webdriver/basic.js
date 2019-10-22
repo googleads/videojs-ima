@@ -34,6 +34,8 @@ browsers.browsers.forEach(function(browser) {
 
     var timeoutTime = 60000; //ms
 
+    var retryCount = 1; // Will retry once.
+
     beforeEach(async function() {
       driver = await new webdriver.Builder()
             .forBrowser(browser.capabilities.browserName)
@@ -48,6 +50,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Displays ad UI ' + browser.name, async function(){
+      this.retries(retryCount);
       await driver.get('http://localhost:8000/test/webdriver/index.html?ad=linear');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
@@ -57,6 +60,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Hides controls when ad ends ' + browser.name, async function(){
+      this.retries(retryCount);
       await driver.get('http://localhost:8000/test/webdriver/index.html?ad=linear');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
@@ -67,6 +71,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Plays content when ad ends ' + browser.name, async function(){
+      this.retries(retryCount);
       await driver.get('http://localhost:8000/test/webdriver/index.html?ad=linear');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
@@ -78,6 +83,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Displays skip ad button ' + browser.name, async function(){
+      this.retries(retryCount);
       await driver.get('http://localhost:8000/test/webdriver/index.html?ad=skippable');
       await driver.findElement(By.id('content_video')).click();
       let log = driver.findElement(By.id('log'));
@@ -91,6 +97,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
      it( 'VMAP: Preroll ' + browser.name, async function(){
+      this.retries(retryCount);
       await driver.get('http://localhost:8000/test/webdriver/index.html?ad=vmap_preroll');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
@@ -101,6 +108,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'VMAP: Midroll ' + browser.name, async function(){
+      this.retries(retryCount);
       await driver.get('http://localhost:8000/test/webdriver/index.html?ad=vmap_midroll');
       await driver.findElement(By.id('content_video')).click();
       await driver.wait(until.elementIsVisible(driver.findElement(
@@ -109,6 +117,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Nonlinear ' + browser.name, async function(){
+      this.retries(retryCount);
       await driver.get('http://localhost:8000/test/webdriver/index.html?ad=nonlinear');
       await driver.findElement(By.id('content_video')).click();
       let log = await driver.findElement(By.id('log'));
@@ -121,6 +130,7 @@ browsers.browsers.forEach(function(browser) {
     });
 
     it( 'Handles ad error 303: wrappers ' + browser.name, async function(){
+      this.retries(retryCount);
       await driver.get('http://localhost:8000/test/webdriver/index.html?ad=error_303');
       let log = await driver.findElement(By.id('log'));
       await driver.wait(until.elementTextContains(log, '303'), timeoutTime);

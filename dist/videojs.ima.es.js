@@ -487,7 +487,9 @@ PlayerWrapper.prototype.onAdStart = function () {
  */
 PlayerWrapper.prototype.onAllAdsCompleted = function () {
   if (this.contentComplete == true) {
-    if (this.vjsPlayer.currentSrc() != this.contentSource) {
+    // The null check on this.contentSource was added to fix
+    // an error when the post-roll was an empty VAST tag.
+    if (this.contentSource && this.vjsPlayer.currentSrc() != this.contentSource) {
       this.vjsPlayer.src({
         src: this.contentSource,
         type: this.contentSourceType
@@ -719,9 +721,13 @@ AdUi.prototype.createControls = function () {
   this.assignControlAttributes(this.controlsDiv, 'ima-controls-div');
   this.controlsDiv.style.width = '100%';
 
-  this.assignControlAttributes(this.countdownDiv, 'ima-countdown-div');
-  this.countdownDiv.innerHTML = this.controller.getSettings().adLabel;
-  this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
+  if (!this.controller.getIsMobile) {
+    this.assignControlAttributes(this.countdownDiv, 'ima-countdown-div');
+    this.countdownDiv.innerHTML = this.controller.getSettings().adLabel;
+    this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
+  } else {
+    this.countdownDiv.style.display = 'none';
+  }
 
   this.assignControlAttributes(this.seekBarDiv, 'ima-seek-bar-div');
   this.seekBarDiv.style.width = '100%';
