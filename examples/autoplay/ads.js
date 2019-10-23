@@ -24,8 +24,8 @@ var wrapperDiv;
 function checkUnmutedAutoplaySupport() {
   canAutoplay
     .video({timeout: 100, muted: false})
-    .then(({result, error}) => {
-        if(result === false) {
+    .then(function(response) {
+        if(response.result === false) {
           // Unmuted autoplay is not allowed.
           checkMutedAutoplaySupport();
         } else {
@@ -40,8 +40,8 @@ function checkUnmutedAutoplaySupport() {
 function checkMutedAutoplaySupport() {
   canAutoplay
     .video({timeout: 100, muted: true})
-    .then(({result, error}) => {
-        if(result === false) {
+    .then(function(response) {
+        if(response.result === false) {
           // Muted autoplay is not allowed.
           autoplayAllowed = false;
           autoplayRequiresMute = false;
