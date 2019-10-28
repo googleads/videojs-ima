@@ -402,10 +402,10 @@ AdUi.prototype.onAdBreakStart = function(adEvent) {
 
   const contentType = adEvent.getAd().getContentType();
   if ((contentType === 'application/javascript') &&
-      !this.controller.getSettings().showControlsForJSAds) {
-    this.controlsDiv.style.display = 'none';
-  } else {
+      this.controller.getSettings().showControlsForJSAds) {
     this.controlsDiv.style.display = 'block';
+  } else {
+    this.controlsDiv.style.display = 'none';
   }
   this.onAdsPlaying();
   // Start with the ad controls minimized.
