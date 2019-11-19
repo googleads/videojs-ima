@@ -137,6 +137,7 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   this.vjsPlayer.on('dispose', this.playerDisposedListener.bind(this));
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
+  this.vjsPlayer.on('adtimeout', this.onAdTimeout.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
 
   if (this.controller.getSettings().requestMode === 'onPlay') {
@@ -270,6 +271,12 @@ PlayerWrapper.prototype.onReadyForPreroll = function() {
   this.controller.onPlayerReadyForPreroll();
 };
 
+/**
+ * Detects if the ad has timed out.
+ */
+PlayerWrapper.prototype.onAdTimeout = function() {
+  this.controller.onAdTimeout();
+};
 
 /**
  * Called when the player fires its 'ready' event.

@@ -108,6 +108,11 @@ const SdkImpl = function(controller) {
   this.contentCompleteCalled = false;
 
   /**
+   * True if the ad has timed out.
+   */
+  this.isAdTimedOut = false;
+
+  /**
    * Stores the dimensions for the ads manager.
    */
   this.adsManagerDimensions = {
@@ -301,7 +306,14 @@ SdkImpl.prototype.onAdsManagerLoaded = function(adsManagerLoadedEvent) {
     this.initAdsManager();
   }
 
-  this.controller.onAdsReady();
+  const {doNotPlayAdAfterContentStart} = this.controller.getSettings();
+
+  if (!doNotPlayAdAfterContentStart) {
+    this.controller.onAdsReady();
+  } else if (doNotPlayAdAfterContentStart &&
+    !this.isAdTimedOut) {
+    this.controller.onAdsReady();
+  }
 
   if (this.controller.getSettings().adsManagerLoadedCallback) {
     this.controller.getSettings().adsManagerLoadedCallback();
@@ -556,6 +568,10 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function() {
       this.onAdError(adError);
     }
   }
+};
+
+SdkImpl.prototype.onAdTimeout = function() {
+  this.isAdTimedOut = true;
 };
 
 SdkImpl.prototype.onPlayerReady = function() {

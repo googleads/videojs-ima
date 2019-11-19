@@ -87,6 +87,7 @@ Controller.IMA_DEFAULTS = {
   adLabelNofN: 'of',
   showControlsForJSAds: true,
   requestMode: 'onLoad',
+  doNotPlayAdAfterContentStart: false,
 };
 
 /**
@@ -488,6 +489,13 @@ Controller.prototype.onPlayerDisposed = function() {
  */
 Controller.prototype.onPlayerReadyForPreroll = function() {
   this.sdkImpl.onPlayerReadyForPreroll();
+};
+
+/**
+ * Called if the ad times out.
+ */
+Controller.prototype.onAdTimeout = function() {
+  this.sdkImpl.onAdTimeout();
 };
 
 
