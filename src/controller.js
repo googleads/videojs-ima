@@ -639,7 +639,7 @@ Controller.prototype.setAdBreakReadyListener = function(listener) {
 Controller.prototype.setShowCountdown = function(showCountdownIn) {
   this.adUi.setShowCountdown(showCountdownIn);
   this.showCountdown = showCountdownIn;
-  this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
+  this.adUi.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
 };
 
 
