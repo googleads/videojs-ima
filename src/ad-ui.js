@@ -233,6 +233,7 @@ AdUi.prototype.onAdFullscreenClick = function() {
  * Show pause and hide play button
  */
 AdUi.prototype.onAdsPaused = function() {
+  this.controller.sdkImpl.adPlaying = false;
   this.addClass(this.playPauseDiv, 'ima-paused');
   this.removeClass(this.playPauseDiv, 'ima-playing');
   this.showAdControls();
@@ -252,6 +253,7 @@ AdUi.prototype.onAdsResumed = function() {
  * Show play and hide pause button
  */
 AdUi.prototype.onAdsPlaying = function() {
+  this.controller.sdkImpl.adPlaying = true;
   this.addClass(this.playPauseDiv, 'ima-playing');
   this.removeClass(this.playPauseDiv, 'ima-paused');
 };
