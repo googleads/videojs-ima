@@ -721,7 +721,7 @@ AdUi.prototype.createControls = function () {
   this.assignControlAttributes(this.controlsDiv, 'ima-controls-div');
   this.controlsDiv.style.width = '100%';
 
-  if (!this.controller.getIsMobile) {
+  if (!this.controller.getIsMobile()) {
     this.assignControlAttributes(this.countdownDiv, 'ima-countdown-div');
     this.countdownDiv.innerHTML = this.controller.getSettings().adLabel;
     this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
@@ -792,6 +792,7 @@ AdUi.prototype.onAdFullscreenClick = function () {
  * Show pause and hide play button
  */
 AdUi.prototype.onAdsPaused = function () {
+  this.controller.sdkImpl.adPlaying = false;
   this.addClass(this.playPauseDiv, 'ima-paused');
   this.removeClass(this.playPauseDiv, 'ima-playing');
   this.showAdControls();
@@ -809,6 +810,7 @@ AdUi.prototype.onAdsResumed = function () {
  * Show play and hide pause button
  */
 AdUi.prototype.onAdsPlaying = function () {
+  this.controller.sdkImpl.adPlaying = true;
   this.addClass(this.playPauseDiv, 'ima-playing');
   this.removeClass(this.playPauseDiv, 'ima-paused');
 };
@@ -1106,7 +1108,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.7.1";
+var version = "1.7.3";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -2410,7 +2412,7 @@ Controller.prototype.setAdBreakReadyListener = function (listener) {
 Controller.prototype.setShowCountdown = function (showCountdownIn) {
   this.adUi.setShowCountdown(showCountdownIn);
   this.showCountdown = showCountdownIn;
-  this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
+  this.adUi.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
 };
 
 /**
