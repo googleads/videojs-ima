@@ -30,6 +30,9 @@ Your index.html should contain the video.js stylesheet (not included in the npm 
 a video player to be used for playback, and script tags for the IMA SDK and your own
 javascript file.
 
+It's recommended that you include the videojs-ima stylesheet (video.js.ima.css/scss)
+if you provide some player options to video.js which is related to styles, see #880.
+
 ```html
 <html>
   <head>
@@ -51,12 +54,15 @@ javascript file.
 </html>
 ```
 
-Three imports are required to use the videojs-ima module, as seen in the player.js example below.
+Four imports are required to use the videojs-ima module, as seen in the player.js example below.
+Note that import CSS in javascript would require you to [set up css modules build process](https://github.com/css-modules/webpack-demo).
+
 
 ```javascript
 import videojs from 'video.js';
 import 'videojs-contrib-ads';
 import 'videojs-ima';
+import 'videojs-ima/dist/videojs.ima.css';
 
 var videoOptions = {
   controls: true,
