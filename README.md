@@ -80,7 +80,7 @@ player.ima(imaOptions);
 // player.ima.initializeAdDisplayContainer();
 ```
 
-Please include the following CSS into you app's CSS to insure proper position for the ad container.
+Please include the following CSS into you app's CSS to ensure proper position for the ad container.
 
 ```CSS
 .ima-ad-container {
