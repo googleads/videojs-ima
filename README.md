@@ -80,6 +80,19 @@ player.ima(imaOptions);
 // player.ima.initializeAdDisplayContainer();
 ```
 
+Please include the following CSS into you app's CSS to insure proper position for the ad container.
+
+```CSS
+.ima-ad-container {
+  top: 0em;
+  position: absolute;
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+```
+
 ### Alternative Setup
 If you don't use npm, you can download the source from the dist/ folder and
 include it directly in your project. You'll also need to download the source for
