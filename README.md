@@ -35,6 +35,7 @@ javascript file.
   <head>
     <!-- Load dependent stylesheets. -->
     <link href="path/to/video-js.css" rel="stylesheet">
+    <link href="path/to/videojs.ima.css" rel="stylesheet"/>
   </head>
 
   <body>
@@ -78,21 +79,6 @@ player.ima(imaOptions);
 // will make it for you, but not as the result of a user action. For more info
 // see our examples, all of which are set up to work on mobile devices.
 // player.ima.initializeAdDisplayContainer();
-```
-
-Please include the following CSS into you app's CSS to ensure proper position for the ad container.
-Further styling for the ad player can be found in 
-[videojs.ima.css](//github.com/googleads/videojs-ima/blob/master/dist/videojs.ima.css).
-
-```CSS
-.ima-ad-container {
-  top: 0em;
-  position: absolute;
-  display: none;
-  width: 100%;
-  height: 100%;
-}
-
 ```
 
 ### Alternative Setup
