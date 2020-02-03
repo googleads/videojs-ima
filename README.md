@@ -35,6 +35,7 @@ javascript file.
   <head>
     <!-- Load dependent stylesheets. -->
     <link href="path/to/video-js.css" rel="stylesheet">
+    <link href="path/to/videojs.ima.css" rel="stylesheet"/>
   </head>
 
   <body>
