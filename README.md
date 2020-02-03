@@ -81,6 +81,8 @@ player.ima(imaOptions);
 ```
 
 Please include the following CSS into you app's CSS to ensure proper position for the ad container.
+Further styling for the ad player can be found in 
+[videojs.ima.css](//github.com/googleads/videojs-ima/blob/master/dist/videojs.ima.css).
 
 ```CSS
 .ima-ad-container {
