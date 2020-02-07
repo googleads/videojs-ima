@@ -29,7 +29,8 @@
     "preversion": "node scripts/preversion.js && npm run lint && npm test",
     "version": "node scripts/version.js",
     "postversion": "node scripts/postversion.js",
-    "webdriver": "mocha test/webdriver/*.js --no-timeouts"
+    "webdriver": "mocha test/webdriver/*.js --no-timeouts",
+    "prepare": "npm run rollup:es"
   },
   "repository": {
     "type": "git",
