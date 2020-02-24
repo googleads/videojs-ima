@@ -87,7 +87,7 @@ Controller.IMA_DEFAULTS = {
   adLabelNofN: 'of',
   showControlsForJSAds: true,
   requestMode: 'onLoad',
-  doNotPlayAdAfterContentStart: false,
+  preventLateAdStart: false,
 };
 
 /**

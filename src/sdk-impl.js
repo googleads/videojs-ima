@@ -306,11 +306,11 @@ SdkImpl.prototype.onAdsManagerLoaded = function(adsManagerLoadedEvent) {
     this.initAdsManager();
   }
 
-  const {doNotPlayAdAfterContentStart} = this.controller.getSettings();
+  const {preventLateAdStart} = this.controller.getSettings();
 
-  if (!doNotPlayAdAfterContentStart) {
+  if (!preventLateAdStart) {
     this.controller.onAdsReady();
-  } else if (doNotPlayAdAfterContentStart &&
+  } else if (preventLateAdStart &&
     !this.isAdTimedOut) {
     this.controller.onAdsReady();
   }
