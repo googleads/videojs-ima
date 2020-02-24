@@ -165,6 +165,7 @@ the previous snippet. A summary of all settings follows:
 | vastLoadTimeout        | number       | Override for default VAST load timeout in milliseconds for a single wrapper. The default timeout is 5000ms. |
 | vpaidAllowed           | boolean      | **DEPRECATED**, please use vpaidMode. |
 | vpaidMode              | VpaidMode(5) | VPAID Mode. Defaults to ENABLED. This setting,overrides vpaidAllowed. |
+| preventLateAdStart | boolean | Prevent ads from starting after the content has started if an adtimeout occurred (preroll, midroll, postroll). The default value is false
 
 
 (1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
