@@ -139,6 +139,7 @@ var PlayerWrapper = function PlayerWrapper(player, adsPluginSettings, controller
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   this.vjsPlayer.on('dispose', this.playerDisposedListener.bind(this));
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
+  this.vjsPlayer.on('adtimeout', this.onAdTimeout.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
 
   if (this.controller.getSettings().requestMode === 'onPlay') {
@@ -259,6 +260,13 @@ PlayerWrapper.prototype.playerDisposedListener = function () {
  */
 PlayerWrapper.prototype.onReadyForPreroll = function () {
   this.controller.onPlayerReadyForPreroll();
+};
+
+/**
+ * Detects if the ad has timed out.
+ */
+PlayerWrapper.prototype.onAdTimeout = function () {
+  this.controller.onAdTimeout();
 };
 
 /**
@@ -1108,7 +1116,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.7.4";
+var version = "1.7.5";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1244,6 +1252,11 @@ var SdkImpl = function SdkImpl(controller) {
    * Tracks whether or not we have already called adsLoader.contentComplete().
    */
   this.contentCompleteCalled = false;
+
+  /**
+   * True if the ad has timed out.
+   */
+  this.isAdTimedOut = false;
 
   /**
    * Stores the dimensions for the ads manager.
@@ -1393,7 +1406,14 @@ SdkImpl.prototype.onAdsManagerLoaded = function (adsManagerLoadedEvent) {
     this.initAdsManager();
   }
 
-  this.controller.onAdsReady();
+  var _controller$getSettin = this.controller.getSettings(),
+      preventLateAdStart = _controller$getSettin.preventLateAdStart;
+
+  if (!preventLateAdStart) {
+    this.controller.onAdsReady();
+  } else if (preventLateAdStart && !this.isAdTimedOut) {
+    this.controller.onAdsReady();
+  }
 
   if (this.controller.getSettings().adsManagerLoadedCallback) {
     this.controller.getSettings().adsManagerLoadedCallback();
@@ -1625,6 +1645,10 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function () {
       this.onAdError(adError);
     }
   }
+};
+
+SdkImpl.prototype.onAdTimeout = function () {
+  this.isAdTimedOut = true;
 };
 
 SdkImpl.prototype.onPlayerReady = function () {
@@ -1916,7 +1940,8 @@ Controller.IMA_DEFAULTS = {
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
   showControlsForJSAds: true,
-  requestMode: 'onLoad'
+  requestMode: 'onLoad',
+  preventLateAdStart: false
 };
 
 /**
@@ -2278,6 +2303,13 @@ Controller.prototype.onPlayerDisposed = function () {
  */
 Controller.prototype.onPlayerReadyForPreroll = function () {
   this.sdkImpl.onPlayerReadyForPreroll();
+};
+
+/**
+ * Called if the ad times out.
+ */
+Controller.prototype.onAdTimeout = function () {
+  this.sdkImpl.onAdTimeout();
 };
 
 /**
