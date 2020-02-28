@@ -142,6 +142,10 @@ const SdkImpl = function(controller) {
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(
         this.controller.getSettings().disableCustomPlaybackForIOS10Plus);
   }
+
+  if (this.controller.getSettings().ppid) {
+    google.ima.settings.setPpid(this.controller.getSettings().ppid);
+  }
 };
 
 
