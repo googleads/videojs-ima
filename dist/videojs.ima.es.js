@@ -1030,7 +1030,12 @@ AdUi.prototype.onPlayerVolumeChanged = function (volume) {
  * Shows ad controls on mouseover.
  */
 AdUi.prototype.showAdControls = function () {
-  this.addClass(this.controlsDiv, 'ima-controls-div-showing');
+  var _controller$getSettin = this.controller.getSettings(),
+      disableAdControls = _controller$getSettin.disableAdControls;
+
+  if (!disableAdControls) {
+    this.addClass(this.controlsDiv, 'ima-controls-div-showing');
+  }
 };
 
 /**
@@ -1116,7 +1121,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.7.5";
+var version = "1.8.0";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1285,6 +1290,10 @@ var SdkImpl = function SdkImpl(controller) {
   }
   if (this.controller.getSettings().disableCustomPlaybackForIOS10Plus) {
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(this.controller.getSettings().disableCustomPlaybackForIOS10Plus);
+  }
+
+  if (this.controller.getSettings().ppid) {
+    google.ima.settings.setPpid(this.controller.getSettings().ppid);
   }
 };
 
@@ -1934,14 +1943,15 @@ var Controller = function Controller(player, options) {
 };
 
 Controller.IMA_DEFAULTS = {
-  debug: false,
-  timeout: 5000,
-  prerollTimeout: 1000,
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
-  showControlsForJSAds: true,
+  debug: false,
+  disableAdControls: false,
+  prerollTimeout: 1000,
+  preventLateAdStart: false,
   requestMode: 'onLoad',
-  preventLateAdStart: false
+  showControlsForJSAds: true,
+  timeout: 5000
 };
 
 /**
