@@ -492,7 +492,7 @@ AdUi.prototype.onPlayerVolumeChanged = function(volume) {
  */
 AdUi.prototype.showAdControls = function() {
   const {disableAdControls} = this.controller.getSettings();
-  if(!disableAdControls) {
+  if (!disableAdControls) {
     this.addClass(this.controlsDiv, 'ima-controls-div-showing');
   }
 };
