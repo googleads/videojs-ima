@@ -161,12 +161,13 @@ the previous snippet. A summary of all settings follows:
 | nonLinearHeight        | number       | Desired height for non-linear ads. Defaults to 1/3 player height. |
 | nonLinearWidth         | number       | Desired width of non-linear ads. Defaults to player width. |
 | numRedirects           | number       | Maximum number of VAST redirects before the subsequent redirects will be denied and the ad load aborted. The number of redirects directly affects latency and thus user experience. This applies to all VAST wrapper ads. |
-| preventLateAdStart | boolean | Prevent ads from starting after the content has started if an adtimeout occurred (preroll, midroll, postroll). The default value is false
+| ppid                   | string       | Sets the publisher provided id |
+| preventLateAdStart     | boolean      | Prevent ads from starting after the content has started if an adtimeout occurred (preroll, midroll, postroll). The default value is false
 | showControlsForJSAds   | boolean      | Whether or not to show the control bar for VPAID JavaScript ads. Defaults to true. |
 | showCountdown          | boolean      | Whether or not to show the ad countdown timer. Defaults to true. |
 | vastLoadTimeout        | number       | Override for default VAST load timeout in milliseconds for a single wrapper. The default timeout is 5000ms. |
 | vpaidAllowed           | boolean      | **DEPRECATED**, please use vpaidMode. |
-| vpaidMode              | VpaidMode(5) | VPAID Mode. Defaults to ENABLED. This setting overrides vpaidAllowed. |
+| vpaidMode              | VpaidMode(5) | VPAID Mode. Defaults to ENABLED. This setting,overrides vpaidAllowed. |
 
 
 (1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
