@@ -80,14 +80,15 @@ const Controller = function(player, options) {
 
 
 Controller.IMA_DEFAULTS = {
-  debug: false,
-  timeout: 5000,
-  prerollTimeout: 1000,
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
-  showControlsForJSAds: true,
-  requestMode: 'onLoad',
+  debug: false,
+  disableAdControls: false,
+  prerollTimeout: 1000,
   preventLateAdStart: false,
+  requestMode: 'onLoad',
+  showControlsForJSAds: true,
+  timeout: 5000,
 };
 
 /**

@@ -491,7 +491,10 @@ AdUi.prototype.onPlayerVolumeChanged = function(volume) {
  * Shows ad controls on mouseover.
  */
 AdUi.prototype.showAdControls = function() {
-  this.addClass(this.controlsDiv, 'ima-controls-div-showing');
+  const {disableAdControls} = this.controller.getSettings();
+  if(!disableAdControls) {
+    this.addClass(this.controlsDiv, 'ima-controls-div-showing');
+  }
 };
 
 
