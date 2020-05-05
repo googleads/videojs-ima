@@ -139,6 +139,7 @@ var PlayerWrapper = function PlayerWrapper(player, adsPluginSettings, controller
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   this.vjsPlayer.on('dispose', this.playerDisposedListener.bind(this));
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
+  this.vjsPlayer.on('adtimeout', this.onAdTimeout.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
 
   if (this.controller.getSettings().requestMode === 'onPlay') {
@@ -259,6 +260,13 @@ PlayerWrapper.prototype.playerDisposedListener = function () {
  */
 PlayerWrapper.prototype.onReadyForPreroll = function () {
   this.controller.onPlayerReadyForPreroll();
+};
+
+/**
+ * Detects if the ad has timed out.
+ */
+PlayerWrapper.prototype.onAdTimeout = function () {
+  this.controller.onAdTimeout();
 };
 
 /**
@@ -1022,7 +1030,12 @@ AdUi.prototype.onPlayerVolumeChanged = function (volume) {
  * Shows ad controls on mouseover.
  */
 AdUi.prototype.showAdControls = function () {
-  this.addClass(this.controlsDiv, 'ima-controls-div-showing');
+  var _controller$getSettin = this.controller.getSettings(),
+      disableAdControls = _controller$getSettin.disableAdControls;
+
+  if (!disableAdControls) {
+    this.addClass(this.controlsDiv, 'ima-controls-div-showing');
+  }
 };
 
 /**
@@ -1108,7 +1121,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.7.4";
+var version = "1.8.0";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1246,6 +1259,11 @@ var SdkImpl = function SdkImpl(controller) {
   this.contentCompleteCalled = false;
 
   /**
+   * True if the ad has timed out.
+   */
+  this.isAdTimedOut = false;
+
+  /**
    * Stores the dimensions for the ads manager.
    */
   this.adsManagerDimensions = {
@@ -1272,6 +1290,10 @@ var SdkImpl = function SdkImpl(controller) {
   }
   if (this.controller.getSettings().disableCustomPlaybackForIOS10Plus) {
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(this.controller.getSettings().disableCustomPlaybackForIOS10Plus);
+  }
+
+  if (this.controller.getSettings().ppid) {
+    google.ima.settings.setPpid(this.controller.getSettings().ppid);
   }
 };
 
@@ -1393,7 +1415,14 @@ SdkImpl.prototype.onAdsManagerLoaded = function (adsManagerLoadedEvent) {
     this.initAdsManager();
   }
 
-  this.controller.onAdsReady();
+  var _controller$getSettin = this.controller.getSettings(),
+      preventLateAdStart = _controller$getSettin.preventLateAdStart;
+
+  if (!preventLateAdStart) {
+    this.controller.onAdsReady();
+  } else if (preventLateAdStart && !this.isAdTimedOut) {
+    this.controller.onAdsReady();
+  }
 
   if (this.controller.getSettings().adsManagerLoadedCallback) {
     this.controller.getSettings().adsManagerLoadedCallback();
@@ -1625,6 +1654,10 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function () {
       this.onAdError(adError);
     }
   }
+};
+
+SdkImpl.prototype.onAdTimeout = function () {
+  this.isAdTimedOut = true;
 };
 
 SdkImpl.prototype.onPlayerReady = function () {
@@ -1910,13 +1943,15 @@ var Controller = function Controller(player, options) {
 };
 
 Controller.IMA_DEFAULTS = {
-  debug: false,
-  timeout: 5000,
-  prerollTimeout: 1000,
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
+  debug: false,
+  disableAdControls: false,
+  prerollTimeout: 1000,
+  preventLateAdStart: false,
+  requestMode: 'onLoad',
   showControlsForJSAds: true,
-  requestMode: 'onLoad'
+  timeout: 5000
 };
 
 /**
@@ -2278,6 +2313,13 @@ Controller.prototype.onPlayerDisposed = function () {
  */
 Controller.prototype.onPlayerReadyForPreroll = function () {
   this.sdkImpl.onPlayerReadyForPreroll();
+};
+
+/**
+ * Called if the ad times out.
+ */
+Controller.prototype.onAdTimeout = function () {
+  this.sdkImpl.onAdTimeout();
 };
 
 /**
