@@ -170,15 +170,15 @@ the previous snippet. A summary of all settings follows:
 | vpaidMode              | VpaidMode(5) | VPAID Mode. Defaults to ENABLED. This setting,overrides vpaidAllowed. |
 
 
-(1) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRenderingSettings)
+(1) [AdsRenderingSettings](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsRenderingSettings)
 <br />
-(2) [IMA SDK Docs](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRequest)
+(2) [AdsRequest](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsRequest)
 <br />
 (3) [contrib-ads plugin](//github.com/videojs/videojs-contrib-ads)
 <br />
 (4) [Valid locale codes](//developers.google.com/interactive-media-ads/docs/sdks/html5/localization)
 <br />
-(5) [google.ima.ImaSdkSettings.VpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.ImaSdkSettings.VpaidMode)
+(5) [ImaSdkSettings.setVpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.ImaSdkSettings#setVpaidMode)
 
 ## IMA Plugin Ad Events
 The IMA Plugin will fire events that can be listened for. Ad lifecycle events can be listened for by following our [Advanced Example](https://github.com/googleads/videojs-ima/blob/master/examples/advanced/ads.js). Other events are emited from the videojs player. Please see the below example to set up listeners for these events.
@@ -197,9 +197,9 @@ Below are the events added by the videojs-ima plugin to the videojs player.
 | Event | Event String | Payload |
 |-------|--------------|---------|
 | Ad Started | 'ads-ad-started' | none |
-| Ads Manager | 'ads-manager' | [google.ima.AdsManager](https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsManager) |
-| Ads Loader | 'ads-loader' | [google.ima.AdsLoader](https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsLoader) |
-| Ads Request | 'ads-request' | [google.ima.AdsRequest](https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsRequest) |
+| Ads Manager | 'ads-manager' | [google.ima.AdsManager](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsManager) |
+| Ads Loader | 'ads-loader' | [google.ima.AdsLoader](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsLoader) |
+| Ads Request | 'ads-request' | [google.ima.AdsRequest](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsRequest) |
 
 ## Disable automatic ad break playback
 In some circumstances you may want to prevent the SDK from playing ad breaks
