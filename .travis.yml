@@ -1,9 +1,10 @@
 language: node_js
 node_js:
 - node
-dist: trusty
+os: linux
+dist: xenial
 env:
-  matrix:
+  jobs:
   - MOZ_HEADLESS=1
   global:
     secure: byXkN+FuQNpI15xX5TUjFHoZCpEPI4o8Ophb1OvaE10dwlN0tnS7rsFkWJD6u3Ipx7y5VmpTkvxYOtvWYVt3ZbpP8sJTB+bOSsp2zrgX5vByEvZ7z3W2mkDYW1nuwM9zBtv9lkhdKlNCjNNsvw4izoFhOZXoWWsPjMEkanWzkq0=
