@@ -157,7 +157,7 @@ the previous snippet. A summary of all settings follows:
 | disableFlashAds        | boolean      | True to disable Flash ads - Flash ads will be considered an unsupported ad type. Defaults to false. |
 | forceNonLinearFullSlot | boolean      | True to force non-linear AdSense ads to render as linear fullslot. If set, the content video will be paused and the non-linear text or image ad will be rendered as fullslot. The content video will resume once the ad has been skipped or closed. |
 | id                     | string       | **DEPRECATED** as of v.1.5.0, no longer used or required. |
-| locale                 | string       | Locale for ad localization. The supported locale codes can be found in [Localizing for Language and Locale](//developers.google.com/interactive-media-ads/docs/sdks/html5/localization)|
+| locale                 | string       | Locale for ad localization. The supported locale codes can be found in [Localizing for Language and Locale](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/localization)|
 | nonLinearHeight        | number       | Desired height for non-linear ads. Defaults to 1/3 player height. |
 | nonLinearWidth         | number       | Desired width of non-linear ads. Defaults to player width. |
 | numRedirects           | number       | Maximum number of VAST redirects before the subsequent redirects will be denied and the ad load aborted. The number of redirects directly affects latency and thus user experience. This applies to all VAST wrapper ads. |
@@ -170,15 +170,15 @@ the previous snippet. A summary of all settings follows:
 | vpaidMode              | VpaidMode(5) | VPAID Mode. Defaults to ENABLED. This setting,overrides vpaidAllowed. |
 
 
-(1) [AdsRenderingSettings](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsRenderingSettings)
+(1) [AdsRenderingSettings](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.AdsRenderingSettings)
 <br />
-(2) [AdsRequest](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsRequest)
+(2) [AdsRequest](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.AdsRequest)
 <br />
 (3) [contrib-ads plugin](//github.com/videojs/videojs-contrib-ads)
 <br />
-(4) [Valid locale codes](//developers.google.com/interactive-media-ads/docs/sdks/html5/localization)
+(4) [Valid locale codes](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/localization)
 <br />
-(5) [ImaSdkSettings.setVpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.ImaSdkSettings#setVpaidMode)
+(5) [ImaSdkSettings.setVpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.ImaSdkSettings#setVpaidMode)
 
 ## IMA Plugin Ad Events
 The IMA Plugin will fire events that can be listened for. Ad lifecycle events can be listened for by following our [Advanced Example](https://github.com/googleads/videojs-ima/blob/master/examples/advanced/ads.js). Other events are emited from the videojs player. Please see the below example to set up listeners for these events.
@@ -197,9 +197,9 @@ Below are the events added by the videojs-ima plugin to the videojs player.
 | Event | Event String | Payload |
 |-------|--------------|---------|
 | Ad Started | 'ads-ad-started' | none |
-| Ads Manager | 'ads-manager' | [google.ima.AdsManager](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsManager) |
-| Ads Loader | 'ads-loader' | [google.ima.AdsLoader](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsLoader) |
-| Ads Request | 'ads-request' | [google.ima.AdsRequest](//developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/google.ima.AdsRequest) |
+| Ads Manager | 'ads-manager' | [google.ima.AdsManager](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.AdsManager) |
+| Ads Loader | 'ads-loader' | [google.ima.AdsLoader](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.AdsLoader) |
+| Ads Request | 'ads-request' | [google.ima.AdsRequest](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.AdsRequest) |
 
 ## Disable automatic ad break playback
 In some circumstances you may want to prevent the SDK from playing ad breaks
@@ -217,7 +217,7 @@ Please report issues on the [issues page](../../issues).
 
 ## Terms of Service
 The IMA SDK plugin for Video.js uses the IMA SDK, and as such is subject to the
-[IMA SDK Terms of Service](https://developers.google.com/interactive-media-ads/terms).
+[IMA SDK Terms of Service](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/terms).
 
 ## How do I contribute?
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.

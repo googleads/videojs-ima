@@ -679,7 +679,7 @@ Controller.prototype.playAdBreak = function() {
 /**
  * Ads an EventListener to the AdsManager. For a list of available events,
  * see
- * https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdEvent.Type
+ * https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.AdEvent#.Type
  * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to
  *     listen.
  * @param {callback} callback The method to call when the event is fired.
