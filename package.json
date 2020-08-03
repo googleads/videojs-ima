@@ -58,7 +58,7 @@
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "child_process": "^1.0.2",
-    "chromedriver": "^81.0.0",
+    "chromedriver": "^84.0.0",
     "conventional-changelog-cli": "^2.0.31",
     "conventional-changelog-videojs": "^3.0.0",
     "eslint": "^4.19.1",
