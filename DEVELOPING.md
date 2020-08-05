@@ -46,3 +46,6 @@ To create a new release, run the following:
 npm version [major|minor|patch]
 npm publish
 ```
+
+Push changes in `dist/` to the github repo.
+Confirm that these files are on the correct version.
