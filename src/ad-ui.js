@@ -134,6 +134,10 @@ AdUi.prototype.createAdContainer = function() {
       'mouseleave',
       this.hideAdControls.bind(this),
       false);
+  this.adContainerDiv.addEventListener(
+      'click',
+      this.onAdContainerClick.bind(this),
+      false);
   this.createControls();
   this.controller.injectAdContainerDiv(this.adContainerDiv);
 };
@@ -377,6 +381,14 @@ AdUi.prototype.hideAdContainer = function() {
   this.adContainerDiv.style.display = 'none';
 };
 
+/**
+ * Handles clicks on the ad container
+ */
+AdUi.prototype.onAdContainerClick = function() {
+  if (this.controller.getSettings().togglePlaybackOnAdClick) {
+    this.controller.togglePlayback();
+  }
+};
 
 /**
  * Resets the state of the ad ui.

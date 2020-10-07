@@ -387,6 +387,17 @@ PlayerWrapper.prototype.play = function() {
   this.vjsPlayer.play();
 };
 
+/**
+ * Toggles playback of the video.
+ */
+PlayerWrapper.prototype.togglePlayback = function() {
+  if (this.vjsPlayer.paused()) {
+    this.vjsPlayer.play();
+  } else {
+    this.vjsPlayer.pause();
+  }
+};
+
 
 /**
  * Get the player width.

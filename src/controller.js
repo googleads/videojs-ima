@@ -89,6 +89,7 @@ Controller.IMA_DEFAULTS = {
   requestMode: 'onLoad',
   showControlsForJSAds: true,
   timeout: 5000,
+  togglePlaybackOnAdClick: true,
 };
 
 /**
@@ -734,6 +735,12 @@ Controller.prototype.resumeAd = function() {
   this.sdkImpl.resumeAds();
 };
 
+/**
+ * Toggles video/ad playback.
+ */
+Controller.prototype.togglePlayback = function() {
+  this.playerWrapper.togglePlayback();
+};
 
 /**
  * @return {boolean} true if we expect that ads will autoplay. false otherwise.
