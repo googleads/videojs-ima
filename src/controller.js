@@ -89,7 +89,6 @@ Controller.IMA_DEFAULTS = {
   requestMode: 'onLoad',
   showControlsForJSAds: true,
   timeout: 5000,
-  togglePlaybackOnAdClick: true,
 };
 
 /**
