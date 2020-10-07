@@ -115,6 +115,11 @@ const AdUi = function(controller) {
     this.showCountdown = false;
   }
 
+  /**
+   * Boolean flag if the current ad is nonlinear.
+   */
+  this.isAdNonlinear = false;
+
   this.createAdContainer();
 };
 
@@ -385,7 +390,7 @@ AdUi.prototype.hideAdContainer = function() {
  * Handles clicks on the ad container
  */
 AdUi.prototype.onAdContainerClick = function() {
-  if (this.controller.getSettings().togglePlaybackOnAdClick) {
+  if (this.isAdNonlinear) {
     this.controller.togglePlayback();
   }
 };
@@ -455,6 +460,7 @@ AdUi.prototype.onAllAdsCompleted = function() {
 AdUi.prototype.onLinearAdStart = function() {
   // Don't bump container when controls are shown
   this.removeClass(this.adContainerDiv, 'bumpable-ima-ad-container');
+  this.isAdNonlinear = false;
 };
 
 
@@ -467,6 +473,7 @@ AdUi.prototype.onNonLinearAdLoad = function() {
   this.adContainerDiv.style.display = 'block';
   // Bump container when controls are shown
   this.addClass(this.adContainerDiv, 'bumpable-ima-ad-container');
+  this.isAdNonlinear = true;
 };
 
 
