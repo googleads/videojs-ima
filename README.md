@@ -165,7 +165,6 @@ the previous snippet. A summary of all settings follows:
 | preventLateAdStart     | boolean      | Prevent ads from starting after the content has started if an adtimeout occurred (preroll, midroll, postroll). The default value is false
 | showControlsForJSAds   | boolean      | Whether or not to show the control bar for VPAID JavaScript ads. Defaults to true. |
 | showCountdown          | boolean      | Whether or not to show the ad countdown timer. Defaults to true. |
-| togglePlaybackOnAdClick | boolean      | Whether or not to pause ad or content playback when users click on the ad container. Defaults to true. |
 | vastLoadTimeout        | number       | Override for default VAST load timeout in milliseconds for a single wrapper. The default timeout is 5000ms. |
 | vpaidAllowed           | boolean      | **DEPRECATED**, please use vpaidMode. |
 | vpaidMode              | VpaidMode(5) | VPAID Mode. Defaults to ENABLED. This setting,overrides vpaidAllowed. |
