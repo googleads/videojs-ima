@@ -165,7 +165,7 @@ SdkImpl.prototype.initAdObjects = function() {
     this.adsLoader.getSettings().setVpaidMode(
         google.ima.ImaSdkSettings.VpaidMode.DISABLED);
   }
-  if (this.controller.getSettings().vpaidMode) {
+  if (this.controller.getSettings().vpaidMode !== undefined) {
     this.adsLoader.getSettings().setVpaidMode(
         this.controller.getSettings().vpaidMode);
   }
