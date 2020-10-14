@@ -734,6 +734,12 @@ Controller.prototype.resumeAd = function() {
   this.sdkImpl.resumeAds();
 };
 
+/**
+ * Toggles video/ad playback.
+ */
+Controller.prototype.togglePlayback = function() {
+  this.playerWrapper.togglePlayback();
+};
 
 /**
  * @return {boolean} true if we expect that ads will autoplay. false otherwise.
