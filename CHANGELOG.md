@@ -1,5 +1,8 @@
+<a name="1.8.2"></a>
+## [1.8.2](https://github.com/googleads/videojs-ima/compare/v1.8.1...v1.8.2) (2020-10-14)
+
 <a name="1.8.1"></a>
-## [1.8.1](https://github.com/googleads/videojs-ima/compare/v1.8.0...v1.8.1) (2020-08-03)
+## [1.8.1](https://github.com/googleads/videojs-ima/compare/v1.8.0...v1.8.1) (2020-08-05)
 
 ### Bug Fixes
 
