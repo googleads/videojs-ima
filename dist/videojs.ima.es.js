@@ -369,6 +369,17 @@ PlayerWrapper.prototype.play = function () {
 };
 
 /**
+ * Toggles playback of the video.
+ */
+PlayerWrapper.prototype.togglePlayback = function () {
+  if (this.vjsPlayer.paused()) {
+    this.vjsPlayer.play();
+  } else {
+    this.vjsPlayer.pause();
+  }
+};
+
+/**
  * Get the player width.
  *
  * @return {number} The player's width.
@@ -706,6 +717,11 @@ var AdUi = function AdUi(controller) {
     this.showCountdown = false;
   }
 
+  /**
+   * Boolean flag if the current ad is nonlinear.
+   */
+  this.isAdNonlinear = false;
+
   this.createAdContainer();
 };
 
@@ -718,6 +734,7 @@ AdUi.prototype.createAdContainer = function () {
   this.adContainerDiv.style.zIndex = 1111;
   this.adContainerDiv.addEventListener('mouseenter', this.showAdControls.bind(this), false);
   this.adContainerDiv.addEventListener('mouseleave', this.hideAdControls.bind(this), false);
+  this.adContainerDiv.addEventListener('click', this.onAdContainerClick.bind(this), false);
   this.createControls();
   this.controller.injectAdContainerDiv(this.adContainerDiv);
 };
@@ -927,6 +944,15 @@ AdUi.prototype.hideAdContainer = function () {
 };
 
 /**
+ * Handles clicks on the ad container
+ */
+AdUi.prototype.onAdContainerClick = function () {
+  if (this.isAdNonlinear) {
+    this.controller.togglePlayback();
+  }
+};
+
+/**
  * Resets the state of the ad ui.
  */
 AdUi.prototype.reset = function () {
@@ -986,6 +1012,7 @@ AdUi.prototype.onAllAdsCompleted = function () {
 AdUi.prototype.onLinearAdStart = function () {
   // Don't bump container when controls are shown
   this.removeClass(this.adContainerDiv, 'bumpable-ima-ad-container');
+  this.isAdNonlinear = false;
 };
 
 /**
@@ -997,6 +1024,7 @@ AdUi.prototype.onNonLinearAdLoad = function () {
   this.adContainerDiv.style.display = 'block';
   // Bump container when controls are shown
   this.addClass(this.adContainerDiv, 'bumpable-ima-ad-container');
+  this.isAdNonlinear = true;
 };
 
 AdUi.prototype.onPlayerEnterFullscreen = function () {
@@ -1121,7 +1149,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.8.1";
+var version = "1.8.2";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1132,7 +1160,7 @@ var repository = { "type": "git", "url": "https://github.com/googleads/videojs-i
 var files = ["CHANGELOG.md", "LICENSE", "README.md", "dist/", "src/"];
 var peerDependencies = { "video.js": "^5.19.2 || ^6 || ^7" };
 var dependencies = { "can-autoplay": "^3.0.0", "cryptiles": "^4.1.3", "extend": ">=3.0.2", "lodash": ">=4.17.19", "lodash.template": ">=4.5.0", "videojs-contrib-ads": "^6.6.5" };
-var devDependencies = { "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^84.0.0", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7" };
+var devDependencies = { "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^86.0.0", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7" };
 var keywords = ["videojs", "videojs-plugin"];
 var pkg = {
 	name: name,
@@ -1311,7 +1339,7 @@ SdkImpl.prototype.initAdObjects = function () {
   if (this.controller.getSettings().vpaidAllowed == false) {
     this.adsLoader.getSettings().setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.DISABLED);
   }
-  if (this.controller.getSettings().vpaidMode) {
+  if (this.controller.getSettings().vpaidMode !== undefined) {
     this.adsLoader.getSettings().setVpaidMode(this.controller.getSettings().vpaidMode);
   }
 
@@ -2533,6 +2561,13 @@ Controller.prototype.pauseAd = function () {
 Controller.prototype.resumeAd = function () {
   this.adUi.onAdsPlaying();
   this.sdkImpl.resumeAds();
+};
+
+/**
+ * Toggles video/ad playback.
+ */
+Controller.prototype.togglePlayback = function () {
+  this.playerWrapper.togglePlayback();
 };
 
 /**
