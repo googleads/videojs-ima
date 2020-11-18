@@ -1155,7 +1155,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.8.3";
+var version = "1.9.0";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1435,12 +1435,8 @@ SdkImpl.prototype.onAdsManagerLoaded = function (adsManagerLoadedEvent) {
   this.adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, this.onAdComplete.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.SKIPPED, this.onAdComplete.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.LOG, this.onAdLog.bind(this));
-
-  if (this.controller.getIsMobile()) {
-    // Show/hide controls on pause and resume (triggered by tap).
-    this.adsManager.addEventListener(google.ima.AdEvent.Type.PAUSED, this.onAdPaused.bind(this));
-    this.adsManager.addEventListener(google.ima.AdEvent.Type.RESUMED, this.onAdResumed.bind(this));
-  }
+  this.adsManager.addEventListener(google.ima.AdEvent.Type.PAUSED, this.onAdPaused.bind(this));
+  this.adsManager.addEventListener(google.ima.AdEvent.Type.RESUMED, this.onAdResumed.bind(this));
 
   this.controller.playerWrapper.vjsPlayer.trigger({
     type: 'ads-manager',
