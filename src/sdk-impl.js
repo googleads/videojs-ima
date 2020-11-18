@@ -290,16 +290,12 @@ SdkImpl.prototype.onAdsManagerLoaded = function(adsManagerLoadedEvent) {
   this.adsManager.addEventListener(
       google.ima.AdEvent.Type.LOG,
       this.onAdLog.bind(this));
-
-  if (this.controller.getIsMobile()) {
-    // Show/hide controls on pause and resume (triggered by tap).
-    this.adsManager.addEventListener(
-        google.ima.AdEvent.Type.PAUSED,
-        this.onAdPaused.bind(this));
-    this.adsManager.addEventListener(
-        google.ima.AdEvent.Type.RESUMED,
-        this.onAdResumed.bind(this));
-  }
+  this.adsManager.addEventListener(
+      google.ima.AdEvent.Type.PAUSED,
+      this.onAdPaused.bind(this));
+  this.adsManager.addEventListener(
+      google.ima.AdEvent.Type.RESUMED,
+      this.onAdResumed.bind(this));
 
   this.controller.playerWrapper.vjsPlayer.trigger({
     type: 'ads-manager',
