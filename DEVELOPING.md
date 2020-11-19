@@ -40,7 +40,7 @@ Releases should only be created by the repository owners. If you're not an owner
 and think we're in need of a new release, please open an issue in our
 [issue tracker](https://github.com/googleads/videojs-ima/issues).
 
-To create a new release, run the following:
+To create a new release, run the following (you may need to run `npm login` first):
 
 ```
 npm version [major|minor|patch]
