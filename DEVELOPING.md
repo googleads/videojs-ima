@@ -49,3 +49,9 @@ npm publish
 
 Push changes in `dist/` to the github repo.
 Confirm that these files are on the correct version.
+
+## Common issues
+
+If the plugin starts failing the [travis-ci](https://travis-ci.org/github/googleads/videojs-ima) test,
+a possible cause is an out of date version of `chromedriver`. To fix the issue, simply update this
+dependency to the [latest chromdriver version](https://www.npmjs.com/package/chromedriver).

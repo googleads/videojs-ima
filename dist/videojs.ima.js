@@ -1155,7 +1155,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.9.1";
+var version = "1.10.0";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1166,7 +1166,7 @@ var repository = { "type": "git", "url": "https://github.com/googleads/videojs-i
 var files = ["CHANGELOG.md", "LICENSE", "README.md", "dist/", "src/"];
 var peerDependencies = { "video.js": "^5.19.2 || ^6 || ^7" };
 var dependencies = { "can-autoplay": "^3.0.0", "cryptiles": "^4.1.3", "extend": ">=3.0.2", "lodash": ">=4.17.19", "lodash.template": ">=4.5.0", "videojs-contrib-ads": "^6.6.5" };
-var devDependencies = { "axios": ">=0.21.1", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^87.0.5", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "ecstatic": ">=4.1.3", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "ini": ">=1.3.7", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7" };
+var devDependencies = { "axios": ">=0.21.1", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^89.0.0", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "ecstatic": ">=4.1.3", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "ini": ">=1.3.7", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7" };
 var keywords = ["videojs", "videojs-plugin"];
 var pkg = {
 	name: name,
@@ -1355,6 +1355,10 @@ SdkImpl.prototype.initAdObjects = function () {
 
   if (this.controller.getSettings().numRedirects) {
     this.adsLoader.getSettings().setNumRedirects(this.controller.getSettings().numRedirects);
+  }
+
+  if (this.controller.getSettings().sessionId) {
+    this.adsLoader.getSettings().setSessionId(this.controller.getSettings().sessionId);
   }
 
   this.adsLoader.getSettings().setPlayerType('videojs-ima');
@@ -1652,7 +1656,7 @@ SdkImpl.prototype.onContentComplete = function () {
     this.contentCompleteCalled = true;
   }
 
-  if (this.adsManager && this.adsManager.getCuePoints() && !this.adsManager.getCuePoints().includes(-1)) {
+  if (this.adsManager && this.adsManager.getCuePoints() && !this.adsManager.getCuePoints().includes(-1) || !this.adsManager) {
     this.controller.onNoPostroll();
   }
 
