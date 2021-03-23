@@ -161,8 +161,9 @@ the previous snippet. A summary of all settings follows:
 | nonLinearHeight        | number       | Desired height for non-linear ads. Defaults to 1/3 player height. |
 | nonLinearWidth         | number       | Desired width of non-linear ads. Defaults to player width. |
 | numRedirects           | number       | Maximum number of VAST redirects before the subsequent redirects will be denied and the ad load aborted. The number of redirects directly affects latency and thus user experience. This applies to all VAST wrapper ads. |
-| ppid                   | string       | Sets the publisher provided id |
+| ppid                   | string       | Sets the publisher provided ID |
 | preventLateAdStart     | boolean      | Prevent ads from starting after the content has started if an adtimeout occurred (preroll, midroll, postroll). The default value is false
+| sessionId              | string       | Sets the [session ID](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.ImaSdkSettings#setSessionId) |
 | showControlsForJSAds   | boolean      | Whether or not to show the control bar for VPAID JavaScript ads. Defaults to true. |
 | showCountdown          | boolean      | Whether or not to show the ad countdown timer. Defaults to true. |
 | vastLoadTimeout        | number       | Override for default VAST load timeout in milliseconds for a single wrapper. The default timeout is 5000ms. |
