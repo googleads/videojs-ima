@@ -82,7 +82,8 @@
     "uglify-es": "^3.3.9",
     "video.js": "^5.19.2 || ^6 || ^7",
     "watch": "^1.0.2",
-    "webdriver-manager": "^12.1.7"
+    "webdriver-manager": "^12.1.7",
+    "xmldom": ">=0.5.0"
   },
   "keywords": [
     "videojs",
