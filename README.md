@@ -155,12 +155,14 @@ the previous snippet. A summary of all settings follows:
 | disableAdControls      | boolean      | True to hide the ad controls(play/pause, volume, and fullscreen buttons) during ad playback. Defaults to false. |
 | disableCustomPlaybackForIOS10Plus | boolean      | Sets whether to disable custom playback on iOS 10+ browsers. If true, ads will play inline if the content video is inline. Defaults to false. |
 | disableFlashAds        | boolean      | True to disable Flash ads - Flash ads will be considered an unsupported ad type. Defaults to false. |
+| featureFlags           | object       | Sets IMA SDK feature flags. |
 | forceNonLinearFullSlot | boolean      | True to force non-linear AdSense ads to render as linear fullslot. If set, the content video will be paused and the non-linear text or image ad will be rendered as fullslot. The content video will resume once the ad has been skipped or closed. |
 | id                     | string       | **DEPRECATED** as of v.1.5.0, no longer used or required. |
 | locale                 | string       | Locale for ad localization. The supported locale codes can be found in [Localizing for Language and Locale](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/localization)|
 | nonLinearHeight        | number       | Desired height for non-linear ads. Defaults to 1/3 player height. |
 | nonLinearWidth         | number       | Desired width of non-linear ads. Defaults to player width. |
 | numRedirects           | number       | Maximum number of VAST redirects before the subsequent redirects will be denied and the ad load aborted. The number of redirects directly affects latency and thus user experience. This applies to all VAST wrapper ads. |
+| omidMode               | object       | Sets and enables the Open Measurement SDK(4). Accepts an object with keys 'LIMITED', 'DOMAIN', and 'FULL'. The value pair for each key should be a dictionary that maps each access mode to a regular expression that matches the URLs to include. This API is currently in open beta and requires the following feature flag to be set: `{'enableOmidBeta': true}` |
 | ppid                   | string       | Sets the publisher provided ID |
 | preventLateAdStart     | boolean      | Prevent ads from starting after the content has started if an adtimeout occurred (preroll, midroll, postroll). The default value is false
 | sessionId              | string       | Sets the [session ID](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.ImaSdkSettings#setSessionId) |
@@ -177,7 +179,7 @@ the previous snippet. A summary of all settings follows:
 <br />
 (3) [contrib-ads plugin](//github.com/videojs/videojs-contrib-ads)
 <br />
-(4) [Valid locale codes](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/localization)
+(4) [Open Measurement SDK guide](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/omsdk)
 <br />
 (5) [ImaSdkSettings.setVpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.ImaSdkSettings#setVpaidMode)
 
