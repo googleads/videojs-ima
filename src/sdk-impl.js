@@ -228,7 +228,7 @@ SdkImpl.prototype.requestAds = function() {
 
   if (this.controller.getSettings().omidMode) {
     adsRequest.omidAccessModeRules = {};
-    omidValues = this.controller.getSettings().omidMode;
+    const omidValues = this.controller.getSettings().omidMode;
 
     if (omidValues.FULL) {
       adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.FULL] = omidValues.FULL;
