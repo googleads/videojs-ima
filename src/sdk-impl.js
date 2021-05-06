@@ -148,7 +148,8 @@ const SdkImpl = function(controller) {
   }
 
   if (this.controller.getSettings().featureFlags) {
-    google.ima.settings.setFeatureFlags(this.controller.getSettings().featureFlags);
+    google.ima.settings
+      .setFeatureFlags(this.controller.getSettings().featureFlags);
   }
 };
 
@@ -231,13 +232,16 @@ SdkImpl.prototype.requestAds = function() {
     const omidValues = this.controller.getSettings().omidMode;
 
     if (omidValues.FULL) {
-      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.FULL] = omidValues.FULL;
+      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.FULL] =
+        omidValues.FULL;
     }
     if (omidValues.DOMAIN) {
-      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.DOMAIN] = omidValues.DOMAIN;
+      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.DOMAIN] =
+        omidValues.DOMAIN;
     }
     if (omidValues.LIMITED) {
-      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.LIMITED] = omidValues.LIMITED;
+      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.LIMITED] =
+        omidValues.LIMITED;
     }
   }
 
