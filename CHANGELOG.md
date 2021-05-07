@@ -1,3 +1,6 @@
+<a name="1.11.0"></a>
+# [1.11.0](https://github.com/googleads/videojs-ima/compare/v1.10.1...v1.11.0) (2021-05-07)
+
 <a name="1.10.1"></a>
 ## [1.10.1](https://github.com/googleads/videojs-ima/compare/v1.10.0...v1.10.1) (2021-03-31)
 
