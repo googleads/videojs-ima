@@ -1149,7 +1149,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.10.1";
+var version = "1.11.0";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1325,6 +1325,10 @@ var SdkImpl = function SdkImpl(controller) {
   if (this.controller.getSettings().ppid) {
     google.ima.settings.setPpid(this.controller.getSettings().ppid);
   }
+
+  if (this.controller.getSettings().featureFlags) {
+    google.ima.settings.setFeatureFlags(this.controller.getSettings().featureFlags);
+  }
 };
 
 /**
@@ -1384,6 +1388,21 @@ SdkImpl.prototype.requestAds = function () {
 
   if (this.controller.getSettings().vastLoadTimeout) {
     adsRequest.vastLoadTimeout = this.controller.getSettings().vastLoadTimeout;
+  }
+
+  if (this.controller.getSettings().omidMode) {
+    adsRequest.omidAccessModeRules = {};
+    var omidValues = this.controller.getSettings().omidMode;
+
+    if (omidValues.FULL) {
+      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.FULL] = omidValues.FULL;
+    }
+    if (omidValues.DOMAIN) {
+      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.DOMAIN] = omidValues.DOMAIN;
+    }
+    if (omidValues.LIMITED) {
+      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.LIMITED] = omidValues.LIMITED;
+    }
   }
 
   adsRequest.linearAdSlotWidth = this.controller.getPlayerWidth();
