@@ -1161,12 +1161,12 @@ var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
 var author = { "name": "Google Inc." };
 var engines = { "node": ">=0.8.0" };
-var scripts = { "contBuild": "watch 'npm run rollup:max' src", "predevServer": "echo \"Starting up server on localhost:8000.\"", "devServer": "npm-run-all -p testServer contBuild", "lint": "eslint \"src/*.js\"", "rollup": "npm-run-all rollup:*", "rollup:max": "rollup -c configs/rollup.config.js", "rollup:es": "rollup -c configs/rollup.config.es.js", "rollup:min": "rollup -c configs/rollup.config.min.js", "pretest": "npm run rollup", "start": "npm run devServer", "test": "npm-run-all test:*", "test:vjs5": "npm install video.js@5.19.2 --no-save && npm-run-all -p -r testServer webdriver", "test:vjs6": "npm install video.js@6 --no-save && npm-run-all -p -r testServer webdriver", "test:vjs7": "npm install video.js@7 --no-save && npm-run-all -p -r testServer webdriver", "testServer": "http-server --cors -p 8000 --silent", "preversion": "node scripts/preversion.js && npm run lint && npm test", "version": "node scripts/version.js", "postversion": "node scripts/postversion.js", "webdriver": "mocha test/webdriver/*.js --no-timeouts" };
+var scripts = { "contBuild": "chokidar \"src\" -c \"npm run rollup:max\"", "predevServer": "echo \"Starting up server on localhost:8000.\"", "devServer": "npm-run-all -p testServer contBuild", "lint": "eslint \"src/*.js\"", "rollup": "npm-run-all rollup:*", "rollup:max": "rollup -c configs/rollup.config.js", "rollup:es": "rollup -c configs/rollup.config.es.js", "rollup:min": "rollup -c configs/rollup.config.min.js", "pretest": "npm run rollup", "start": "npm run devServer", "test": "npm-run-all test:*", "test:vjs5": "npm install video.js@5.19.2 --no-save && npm-run-all -p -r testServer webdriver", "test:vjs6": "npm install video.js@6 --no-save && npm-run-all -p -r testServer webdriver", "test:vjs7": "npm install video.js@7 --no-save && npm-run-all -p -r testServer webdriver", "testServer": "http-server --cors -p 8000 --silent", "preversion": "node scripts/preversion.js && npm run lint && npm test", "version": "node scripts/version.js", "postversion": "node scripts/postversion.js", "webdriver": "mocha test/webdriver/*.js --no-timeouts" };
 var repository = { "type": "git", "url": "https://github.com/googleads/videojs-ima" };
 var files = ["CHANGELOG.md", "LICENSE", "README.md", "dist/", "src/"];
 var peerDependencies = { "video.js": "^5.19.2 || ^6 || ^7" };
 var dependencies = { "can-autoplay": "^3.0.0", "@hapi/cryptiles": "^5.1.0", "extend": ">=3.0.2", "lodash": ">=4.17.19", "lodash.template": ">=4.5.0", "videojs-contrib-ads": "^6.6.5" };
-var devDependencies = { "axios": ">=0.21.1", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^89.0.0", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "ecstatic": ">=4.1.3", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "ini": ">=1.3.7", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7", "xmldom": ">=0.5.0" };
+var devDependencies = { "axios": ">=0.21.1", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chokidar-cli": "^2.1.0", "chromedriver": "^89.0.0", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "ecstatic": ">=4.1.3", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "ini": ">=1.3.7", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7", "xmldom": ">=0.5.0" };
 var keywords = ["videojs", "videojs-plugin"];
 var pkg = {
 	name: name,
@@ -1331,6 +1331,10 @@ var SdkImpl = function SdkImpl(controller) {
   if (this.controller.getSettings().ppid) {
     google.ima.settings.setPpid(this.controller.getSettings().ppid);
   }
+
+  if (this.controller.getSettings().featureFlags) {
+    google.ima.settings.setFeatureFlags(this.controller.getSettings().featureFlags);
+  }
 };
 
 /**
@@ -1390,6 +1394,21 @@ SdkImpl.prototype.requestAds = function () {
 
   if (this.controller.getSettings().vastLoadTimeout) {
     adsRequest.vastLoadTimeout = this.controller.getSettings().vastLoadTimeout;
+  }
+
+  if (this.controller.getSettings().omidMode) {
+    adsRequest.omidAccessModeRules = {};
+    var omidValues = this.controller.getSettings().omidMode;
+
+    if (omidValues.FULL) {
+      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.FULL] = omidValues.FULL;
+    }
+    if (omidValues.DOMAIN) {
+      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.DOMAIN] = omidValues.DOMAIN;
+    }
+    if (omidValues.LIMITED) {
+      adsRequest.omidAccessModeRules[google.ima.OmidAccessMode.LIMITED] = omidValues.LIMITED;
+    }
   }
 
   adsRequest.linearAdSlotWidth = this.controller.getPlayerWidth();

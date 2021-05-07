@@ -11,7 +11,7 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "contBuild": "watch 'npm run rollup:max' src",
+    "contBuild": "chokidar \"src\" -c \"npm run rollup:max\"",
     "predevServer": "echo \"Starting up server on localhost:8000.\"",
     "devServer": "npm-run-all -p testServer contBuild",
     "lint": "eslint \"src/*.js\"",
@@ -58,6 +58,7 @@
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "child_process": "^1.0.2",
+    "chokidar-cli": "^2.1.0",
     "chromedriver": "^89.0.0",
     "conventional-changelog-cli": "^2.0.31",
     "conventional-changelog-videojs": "^3.0.1",
@@ -81,7 +82,6 @@
     "selenium-webdriver": "^3.6.0",
     "uglify-es": "^3.3.9",
     "video.js": "^5.19.2 || ^6 || ^7",
-    "watch": "^1.0.2",
     "webdriver-manager": "^12.1.7",
     "xmldom": ">=0.5.0"
   },
