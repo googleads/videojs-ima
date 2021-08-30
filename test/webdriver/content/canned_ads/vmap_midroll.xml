@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<vmap:VMAP xmlns:vmap="http://www.iab.net/videosuite/vmap" version="1.0">
- <vmap:AdBreak timeOffset="00:00:05.000" breakType="linear" breakId="midroll-1">
-  <vmap:AdSource id="midroll-1-ad-1" allowMultipleAds="false" followRedirects="true">
-   <vmap:AdTagURI templateType="vast3"><![CDATA[http://localhost:8000/test/webdriver/content/canned_ads/linear.xml]]></vmap:AdTagURI>
-  </vmap:AdSource>
- </vmap:AdBreak>
-</vmap:VMAP>
