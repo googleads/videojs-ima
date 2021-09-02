@@ -156,7 +156,6 @@ Controller.prototype.getIsIos = function() {
   return this.isIos;
 };
 
-
 /**
  * Inject the ad container div into the DOM.
  *
@@ -165,7 +164,6 @@ Controller.prototype.getIsIos = function() {
 Controller.prototype.injectAdContainerDiv = function(adContainerDiv) {
   this.playerWrapper.injectAdContainerDiv(adContainerDiv);
 };
-
 
 /**
  * @return {HTMLElement} The div for the ad container.
@@ -677,7 +675,7 @@ Controller.prototype.playAdBreak = function() {
 
 
 /**
- * Ads an EventListener to the AdsManager. For a list of available events,
+ * Adds an EventListener to the AdsManager. For a list of available events,
  * see
  * https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.AdEvent#.Type
  * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to

@@ -14,7 +14,7 @@
     "contBuild": "watch 'npm run rollup:max' src",
     "predevServer": "echo \"Starting up server on localhost:8000.\"",
     "devServer": "npm-run-all -p testServer contBuild",
-    "lint": "eslint \"src/*.js\"",
+    "lint": "eslint \"src/**/*.js\"",
     "rollup": "npm-run-all rollup:*",
     "rollup:max": "rollup -c configs/rollup.config.js",
     "rollup:es": "rollup -c configs/rollup.config.es.js",
@@ -46,8 +46,9 @@
     "video.js": "^5.19.2 || ^6 || ^7"
   },
   "dependencies": {
-    "can-autoplay": "^3.0.0",
     "@hapi/cryptiles": "^5.1.0",
+    "@videojs/http-streaming": "^2.10.0",
+    "can-autoplay": "^3.0.0",
     "extend": ">=3.0.2",
     "lodash": ">=4.17.19",
     "lodash.template": ">=4.5.0",

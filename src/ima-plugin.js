@@ -17,7 +17,7 @@
  * https://www.github.com/googleads/videojs-ima
  */
 
-import Controller from './controller.js';
+import Controller from './client-side/controller.js';
 import videojs from 'video.js';
 
 /**
