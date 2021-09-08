@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vast.xsd" version="3.0">
+ <Ad id="11111">
+  <InLine>
+   <AdSystem>GDFP</AdSystem>
+   <AdTitle>Standard Linear Skippable Ad</AdTitle>
+   <Description>Standard Linear Skippable Ad</Description>
+   <Error><![CDATA[http://www.example.com]]></Error>
+   <Impression><![CDATA[http://www.example.com]]></Impression>
+   <Creatives>
+    <Creative id="11111" AdID="ABCD123456EF" sequence="1">
+     <Linear skipoffset="00:00:05">
+      <Duration>00:00:10</Duration>
+      <TrackingEvents>
+       <Tracking event="start"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="start"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="firstQuartile"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="midpoint"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="thirdQuartile"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="thirdQuartile"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="complete"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="pause"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="creativeView"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="skip"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="progress" offset="00:00:05"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="mute"><![CDATA[http://www.example.com]]></Tracking>
+       <Tracking event="unmute"><![CDATA[http://www.example.com]]></Tracking>
+      </TrackingEvents>
+      <VideoClicks>
+       <ClickThrough id="GDFP"><![CDATA[http://www.example.com]]></ClickThrough>
+       <ClickTracking id=""><![CDATA[http://www.example.com]]></ClickTracking>
+      </VideoClicks>
+      <MediaFiles>
+       <MediaFile id="GDFP" delivery="progressive" width="640" height="360" type="video/mp4" bitrate="118"><![CDATA[http://localhost:8000/test/webdriver/content/canned_ads/media/long_linear_ad.mp4]]></MediaFile>
+       <MediaFile id="GDFP" delivery="progressive" width="640" height="360" type="video/webm" bitrate="445"><![CDATA[http://localhost:8000/test/webdriver/content/canned_ads/media/long_linear_ad.webm]]></MediaFile>
+      </MediaFiles>
+     </Linear>
+    </Creative>
+   </Creatives>
+  </InLine>
+ </Ad>
+</VAST>
