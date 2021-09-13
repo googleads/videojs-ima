@@ -209,13 +209,84 @@ const ImaPlugin = function(player, options) {
   }.bind(this);
 };
 
+/**
+ * Exposes the ImaDaiPlugin to a publisher implementation.
+ *
+ * @param {Object} player Instance of the video.js player to which this plugin
+ *     will be added.
+ * @param {Object} options Options provided by the implementation.
+ * @constructor
+ * @struct
+ * @final
+ */
+const ImaDaiPlugin = function(player, options) {
+  console.log(options);
+}
+
+class VodStream {
+  constructor (streamFormat, cmsId, videoId) {
+    streamFormat = streamFormat.toLowerCase();
+    if (streamFormat !== 'hls' && streamFormat !== 'dash') {
+      window.console.error('VodStream error: incorrect streamFormat.');
+    } else if (typeof cmsId !== 'string') {
+      window.console.error('cmsId error: value must be string.');
+    } else if(typeof videoId !== 'string') {
+      window.console.error('videoId error: value must be string.');
+    }
+
+    this.streamFormat = streamFormat;
+    this.cmsId = cmsId;
+    this.videoId = videoId;
+  }
+}
+
 
 const init = function(options) {
   /* eslint no-invalid-this: 'off' */
   this.ima = new ImaPlugin(this, options);
 };
 
+const initLiveDai = function(streamFormat, assetKey, options) {
+  if (streamFormat !== 'hls' && streamFormat !== 'dash') {
+    window.console.error('VodStream error: incorrect streamFormat.');
+    return;
+  } else if (typeof assetKey !== 'string') {
+    window.console.error('assetKey error: value must be string.');
+    return;
+  }
+
+  options.streamType = 'live';
+  options.streamFormat = stream.streamFormat;
+  options.assetKey = stream.assetKey;
+  /* eslint no-invalid-this: 'off' */
+  this.imaDai = new ImaDaiPlugin(this, options);
+};
+
+const initVodDai = function(streamFormat, cmsId, videoId, options) {
+  streamFormat = streamFormat.toLowerCase();
+  if (streamFormat !== 'hls' && streamFormat !== 'dash') {
+    window.console.error('VodStream error: incorrect streamFormat.');
+    return;
+  } else if (typeof cmsId !== 'string') {
+    window.console.error('cmsId error: value must be string.');
+    return;
+  } else if(typeof videoId !== 'string') {
+    window.console.error('videoId error: value must be string.');
+    return;
+  }
+  
+  options.streamType = 'vod';
+  options.streamFormat = stream.streamFormat;
+  options.cmsId = stream.cmsId;
+  options.videoId = stream.videoId;
+
+  /* eslint no-invalid-this: 'off' */
+  this.imaDai = new ImaDaiPlugin(this, options);
+};
+
 const registerPlugin = videojs.registerPlugin || videojs.plugin;
 registerPlugin('ima', init);
+registerPlugin('imaLiveDai', initLiveDai);
+registerPlugin('imaVodDai', initVodDai);
 
 export default ImaPlugin;
