@@ -1155,11 +1155,11 @@ var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
 var author = { "name": "Google Inc." };
 var engines = { "node": ">=0.8.0" };
-var scripts = { "contBuild": "watch 'npm run rollup:max' src", "predevServer": "echo \"Starting up server on localhost:8000.\"", "devServer": "npm-run-all -p testServer contBuild", "lint": "eslint \"src/*.js\"", "rollup": "npm-run-all rollup:*", "rollup:max": "rollup -c configs/rollup.config.js", "rollup:es": "rollup -c configs/rollup.config.es.js", "rollup:min": "rollup -c configs/rollup.config.min.js", "pretest": "npm run rollup", "start": "npm run devServer", "test": "npm-run-all test:*", "test:vjs5": "npm install video.js@5.19.2 --no-save && npm-run-all -p -r testServer webdriver", "test:vjs6": "npm install video.js@6 --no-save && npm-run-all -p -r testServer webdriver", "test:vjs7": "npm install video.js@7 --no-save && npm-run-all -p -r testServer webdriver", "testServer": "http-server --cors -p 8000 --silent", "preversion": "node scripts/preversion.js && npm run lint && npm test", "version": "node scripts/version.js", "postversion": "node scripts/postversion.js", "webdriver": "mocha test/webdriver/*.js --no-timeouts" };
+var scripts = { "contBuild": "watch 'npm run rollup:max' src", "predevServer": "echo \"Starting up server on localhost:8000.\"", "devServer": "npm-run-all -p testServer contBuild", "lint": "eslint \"src/**/*.js\"", "rollup": "npm-run-all rollup:*", "rollup:max": "rollup -c configs/rollup.config.js", "rollup:es": "rollup -c configs/rollup.config.es.js", "rollup:min": "rollup -c configs/rollup.config.min.js", "pretest": "npm run rollup", "start": "npm run devServer", "test": "npm-run-all test:*", "test:vjs5": "npm install video.js@5.19.2 --no-save && npm-run-all -p -r testServer webdriver", "test:vjs6": "npm install video.js@6 --no-save && npm-run-all -p -r testServer webdriver", "test:vjs7": "npm install video.js@7 --no-save && npm-run-all -p -r testServer webdriver", "testServer": "http-server --cors -p 8000 --silent", "preversion": "node scripts/preversion.js && npm run lint && npm test", "version": "node scripts/version.js", "postversion": "node scripts/postversion.js", "webdriver": "mocha test/webdriver/*.js --no-timeouts" };
 var repository = { "type": "git", "url": "https://github.com/googleads/videojs-ima" };
 var files = ["CHANGELOG.md", "LICENSE", "README.md", "dist/", "src/"];
 var peerDependencies = { "video.js": "^5.19.2 || ^6 || ^7" };
-var dependencies = { "can-autoplay": "^3.0.0", "@hapi/cryptiles": "^5.1.0", "extend": ">=3.0.2", "lodash": ">=4.17.19", "lodash.template": ">=4.5.0", "videojs-contrib-ads": "^6.6.5" };
+var dependencies = { "@hapi/cryptiles": "^5.1.0", "@videojs/http-streaming": "^2.10.0", "can-autoplay": "^3.0.0", "extend": ">=3.0.2", "lodash": ">=4.17.19", "lodash.template": ">=4.5.0", "videojs-contrib-ads": "^6.6.5" };
 var devDependencies = { "axios": ">=0.21.1", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^89.0.0", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "ecstatic": ">=4.1.3", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "ini": ">=1.3.7", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7", "xmldom": ">=0.5.0" };
 var keywords = ["videojs", "videojs-plugin"];
 var pkg = {
@@ -2528,7 +2528,7 @@ Controller.prototype.playAdBreak = function () {
  */
 
 /**
- * Ads an EventListener to the AdsManager. For a list of available events,
+ * Adds an EventListener to the AdsManager. For a list of available events,
  * see
  * https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.AdEvent#.Type
  * @param {google.ima.AdEvent.Type} event The AdEvent.Type for which to
@@ -2654,6 +2654,8 @@ Controller.prototype.extend = function (obj) {
   }
   return obj;
 };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
  * Copyright 2017 Google Inc.
@@ -2845,12 +2847,80 @@ var ImaPlugin = function ImaPlugin(player, options) {
   }.bind(this);
 };
 
+/**
+ * Exposes the ImaDaiPlugin to a publisher implementation.
+ *
+ * @param {Object} player Instance of the video.js player to which this plugin
+ *     will be added.
+ * @param {Object} options Options provided by the implementation.
+ * @constructor
+ * @struct
+ * @final
+ */
+var ImaDaiPlugin = function ImaDaiPlugin(player, options) {
+  console.log(options);
+};
+
 var init = function init(options) {
   /* eslint no-invalid-this: 'off' */
   this.ima = new ImaPlugin(this, options);
 };
 
+var LiveStream = function LiveStream(streamFormat, assetKey) {
+  _classCallCheck(this, LiveStream);
+
+  streamFormat = streamFormat.toLowerCase();
+  if (streamFormat !== 'hls' && streamFormat !== 'dash') {
+    window.console.error('VodStream error: incorrect streamFormat.');
+    return;
+  } else if (typeof assetKey !== 'string') {
+    window.console.error('assetKey error: value must be string.');
+    return;
+  }
+  this.streamFormat = streamFormat;
+  this.assetKey = assetKey;
+};
+
+var VodStream = function VodStream(streamFormat, cmsId, videoId) {
+  _classCallCheck(this, VodStream);
+
+  streamFormat = streamFormat.toLowerCase();
+  if (streamFormat !== 'hls' && streamFormat !== 'dash') {
+    window.console.error('VodStream error: incorrect streamFormat.');
+    return;
+  } else if (typeof cmsId !== 'string') {
+    window.console.error('cmsId error: value must be string.');
+    return;
+  } else if (typeof videoId !== 'string') {
+    window.console.error('videoId error: value must be string.');
+    return;
+  }
+
+  this.streamFormat = streamFormat;
+  this.cmsId = cmsId;
+  this.videoId = videoId;
+};
+
+var initDai = function initDai(stream, options) {
+  if (stream instanceof LiveStream) {
+    options.streamType = 'live';
+    options.assetKey = stream.assetKey;
+  } else if (stream instanceof VodStream) {
+    options.streamType = 'vod';
+    options.cmsId = stream.cmsId;
+    options.videoId = stream.videoId;
+  } else {
+    window.console.error('initDai() first parameter must be an instance of LiveStream or VodStream.');
+    return;
+  }
+
+  options.streamFormat = stream.streamFormat;
+  /* eslint no-invalid-this: 'off' */
+  this.imaDai = new ImaDaiPlugin(this, options);
+};
+
 var registerPlugin = videojs.registerPlugin || videojs.plugin;
 registerPlugin('ima', init);
+registerPlugin('imaDai', initDai);
 
 export default ImaPlugin;
