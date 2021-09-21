@@ -18,6 +18,7 @@
  */
 
 import Controller from './client-side/controller.js';
+import DaiController from './dai/dai-controller.js';
 import videojs from 'video.js';
 
 /**
@@ -220,7 +221,37 @@ const ImaPlugin = function(player, options) {
  * @final
  */
 const ImaDaiPlugin = function(player, options) {
-  console.log(options);
+  this.controller = new DaiController(player, options);
+
+  /**
+   * Adds a listener that will be called when content and all ads in the
+   * stream have finished playing. VOD stream only.
+   * @param {listener} listener The listener to be called when content and ads
+   *     complete.
+   */
+   this.streamEndedListener = function(listener) {
+    this.controller.addStreamEndedListener(listener);
+  }.bind(this);
+
+  /**
+   * Adds an EventListener to the StreamManager. For a list of available events,
+   * see
+   * https://developers.google.com/interactive-media-ads/docs/sdks/html5/dai/reference/js/StreamEvent
+   * @param {google.ima.StreamEvent.Type} event The StreamEvent.Type for which to
+   *     listen.
+   * @param {callback} callback The method to call when the event is fired.
+   */
+   this.addEventListener = function(event, callback) {
+    this.controller.addEventListener(event, callback);
+  }.bind(this);
+
+  /**
+   * Returns the instance of the StreamManager.
+   * @return {google.ima.StreamManager} The StreamManager being used by the plugin.
+   */
+   this.getStreamManager = function() {
+    return this.controller.getStreamManager();
+  }.bind(this);
 }
 
 const init = function(options) {

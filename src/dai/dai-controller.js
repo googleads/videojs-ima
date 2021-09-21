@@ -137,22 +137,6 @@ Controller.prototype.getIsIos = function() {
 };
 
 /**
- * Inject the ad container div into the DOM.
- *
- * @param{HTMLElement} adContainerDiv The ad container div.
- */
-Controller.prototype.injectAdContainerDiv = function(adContainerDiv) {
-    this.playerWrapper.injectAdContainerDiv(adContainerDiv);
-  };
-
-/**
- * @return {HTMLElement} The div for the ad UI.
- */
- Controller.prototype.getAdUIDiv = function() {
-  return this.adUi.getAdUIDiv();
-};
-
-/**
  * @return {Object} The stream player.
  */
 Controller.prototype.getStreamPlayer = function() {
@@ -193,39 +177,6 @@ Controller.prototype.setSetting = function(key, value) {
 Controller.prototype.onErrorLoadingAds = function(adErrorEvent) {
   this.adUi.onAdError();
   this.playerWrapper.onAdError(adErrorEvent);
-};
- 
-/**
- * Called by the ad UI when the mute button is clicked.
- *
- */
-Controller.prototype.onAdMuteClick = function() {
-  if (this.sdkImpl.isAdMuted()) {
-    this.playerWrapper.unmute();
-    this.adUi.unmute();
-    this.sdkImpl.unmute();
-  } else {
-    this.playerWrapper.mute();
-    this.adUi.mute();
-    this.sdkImpl.mute();
-  }
-};
- 
-/**
- * Set the volume of the player and ads. 0-1.
- *
- * @param {number} volume The new volume.
- */
-Controller.prototype.setVolume = function(volume) {
-  this.playerWrapper.setVolume(volume);
-  this.sdkImpl.setVolume(volume);
-};
-
-/**
- * @return {number} The volume of the content player.
- */
-Controller.prototype.getPlayerVolume = function() {
-  return this.playerWrapper.getVolume();
 };
  
 /**
@@ -276,38 +227,10 @@ Controller.prototype.getCurrentAd = function() {
 };
 
 /**
- * Play content.
+ * Play stream.
  */
-Controller.prototype.playContent = function() {
+Controller.prototype.playStream = function() {
   this.playerWrapper.play();
-};
- 
-/**
- * Get the player width.
- *
- * @return {number} The width of the player.
- */
-Controller.prototype.getPlayerWidth = function() {
-  return this.playerWrapper.getPlayerWidth();
-};
-
-/**
- * Get the player height.
- *
- * @return {number} The height of the player.
- */
-Controller.prototype.getPlayerHeight = function() {
-  return this.playerWrapper.getPlayerHeight();
-};
-
-/**
- * Called when the player wrapper detects that the player has been resized.
- *
- * @param {number} width The post-resize width of the player.
- * @param {number} height The post-resize height of the player.
- */
-Controller.prototype.onPlayerResize = function(width, height) {
-  this.sdkImpl.onPlayerResize(width, height);
 };
  
 /**
