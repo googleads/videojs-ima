@@ -17,7 +17,7 @@
  * https://www.github.com/googleads/videojs-ima
  */
 
-import Controller from './controller.js';
+import Controller from './client-side/controller.js';
 import videojs from 'video.js';
 
 /**
@@ -209,13 +209,84 @@ const ImaPlugin = function(player, options) {
   }.bind(this);
 };
 
+/**
+ * Exposes the ImaDaiPlugin to a publisher implementation.
+ *
+ * @param {Object} player Instance of the video.js player to which this plugin
+ *     will be added.
+ * @param {Object} options Options provided by the implementation.
+ * @constructor
+ * @struct
+ * @final
+ */
+const ImaDaiPlugin = function(player, options) {
+  console.log(options);
+}
 
 const init = function(options) {
   /* eslint no-invalid-this: 'off' */
   this.ima = new ImaPlugin(this, options);
 };
 
+class LiveStream {
+  constructor(streamFormat, assetKey) {
+    streamFormat = streamFormat.toLowerCase();
+    if (streamFormat !== 'hls' && streamFormat !== 'dash') {
+      window.console.error('VodStream error: incorrect streamFormat.');
+      return;
+    } else if (typeof assetKey !== 'string') {
+      window.console.error('assetKey error: value must be string.');
+      return;
+    }
+    this.streamFormat = streamFormat;
+    this.assetKey = assetKey;
+  }
+}
+
+class VodStream {
+  constructor(streamFormat, cmsId, videoId) {
+    streamFormat = streamFormat.toLowerCase();
+    if (streamFormat !== 'hls' && streamFormat !== 'dash') {
+      window.console.error('VodStream error: incorrect streamFormat.');
+      return;
+    } else if (typeof cmsId !== 'string') {
+      window.console.error('cmsId error: value must be string.');
+      return;
+    } else if(typeof videoId !== 'string') {
+      window.console.error('videoId error: value must be string.');
+      return;
+    }
+
+    this.streamFormat = streamFormat;
+    this.cmsId = cmsId;
+    this.videoId = videoId;
+  }
+}
+
+const initDai = function(stream, options) {
+  if (stream instanceof LiveStream) {
+    options.streamType = 'live';
+    options.assetKey = stream.assetKey;
+  } else if (stream instanceof VodStream) {
+    options.streamType = 'vod';
+    options.cmsId = stream.cmsId;
+    options.videoId = stream.videoId;
+  } else {
+    window.console.error('initDai() first parameter must be an instance of LiveStream or VodStream.');
+    return;
+  }
+
+  options.streamFormat = stream.streamFormat;
+  /* eslint no-invalid-this: 'off' */
+  this.imaDai = new ImaDaiPlugin(this, options);
+};
+
 const registerPlugin = videojs.registerPlugin || videojs.plugin;
 registerPlugin('ima', init);
+registerPlugin('imaDai', initDai);
 
 export default ImaPlugin;
+export {
+  VodStream,
+  LiveStream
+}
