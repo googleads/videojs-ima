@@ -17,7 +17,6 @@
  * https://www.github.com/googleads/videojs-ima
  */
 import PlayerWrapper from './player-wrapper.js';
-import AdUi from './ad-ui.js';
 import SdkImpl from './sdk-impl.js';
  
 /**
@@ -36,7 +35,6 @@ const DaiController = function(player, options) {
   * @type {Object}
   */
   this.settings = {};
- 
  
   /**
   * Whether or not we are running on a mobile platform.
@@ -65,11 +63,10 @@ const DaiController = function(player, options) {
       {}, contribAdsDefaults, options.contribAdsSettings || {});
 
   this.playerWrapper = new PlayerWrapper(player, adsPluginSettings, this);
-  this.adUi = new AdUi(this);
   this.sdkImpl = new SdkImpl(this);
 };
  
-Controller.IMA_DEFAULTS = {
+DaiController.IMA_DEFAULTS = {
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
   debug: false,
@@ -82,8 +79,8 @@ Controller.IMA_DEFAULTS = {
  *
  * @param {Object} options Options to be used in initialization.
  */
-Controller.prototype.initWithSettings = function(options) {
-  this.settings = this.extend({}, Controller.IMA_DEFAULTS, options || {});
+DaiController.prototype.initWithSettings = function(options) {
+  this.settings = this.extend({}, DaiController.IMA_DEFAULTS, options || {});
 
   this.warnAboutDeprecatedSettings();
 
@@ -97,7 +94,7 @@ Controller.prototype.initWithSettings = function(options) {
 /**
  * Logs console warnings when deprecated settings are used.
  */
-Controller.prototype.warnAboutDeprecatedSettings = function() {
+DaiController.prototype.warnAboutDeprecatedSettings = function() {
   const deprecatedSettings = [
     // Currently no DAI plugin settings are deprecated.
   ];
@@ -114,7 +111,7 @@ Controller.prototype.warnAboutDeprecatedSettings = function() {
  *
  * @return {Object} The settings object.
  */
-Controller.prototype.getSettings = function() {
+DaiController.prototype.getSettings = function() {
   return this.settings;
 };
  
@@ -123,7 +120,7 @@ Controller.prototype.getSettings = function() {
  *
  * @return {boolean} True if running on mobile, false otherwise.
  */
-Controller.prototype.getIsMobile = function() {
+DaiController.prototype.getIsMobile = function() {
   return this.isMobile;
 };
 
@@ -132,30 +129,21 @@ Controller.prototype.getIsMobile = function() {
  *
  * @return {boolean} True if running on iOS, false otherwise.
  */
-Controller.prototype.getIsIos = function() {
+DaiController.prototype.getIsIos = function() {
   return this.isIos;
 };
 
 /**
  * @return {Object} The stream player.
  */
-Controller.prototype.getStreamPlayer = function() {
+DaiController.prototype.getStreamPlayer = function() {
   return this.playerWrapper.getStreamPlayer();
-};
-
-/**
- * Returns the content playhead tracker.
- *
- * @return {Object} The content playhead tracker.
- */
-Controller.prototype.getContentPlayheadTracker = function() {
-  return this.playerWrapper.getContentPlayheadTracker();
 };
 
 /**
  * Requests the stream.
  */
-Controller.prototype.requestStream = function() {
+DaiController.prototype.requestStream = function() {
   this.sdkImpl.requestStream();
 };
  
@@ -165,7 +153,7 @@ Controller.prototype.requestStream = function() {
  * @param {string} key Key to modify
  * @param {Object} value Value to set at key.
 */
-Controller.prototype.setSetting = function(key, value) {
+DaiController.prototype.setSetting = function(key, value) {
   this.settings[key] = value;
 };
 
@@ -174,16 +162,8 @@ Controller.prototype.setSetting = function(key, value) {
  *
  * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
  */
-Controller.prototype.onErrorLoadingAds = function(adErrorEvent) {
-  this.adUi.onAdError();
+DaiController.prototype.onErrorLoadingAds = function(adErrorEvent) {
   this.playerWrapper.onAdError(adErrorEvent);
-};
- 
-/**
- * Toggle fullscreen state.
- */
-Controller.prototype.toggleFullscreen = function() {
-  this.playerWrapper.toggleFullscreen();
 };
 
 /**
@@ -191,52 +171,29 @@ Controller.prototype.toggleFullscreen = function() {
  *
  * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
  */
-Controller.prototype.onAdError = function(adErrorEvent) {
-  this.adUi.onAdError();
+DaiController.prototype.onAdError = function(adErrorEvent) {
   this.playerWrapper.onAdError(adErrorEvent);
-};
-
-/**
- * Takes data from the sdk impl and passes it to the ad UI to update the UI.
- *
- * @param {number} currentTime Current time of the ad.
- * @param {number} remainingTime Remaining time of the ad.
- * @param {number} duration Duration of the ad.
- * @param {number} adPosition Index of the ad in the pod.
- * @param {number} totalAds Total number of ads in the pod.
- */
-Controller.prototype.onAdPlayheadUpdated =
-    function(currentTime, remainingTime, duration, adPosition, totalAds) {
-  this.adUi.updateAdUi(
-      currentTime, remainingTime, duration, adPosition, totalAds);
 };
  
 /**
  * Handles ad log messages.
  * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
  */
-Controller.prototype.onAdLog = function(adEvent) {
+DaiController.prototype.onAdLog = function(adEvent) {
   this.playerWrapper.onAdLog(adEvent);
-};
-
-/**
- * @return {Object} The current ad.
- */
-Controller.prototype.getCurrentAd = function() {
-  return this.sdkImpl.getCurrentAd();
 };
 
 /**
  * Play stream.
  */
-Controller.prototype.playStream = function() {
+DaiController.prototype.playStream = function() {
   this.playerWrapper.play();
 };
  
 /**
  * Called when the player is disposed.
  */
-Controller.prototype.onPlayerDisposed = function() {
+DaiController.prototype.onPlayerDisposed = function() {
   this.contentAndAdsEndedListeners = [];
   this.sdkImpl.onPlayerDisposed();
 };
@@ -244,24 +201,8 @@ Controller.prototype.onPlayerDisposed = function() {
 /**
  * Called when the player is ready.
  */
-Controller.prototype.onPlayerReady = function() {
+DaiController.prototype.onPlayerReady = function() {
   this.sdkImpl.onPlayerReady();
-};
-
-/**
- * Called when the player enters fullscreen.
- */
-Controller.prototype.onPlayerEnterFullscreen = function() {
-  this.adUi.onPlayerEnterFullscreen();
-  this.sdkImpl.onPlayerEnterFullscreen();
-};
-
-/**
- * Called when the player exits fullscreen.
- */
-Controller.prototype.onPlayerExitFullscreen = function() {
-  this.adUi.onPlayerExitFullscreen();
-  this.sdkImpl.onPlayerExitFullscreen();
 };
  
 /**
@@ -269,29 +210,16 @@ Controller.prototype.onPlayerExitFullscreen = function() {
  *
  * @param {number} volume The new player volume.
  */
-Controller.prototype.onPlayerVolumeChanged = function(volume) {
-  this.adUi.onPlayerVolumeChanged(volume);
+DaiController.prototype.onPlayerVolumeChanged = function(volume) {
   this.sdkImpl.onPlayerVolumeChanged(volume);
 };
 
 /**
  * Resets the state of the plugin.
  */
-Controller.prototype.reset = function() {
+DaiController.prototype.reset = function() {
   this.sdkImpl.reset();
   this.playerWrapper.reset();
-  this.adUi.reset();
-};
- 
-/**
- * Changes the flag to show or hide the ad countdown timer.
- *
- * @param {boolean} showCountdownIn Show or hide the countdown timer.
- */
-Controller.prototype.setShowCountdown = function(showCountdownIn) {
-  this.adUi.setShowCountdown(showCountdownIn);
-  this.showCountdown = showCountdownIn;
-  this.adUi.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
 };
 
 /**
@@ -302,7 +230,7 @@ Controller.prototype.setShowCountdown = function(showCountdownIn) {
  *     listen.
  * @param {callback} callback The method to call when the event is fired.
  */
-Controller.prototype.addEventListener = function(event, callback) {
+DaiController.prototype.addEventListener = function(event, callback) {
   this.sdkImpl.addEventListener(event, callback);
 };
  
@@ -310,7 +238,7 @@ Controller.prototype.addEventListener = function(event, callback) {
  * Returns the instance of the StreamManager.
  * @return {google.ima.StreamManager} The StreamManager being used by the plugin.
  */
-Controller.prototype.getStreamManager = function() {
+DaiController.prototype.getStreamManager = function() {
   return this.sdkImpl.getStreamManager();
 };
 
@@ -318,37 +246,21 @@ Controller.prototype.getStreamManager = function() {
  * Returns the instance of the player id.
  * @return {string} The player id.
  */
-Controller.prototype.getPlayerId = function() {
+DaiController.prototype.getPlayerId = function() {
   return this.playerWrapper.getPlayerId();
-};
-
-/**
- * Pauses the stream.
- */
-Controller.prototype.pauseStream = function() {
-  this.adUi.onAdsPaused();
-  this.sdkImpl.pauseAds();
-};
- 
-/**
- * Resumes the stream.
- */
-Controller.prototype.resumeStream = function() {
-  this.adUi.onAdsPlaying();
-  this.sdkImpl.resumeAds();
 };
 
 /**
  * Toggles stream playback.
  */
-Controller.prototype.togglePlayback = function() {
+DaiController.prototype.togglePlayback = function() {
   this.playerWrapper.togglePlayback();
 };
 
 /**
  * @return {boolean} true if we expect that the stream will autoplay. false otherwise.
  */
-Controller.prototype.streamWillAutoplay = function() {
+DaiController.prototype.streamWillAutoplay = function() {
   if (this.settings.streamWillAutoplay !== undefined) {
     return this.settings.streamWillAutoplay;
   } else {
@@ -360,7 +272,7 @@ Controller.prototype.streamWillAutoplay = function() {
 /**
  * @return {boolean} true if we expect that the stream will autoplay muted. false otherwise.
  */
-Controller.prototype.streamWillPlayMuted = function() {
+DaiController.prototype.streamWillPlayMuted = function() {
   if (this.settings.streamWillPlayMuted !== undefined) {
     return this.settings.streamWillPlayMuted;
   } else if (this.playerWrapper.getPlayerOptions().muted !== undefined) {
@@ -375,7 +287,7 @@ Controller.prototype.streamWillPlayMuted = function() {
  * @param  {string} name The event name.
  * @param  {Object} data The event data.
  */
-Controller.prototype.triggerPlayerEvent = function(name, data) {
+DaiController.prototype.triggerPlayerEvent = function(name, data) {
   this.playerWrapper.triggerPlayerEvent(name, data);
 };
  
@@ -389,7 +301,7 @@ Controller.prototype.triggerPlayerEvent = function(name, data) {
  *     onto obj.
  * @return {Object} The extended object.
  */
-Controller.prototype.extend = function(obj, ...args) {
+DaiController.prototype.extend = function(obj, ...args) {
   let arg;
   let index;
   let key;

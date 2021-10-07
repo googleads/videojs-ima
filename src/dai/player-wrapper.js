@@ -36,54 +36,6 @@ const PlayerWrapper = function(player, adsPluginSettings, daiController) {
   this.daiController = daiController;
 
   /**
-   * Handle to interval that repeatedly updates current time.
-   */
-  this.updateTimeIntervalHandle = null;
-
-  /**
-   * Interval (ms) to check for player resize for fluid support.
-   */
-  this.updateTimeInterval = 1000;
-
-  /**
-   * Handle to interval that repeatedly checks for seeking.
-   */
-  this.seekCheckIntervalHandle = null;
-
-  /**
-   * Interval (ms) on which to check if the user is seeking through the
-   * content.
-   */
-  this.seekCheckInterval = 1000;
-
-  /**
-   * Handle to interval that repeatedly checks for player resize.
-   */
-  this.resizeCheckIntervalHandle = null;
-
-  /**
-   * Interval (ms) to check for player resize for fluid support.
-   */
-  this.resizeCheckInterval = 250;
-
-  /**
-   * Threshold by which to judge user seeking. We check every 1000 ms to see
-   * if the user is seeking. In order for us to decide that they are *not*
-   * seeking, the content video playhead must only change by 900-1100 ms
-   * between checks. Any greater change and we assume the user is seeking
-   * through the video.
-   */
-  this.seekThreshold = 100;
-
-  /**
-   * Player dimensions. Used in our resize check.
-   */
-  this.vjsPlayerDimensions = {
-    width: this.getPlayerWidth(),
-    height: this.getPlayerHeight(),
-  };
-
-  /**
    * Video.js control bar.
    */
   this.vjsControls = this.vjsPlayer.getChild('controlBar');
@@ -93,98 +45,15 @@ const PlayerWrapper = function(player, adsPluginSettings, daiController) {
    */
   this.h5Player = null;
 
-  this.vjsPlayer.one('play', this.setUpPlayerIntervals.bind(this));
-  this.boundContentEndedListener = this.localContentEndedListener.bind(this);
   this.vjsPlayer.on('dispose', this.playerDisposedListener.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
 
   if (this.controller.getSettings().requestMode === 'onPlay') {
-      this.vjsPlayer.one('play',
-      this.controller.requestAds.bind(this.controller));
-}
+    this.vjsPlayer.one('play',
+    this.controller.requestAds.bind(this.controller));
+  }
 
   this.vjsPlayer.ads(adsPluginSettings);
-};
-
-
-/**
- * Set up the intervals we use on the player.
- */
-PlayerWrapper.prototype.setUpPlayerIntervals = function() {
-  this.updateTimeIntervalHandle =
-      setInterval(this.updateCurrentTime.bind(this), this.updateTimeInterval);
-  this.seekCheckIntervalHandle =
-      setInterval(this.checkForSeeking.bind(this), this.seekCheckInterval);
-  this.resizeCheckIntervalHandle =
-      setInterval(this.checkForResize.bind(this), this.resizeCheckInterval);
-};
-
-/**
- * Updates the current time of the video
- */
-PlayerWrapper.prototype.updateCurrentTime = function() {
-  if (!this.contentPlayheadTracker.seeking) {
-    this.contentPlayheadTracker.currentTime = this.vjsPlayer.currentTime();
-  }
-};
-
-/**
- * Detects when the user is seeking through a video.
- * This is used to prevent mid-rolls from playing while a user is seeking.
- *
- * There *is* a seeking property of the HTML5 video element, but it's not
- * properly implemented on all platforms (e.g. mobile safari), so we have to
- * check ourselves to be sure.
- */
-PlayerWrapper.prototype.checkForSeeking = function() {
-  const tempCurrentTime = this.vjsPlayer.currentTime();
-  const diff =
-      (tempCurrentTime - this.contentPlayheadTracker.previousTime) * 1000;
-  if (Math.abs(diff) > this.seekCheckInterval + this.seekThreshold) {
-    this.contentPlayheadTracker.seeking = true;
-  } else {
-    this.contentPlayheadTracker.seeking = false;
-  }
-  this.contentPlayheadTracker.previousTime = this.vjsPlayer.currentTime();
-};
-
-/**
- * Detects when the player is resized (for fluid support) and resizes the
- * ads manager to match.
- */
-PlayerWrapper.prototype.checkForResize = function() {
-  const currentWidth = this.getPlayerWidth();
-  const currentHeight = this.getPlayerHeight();
-
-  if (currentWidth != this.vjsPlayerDimensions.width ||
-      currentHeight != this.vjsPlayerDimensions.height) {
-    this.vjsPlayerDimensions.width = currentWidth;
-    this.vjsPlayerDimensions.height = currentHeight;
-    this.controller.onPlayerResize(currentWidth, currentHeight);
-  }
-};
-
-/**
- * Local content ended listener for contentComplete.
- */
-PlayerWrapper.prototype.localContentEndedListener = function() {
-  if (!this.contentComplete) {
-    this.contentComplete = true;
-    this.controller.onContentComplete();
-  }
-
-  for (let index in this.contentEndedListeners) {
-    if (typeof this.contentEndedListeners[index] === 'function') {
-      this.contentEndedListeners[index]();
-    }
-  }
-
-  clearInterval(this.updateTimeIntervalHandle);
-  clearInterval(this.seekCheckIntervalHandle);
-  clearInterval(this.resizeCheckIntervalHandle);
-  if (this.vjsPlayer.el()) {
-    this.vjsPlayer.one('play', this.setUpPlayerIntervals.bind(this));
-  }
 };
 
 /**
@@ -193,24 +62,6 @@ PlayerWrapper.prototype.localContentEndedListener = function() {
 PlayerWrapper.prototype.playerDisposedListener = function() {
   this.contentEndedListeners = [];
   this.controller.onPlayerDisposed();
-
-  this.contentComplete = true;
-  this.vjsPlayer.off('contentended', this.boundContentEndedListener);
-
-  // Bug fix: https://github.com/googleads/videojs-ima/issues/306
-  if (this.vjsPlayer.ads.adTimeoutTimeout) {
-    clearTimeout(this.vjsPlayer.ads.adTimeoutTimeout);
-  }
-
-  const intervalsToClear = [
-    this.updateTimeIntervalHandle,
-    this.seekCheckIntervalHandle,
-    this.resizeCheckIntervalHandle];
-  for (let index in intervalsToClear) {
-    if (intervalsToClear[index]) {
-      clearInterval(intervalsToClear[index]);
-    }
-  }
 };
 
 /**
@@ -222,30 +73,11 @@ PlayerWrapper.prototype.onPlayerReady = function() {
           this.getPlayerId()).getElementsByClassName(
               'vjs-tech')[0];
 
-  // Detect inline options
-  if (this.h5Player.hasAttribute('autoplay')) {
-    this.controller.setSetting('adWillAutoPlay', true);
-  }
-
   // Sync ad volume with player volume.
   this.onVolumeChange();
-  this.vjsPlayer.on('fullscreenchange', this.onFullscreenChange.bind(this));
   this.vjsPlayer.on('volumechange', this.onVolumeChange.bind(this));
 
   this.controller.onPlayerReady();
-};
-
-
-/**
- * Listens for the video.js player to change its fullscreen status. This
- * keeps the fullscreen-ness of the AdContainer in sync with the player.
- */
-PlayerWrapper.prototype.onFullscreenChange = function() {
-  if (this.vjsPlayer.isFullscreen()) {
-    this.controller.onPlayerEnterFullscreen();
-  } else {
-    this.controller.onPlayerExitFullscreen();
-  }
 };
 
 /**
@@ -373,26 +205,6 @@ PlayerWrapper.prototype.getPlayerId = function() {
 };
 
 /**
- * Toggle fullscreen state.
- */
-PlayerWrapper.prototype.toggleFullscreen = function() {
-  if (this.vjsPlayer.isFullscreen()) {
-    this.vjsPlayer.exitFullscreen();
-  } else {
-    this.vjsPlayer.requestFullscreen();
-  }
-};
-
-/**
- * Returns the content playhead tracker.
- *
- * @return {Object} The content playhead tracker.
- */
-PlayerWrapper.prototype.getContentPlayheadTracker = function() {
-  return this.contentPlayheadTracker;
-};
-
-/**
  * Handles ad errors.
  *
  * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
@@ -429,7 +241,6 @@ PlayerWrapper.prototype.onAdLog = function(adEvent) {
 PlayerWrapper.prototype.onAdBreakStart = function() {
   this.contentSource = this.vjsPlayer.currentSrc();
   this.contentSourceType = this.vjsPlayer.currentType();
-  this.vjsPlayer.off('contentended', this.boundContentEndedListener);
   this.vjsPlayer.ads.startLinearAdMode();
   this.vjsControls.hide();
   this.vjsPlayer.pause();
@@ -439,82 +250,17 @@ PlayerWrapper.prototype.onAdBreakStart = function() {
  * Handles ad break ending.
  */
 PlayerWrapper.prototype.onAdBreakEnd = function() {
-  this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   if (this.vjsPlayer.ads.inAdBreak()) {
     this.vjsPlayer.ads.endLinearAdMode();
   }
   this.vjsControls.show();
-};
-
-/**
- * Handles an individual ad start.
- */
-PlayerWrapper.prototype.onAdStart = function() {
-  this.vjsPlayer.trigger('ads-ad-started');
-};
-
-/**
- * Triggers adsready for contrib-ads.
- */
-PlayerWrapper.prototype.onAdsReady = function() {
-  this.vjsPlayer.trigger('adsready');
-};
-
-/**
- * Changes the player source.
- * @param {?string} contentSrc The URI for the content to be played. Leave
- *     blank to use the existing content.
- */
-PlayerWrapper.prototype.changeSource = function(contentSrc) {
-  // Only try to pause the player when initialised with a source already
-  if (this.vjsPlayer.currentSrc()) {
-    this.vjsPlayer.currentTime(0);
-    this.vjsPlayer.pause();
-  }
-  if (contentSrc) {
-    this.vjsPlayer.src(contentSrc);
-  }
-  this.vjsPlayer.one('loadedmetadata', this.seekContentToZero.bind(this));
-};
-
-/**
- * Seeks content to 00:00:00. This is used as an event handler for the
- * loadedmetadata event, since seeking is not possible until that event has
- * fired.
- */
-PlayerWrapper.prototype.seekContentToZero = function() {
-  this.vjsPlayer.currentTime(0);
-};
-
-/**
- * Triggers an event on the VJS player
- * @param  {string} name The event name.
- * @param  {Object} data The event data.
- */
-PlayerWrapper.prototype.triggerPlayerEvent = function(name, data) {
-  this.vjsPlayer.trigger(name, data);
 };
 
 /**
  * Reset the player.
  */
 PlayerWrapper.prototype.reset = function() {
-  // Attempts to remove the contentEndedListener before adding it.
-  // This is to prevent an error where an erroring video caused multiple
-  // contentEndedListeners to be added.
-  this.vjsPlayer.off('contentended', this.boundContentEndedListener);
-
-  this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   this.vjsControls.show();
-  if (this.vjsPlayer.ads.inAdBreak()) {
-    this.vjsPlayer.ads.endLinearAdMode();
-  }
-  // Reset the content time we give the SDK. Fixes an issue where requesting
-  // VMAP followed by VMAP would play the second mid-rolls as pre-rolls if
-  // the first playthrough of the video passed the second response's
-  // mid-roll time.
-  this.contentPlayheadTracker.currentTime = 0;
-  this.contentComplete = false;
 };
 
 export default PlayerWrapper;
