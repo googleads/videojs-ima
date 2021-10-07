@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('video.js')) :
-	typeof define === 'function' && define.amd ? define(['video.js'], factory) :
-	(global.videojsIma = factory(global.videojs));
-}(this, (function (videojs) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('video.js')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'video.js'], factory) :
+	(factory((global.videojsIma = {}),global.videojs));
+}(this, (function (exports,videojs) { 'use strict';
 
 videojs = videojs && videojs.hasOwnProperty('default') ? videojs['default'] : videojs;
 
@@ -1166,7 +1166,7 @@ var repository = { "type": "git", "url": "https://github.com/googleads/videojs-i
 var files = ["CHANGELOG.md", "LICENSE", "README.md", "dist/", "src/"];
 var peerDependencies = { "video.js": "^5.19.2 || ^6 || ^7" };
 var dependencies = { "@hapi/cryptiles": "^5.1.0", "@videojs/http-streaming": "^2.10.0", "can-autoplay": "^3.0.0", "extend": ">=3.0.2", "lodash": ">=4.17.19", "lodash.template": ">=4.5.0", "videojs-contrib-ads": "^6.6.5" };
-var devDependencies = { "axios": ">=0.21.1", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^89.0.0", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "ecstatic": ">=4.1.3", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "ini": ">=1.3.7", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7", "xmldom": ">=0.5.0" };
+var devDependencies = { "axios": ">=0.21.1", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^94.0.0", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "ecstatic": ">=4.1.3", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "ini": ">=1.3.7", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7", "xmldom": ">=0.5.0" };
 var keywords = ["videojs", "videojs-plugin"];
 var pkg = {
 	name: name,
@@ -2661,6 +2661,815 @@ Controller.prototype.extend = function (obj) {
   return obj;
 };
 
+/**
+ * Copyright 2021 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * IMA SDK integration plugin for Video.js. For more information see
+ * https://www.github.com/googleads/videojs-ima
+ */
+
+/**
+ * Wraps the video.js stream player for the plugin.
+ *
+ * @param {Object} player Video.js player instance.
+ * @param {Object} adsPluginSettings Settings for the contrib-ads plugin.
+ * @param {DaiController} daiController Reference to the parent controller.
+ */
+var PlayerWrapper$2 = function PlayerWrapper(player, adsPluginSettings, daiController) {
+  /**
+   * Instance of the video.js player.
+   */
+  this.vjsPlayer = player;
+
+  /**
+   * Plugin DAI controller.
+   */
+  this.daiController = daiController;
+
+  /**
+   * Video.js control bar.
+   */
+  this.vjsControls = this.vjsPlayer.getChild('controlBar');
+
+  /**
+   * Vanilla HTML5 video player underneath the video.js player.
+   */
+  this.h5Player = null;
+
+  this.vjsPlayer.on('dispose', this.playerDisposedListener.bind(this));
+  this.vjsPlayer.ready(this.onPlayerReady.bind(this));
+
+  if (this.controller.getSettings().requestMode === 'onPlay') {
+    this.vjsPlayer.one('play', this.controller.requestAds.bind(this.controller));
+  }
+
+  this.vjsPlayer.ads(adsPluginSettings);
+};
+
+/**
+ * Detects when the video.js player has been disposed.
+ */
+PlayerWrapper$2.prototype.playerDisposedListener = function () {
+  this.contentEndedListeners = [];
+  this.controller.onPlayerDisposed();
+};
+
+/**
+ * Called when the player fires its 'ready' event.
+ */
+PlayerWrapper$2.prototype.onPlayerReady = function () {
+  this.h5Player = document.getElementById(this.getPlayerId()).getElementsByClassName('vjs-tech')[0];
+
+  // Sync ad volume with player volume.
+  this.onVolumeChange();
+  this.vjsPlayer.on('volumechange', this.onVolumeChange.bind(this));
+
+  this.controller.onPlayerReady();
+};
+
+/**
+ * Listens for the video.js player to change its volume. This keeps the ad
+ * volume in sync with the content volume if the volume of the player is
+ * changed while content is playing.
+ */
+PlayerWrapper$2.prototype.onVolumeChange = function () {
+  var newVolume = this.vjsPlayer.muted() ? 0 : this.vjsPlayer.volume();
+  this.controller.onPlayerVolumeChanged(newVolume);
+};
+
+/**
+ * Inject the ad container div into the DOM.
+ *
+ * @param{HTMLElement} adUi The ad UI div.
+ */
+PlayerWrapper$2.prototype.injectAdContainerDiv = function (adUi) {
+  this.vjsControls.el().parentNode.appendChild(adUi);
+};
+
+/**
+ * @return {Object} The content player.
+ */
+PlayerWrapper$2.prototype.getContentPlayer = function () {
+  return this.h5Player;
+};
+
+/**
+ * @return {number} The volume, 0-1.
+ */
+PlayerWrapper$2.prototype.getVolume = function () {
+  return this.vjsPlayer.muted() ? 0 : this.vjsPlayer.volume();
+};
+
+/**
+ * Set the volume of the player. 0-1.
+ *
+ * @param {number} volume The new volume.
+ */
+PlayerWrapper$2.prototype.setVolume = function (volume) {
+  this.vjsPlayer.volume(volume);
+  if (volume == 0) {
+    this.vjsPlayer.muted(true);
+  } else {
+    this.vjsPlayer.muted(false);
+  }
+};
+
+/**
+ * Ummute the player.
+ */
+PlayerWrapper$2.prototype.unmute = function () {
+  this.vjsPlayer.muted(false);
+};
+
+/**
+ * Mute the player.
+ */
+PlayerWrapper$2.prototype.mute = function () {
+  this.vjsPlayer.muted(true);
+};
+
+/**
+ * Play the stream.
+ */
+PlayerWrapper$2.prototype.play = function () {
+  this.vjsPlayer.play();
+};
+
+/**
+ * Toggles playback of the stream.
+ */
+PlayerWrapper$2.prototype.togglePlayback = function () {
+  if (this.vjsPlayer.paused()) {
+    this.vjsPlayer.play();
+  } else {
+    this.vjsPlayer.pause();
+  }
+};
+
+/**
+ * Get the player width.
+ *
+ * @return {number} The player's width.
+ */
+PlayerWrapper$2.prototype.getPlayerWidth = function () {
+  var width = (getComputedStyle(this.vjsPlayer.el()) || {}).width;
+
+  if (!width || parseFloat(width) === 0) {
+    width = (this.vjsPlayer.el().getBoundingClientRect() || {}).width;
+  }
+
+  return parseFloat(width) || this.vjsPlayer.width();
+};
+
+/**
+ * Get the player height.
+ *
+ * @return {number} The player's height.
+ */
+PlayerWrapper$2.prototype.getPlayerHeight = function () {
+  var height = (getComputedStyle(this.vjsPlayer.el()) || {}).height;
+
+  if (!height || parseFloat(height) === 0) {
+    height = (this.vjsPlayer.el().getBoundingClientRect() || {}).height;
+  }
+
+  return parseFloat(height) || this.vjsPlayer.height();
+};
+
+/**
+ * @return {Object} The vjs player's options object.
+ */
+PlayerWrapper$2.prototype.getPlayerOptions = function () {
+  return this.vjsPlayer.options_;
+};
+
+/**
+ * Returns the instance of the player id.
+ * @return {string} The player id.
+ */
+PlayerWrapper$2.prototype.getPlayerId = function () {
+  return this.vjsPlayer.id();
+};
+
+/**
+ * Handles ad errors.
+ *
+ * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
+ */
+PlayerWrapper$2.prototype.onAdError = function (adErrorEvent) {
+  this.vjsControls.show();
+  var errorMessage = adErrorEvent.getError !== undefined ? adErrorEvent.getError() : adErrorEvent.stack;
+  this.vjsPlayer.trigger({ type: 'adserror', data: {
+      AdError: errorMessage,
+      AdErrorEvent: adErrorEvent
+    } });
+};
+
+/**
+ * Handles ad log messages.
+ * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
+ */
+PlayerWrapper$2.prototype.onAdLog = function (adEvent) {
+  var adData = adEvent.getAdData();
+  var errorMessage = adData['adError'] !== undefined ? adData['adError'].getMessage() : undefined;
+  this.vjsPlayer.trigger({ type: 'adslog', data: {
+      AdError: errorMessage,
+      AdEvent: adEvent
+    } });
+};
+
+/**
+ * Handles ad break starting.
+ */
+PlayerWrapper$2.prototype.onAdBreakStart = function () {
+  this.contentSource = this.vjsPlayer.currentSrc();
+  this.contentSourceType = this.vjsPlayer.currentType();
+  this.vjsPlayer.ads.startLinearAdMode();
+  this.vjsControls.hide();
+  this.vjsPlayer.pause();
+};
+
+/**
+ * Handles ad break ending.
+ */
+PlayerWrapper$2.prototype.onAdBreakEnd = function () {
+  if (this.vjsPlayer.ads.inAdBreak()) {
+    this.vjsPlayer.ads.endLinearAdMode();
+  }
+  this.vjsControls.show();
+};
+
+/**
+ * Reset the player.
+ */
+PlayerWrapper$2.prototype.reset = function () {
+  this.vjsControls.show();
+};
+
+/**
+ * Copyright 2021 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * IMA SDK integration plugin for Video.js. For more information see
+ * https://www.github.com/googleads/videojs-ima
+ */
+
+/**
+ * Implementation of the IMA DAI SDK for the plugin.
+ *
+ * @param {DaiController} controller Reference to the parent DAI controller.
+ *
+ * @constructor
+ * @struct
+ * @final
+ */
+var SdkImpl$2 = function SdkImpl(controller) {
+  /**
+   * Plugin controller.
+   */
+  this.controller = controller;
+
+  /**
+   * The videoJS stream player.
+   */
+  this.streamPlayer = null;
+
+  /**
+   * IMA SDK StreamManager
+   */
+  this.streamManager = null;
+
+  /**
+   * IMA stream UI settings.
+   */
+  /* eslint no-undef: 'error' */
+  /* global google */
+  this.uiSettings = new google.ima.dai.api.UiSettings();
+
+  /**
+   * If the stream is currently in an ad break.
+   */
+  this.isAdBreak = false;
+};
+
+/**
+ * Creates and initializes the IMA DAI SDK objects.
+ */
+SdkImpl$2.prototype.initDai = function () {
+  this.streamPlayer = this.controller.getStreamPlayer();
+  this.createAdUiDiv();
+  if (this.controller.getSettings().locale) {
+    this.uiSettings.setLocale(this.controller.getSettings().locale);
+  }
+
+  this.streamManager = new google.ima.dai.api.StreamManager(this.streamPlayer, this.adUiDiv, this.uiSettings);
+
+  this.streamPlayer.addEventListener('pause', this.onStreamPause);
+  this.streamPlayer.addEventListener('play', this.onStreamPlay);
+
+  this.streamManager.addEventListener([google.ima.dai.api.StreamEvent.Type.LOADED, google.ima.dai.api.StreamEvent.Type.ERROR, google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED, google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED], this.onStreamEvent, false);
+
+  // Timed metadata is only used for LIVE streams.
+  this.streamPlayer.on(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
+    if (this.streamManager && data) {
+      // For each ID3 tag in the metadata, pass in the type - ID3, the
+      // tag data (a byte array), and the presentation timestamp (PTS).
+      data.samples.forEach(function (sample) {
+        this.streamManager.processMetadata('ID3', sample.data, sample.pts);
+      });
+    }
+  });
+
+  this.requestStream();
+};
+
+/**
+ * Creates the ad UI container.
+ */
+SdkImpl$2.prototype.createAdUiDiv = function () {
+  var uiDiv = document.createElement('div');
+  uiDiv.id = 'ad-ui';
+  this.streamPlayer.parentNode.appendChild(uiDiv);
+  this.adUiDiv = uiDiv;
+};
+
+/**
+ * Called on pause to update the ad UI.
+ */
+SdkImpl$2.prototype.onStreamPause = function () {
+  if (this.isAdBreak) {
+    this.streamPlayer.controls = true;
+    this.adUiDiv.style.display = 'none';
+  }
+};
+
+/**
+ * Called on play to update the ad UI.
+ */
+SdkImpl$2.prototype.onStreamPlay = function () {
+  if (this.isAdBreak) {
+    this.streamPlayer.controls = false;
+    this.adUiDiv.style.display = 'block';
+  }
+};
+
+/**
+ * Handles IMA events.
+ * @param {google.ima.StreamEvent} event the IMA event
+ */
+SdkImpl$2.prototype.onStreamEvent = function (event) {
+  switch (event.type) {
+    case google.ima.dai.api.StreamEvent.Type.LOADED:
+      this.loadUrl(event.getStreamData().url);
+      break;
+    case google.ima.dai.api.StreamEvent.Type.ERROR:
+      var errorMessage = event.getStreamData().errorMessage;
+      window.console.warn('Error loading stream, attempting to play backup stream. ' + errorMessage);
+      var fallbackUrl = this.controller.getSettings().fallbackStreamUrl;
+      if (fallbackUrl) {
+        this.loadurl(fallbackUrl);
+      }
+      break;
+    case google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED:
+      this.isAdBreak = true;
+      this.streamPlayer.controls = false;
+      this.adUiDiv.style.display = 'block';
+      break;
+    case google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED:
+      this.isAdBreak = false;
+      this.streamPlayer.controls = true;
+      this.adUiDiv.style.display = 'none';
+      break;
+    default:
+      break;
+  }
+};
+
+/**
+ * Creates the AdsRequest and request ads through the AdsLoader.
+ */
+SdkImpl$2.prototype.requestStream = function () {
+  var streamRequest = void 0;
+  var streamType = this.controller.getSettings().streamType;
+  if (streamType === 'vod') {
+    streamRequest = new google.ima.dai.api.VODStreamRequest();
+    streamRequest.contentSourceId = this.controller.getSettings().cmsId;
+    streamRequest.videoId = this.controller.getSettings().videoId;
+  } else if (streamType === 'live') {
+    streamRequest = new google.ima.dai.api.LiveStreamRequest();
+    streamRequest.assetKey = this.controller.getSettings().assetKey;
+  } else {
+    window.console.warn('No valid stream type selected');
+  }
+  streamRequest.format = this.controller.getSettings().streamFormat;
+
+  if (this.controller.getSettings().apiKey) {
+    streamRequest.apiKey = this.controller.getSettings().apiKey;
+  }
+  if (this.controller.getSettings().authKey) {
+    streamRequest.authKey = this.controller.getSettings().authKey;
+  }
+  if (this.controller.getSettings().adTagParameters) {
+    streamRequest.adTagParameters = this.controller.getSettings().adTagParameters;
+  }
+  if (this.controller.getSettings().streamActivityMonitorId) {
+    streamRequest.streamActivityMonitorId = this.controller.getSettings().streamActivityMonitorId;
+  }
+
+  if (this.controller.getSettings().omidMode) {
+    streamRequest.omidAccessModeRules = {};
+    var omidValues = this.controller.getSettings().omidMode;
+
+    if (omidValues.FULL) {
+      streamRequest.omidAccessModeRules[google.ima.OmidAccessMode.FULL] = omidValues.FULL;
+    }
+    if (omidValues.DOMAIN) {
+      streamRequest.omidAccessModeRules[google.ima.OmidAccessMode.DOMAIN] = omidValues.DOMAIN;
+    }
+    if (omidValues.LIMITED) {
+      streamRequest.omidAccessModeRules[google.ima.OmidAccessMode.LIMITED] = omidValues.LIMITED;
+    }
+  }
+
+  this.streamManager.requestStream(streamRequest);
+  this.controller.playerWrapper.vjsPlayer.trigger({
+    type: 'stream-request',
+    StreamRequest: streamRequest
+  });
+};
+
+/**
+ * Handles ad log messages.
+ * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
+ */
+SdkImpl$2.prototype.onAdLog = function (adEvent) {
+  this.controller.onAdLog(adEvent);
+};
+
+/**
+ * Called when the player is disposed.
+ */
+SdkImpl$2.prototype.onPlayerDisposed = function () {
+  if (this.streamManager) {
+    this.streamManager.reset();
+  }
+};
+
+/**
+ * Returns the instance of the StreamManager.
+ * @return {google.ima.StreamManager} The StreamManager being used by the plugin.
+ */
+SdkImpl$2.prototype.getStreamManager = function () {
+  return this.StreamManager;
+};
+
+/**
+ * Reset the SDK implementation.
+ */
+SdkImpl$2.prototype.reset = function () {
+  if (this.StreamManager) {
+    this.StreamManager.reset();
+  }
+};
+
+/**
+ * Copyright 2021 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * IMA SDK integration plugin for Video.js. For more information see
+ * https://www.github.com/googleads/videojs-ima
+ */
+/**
+ * The coordinatorfor the DAI portion of the plugin. Facilitates
+ * communication between all other plugin classes.
+ *
+ * @param {Object} player Instance of the video.js player.
+ * @param {Object} options Options provided by the implementation.
+ * @constructor
+ * @struct
+ * @final
+ */
+var DaiController = function DaiController(player, options) {
+  /**
+  * Stores user-provided settings.
+  * @type {Object}
+  */
+  this.settings = {};
+
+  /**
+  * Whether or not we are running on a mobile platform.
+  */
+  this.isMobile = navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/Android/i);
+
+  /**
+  * Whether or not we are running on an iOS platform.
+  */
+  this.isIos = navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i);
+
+  this.initWithSettings(options);
+
+  /**
+  * Stores contrib-ads default settings.
+  */
+  var contribAdsDefaults = {
+    debug: this.settings.debug,
+    timeout: this.settings.timeout,
+    prerollTimeout: this.settings.prerollTimeout
+  };
+  var adsPluginSettings = this.extend({}, contribAdsDefaults, options.contribAdsSettings || {});
+
+  this.playerWrapper = new PlayerWrapper$2(player, adsPluginSettings, this);
+  this.sdkImpl = new SdkImpl$2(this);
+};
+
+DaiController.IMA_DEFAULTS = {
+  adLabel: 'Advertisement',
+  adLabelNofN: 'of',
+  debug: false,
+  disableAdControls: false,
+  showControlsForJSAds: true
+};
+
+/**
+ * Extends the settings to include user-provided settings.
+ *
+ * @param {Object} options Options to be used in initialization.
+ */
+DaiController.prototype.initWithSettings = function (options) {
+  this.settings = this.extend({}, DaiController.IMA_DEFAULTS, options || {});
+
+  this.warnAboutDeprecatedSettings();
+
+  // Default showing countdown timer to true.
+  this.showCountdown = true;
+  if (this.settings.showCountdown === false) {
+    this.showCountdown = false;
+  }
+};
+
+/**
+ * Logs console warnings when deprecated settings are used.
+ */
+DaiController.prototype.warnAboutDeprecatedSettings = function () {
+  var _this = this;
+
+  var deprecatedSettings = [
+    // Currently no DAI plugin settings are deprecated.
+  ];
+  deprecatedSettings.forEach(function (setting) {
+    if (_this.settings[setting] !== undefined) {
+      console.warn('WARNING: videojs.imaDai setting ' + setting + ' is deprecated');
+    }
+  });
+};
+
+/**
+ * Return the settings object.
+ *
+ * @return {Object} The settings object.
+ */
+DaiController.prototype.getSettings = function () {
+  return this.settings;
+};
+
+/**
+ * Return whether or not we're in a mobile environment.
+ *
+ * @return {boolean} True if running on mobile, false otherwise.
+ */
+DaiController.prototype.getIsMobile = function () {
+  return this.isMobile;
+};
+
+/**
+ * Return whether or not we're in an iOS environment.
+ *
+ * @return {boolean} True if running on iOS, false otherwise.
+ */
+DaiController.prototype.getIsIos = function () {
+  return this.isIos;
+};
+
+/**
+ * @return {Object} The stream player.
+ */
+DaiController.prototype.getStreamPlayer = function () {
+  return this.playerWrapper.getStreamPlayer();
+};
+
+/**
+ * Requests the stream.
+ */
+DaiController.prototype.requestStream = function () {
+  this.sdkImpl.requestStream();
+};
+
+/**
+ * Add or modify a setting.
+ *
+ * @param {string} key Key to modify
+ * @param {Object} value Value to set at key.
+*/
+DaiController.prototype.setSetting = function (key, value) {
+  this.settings[key] = value;
+};
+
+/**
+ * Called when there is an error loading ads.
+ *
+ * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
+ */
+DaiController.prototype.onErrorLoadingAds = function (adErrorEvent) {
+  this.playerWrapper.onAdError(adErrorEvent);
+};
+
+/**
+ * Relays ad errors to the player wrapper.
+ *
+ * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
+ */
+DaiController.prototype.onAdError = function (adErrorEvent) {
+  this.playerWrapper.onAdError(adErrorEvent);
+};
+
+/**
+ * Handles ad log messages.
+ * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
+ */
+DaiController.prototype.onAdLog = function (adEvent) {
+  this.playerWrapper.onAdLog(adEvent);
+};
+
+/**
+ * Play stream.
+ */
+DaiController.prototype.playStream = function () {
+  this.playerWrapper.play();
+};
+
+/**
+ * Called when the player is disposed.
+ */
+DaiController.prototype.onPlayerDisposed = function () {
+  this.contentAndAdsEndedListeners = [];
+  this.sdkImpl.onPlayerDisposed();
+};
+
+/**
+ * Called when the player is ready.
+ */
+DaiController.prototype.onPlayerReady = function () {
+  this.sdkImpl.onPlayerReady();
+};
+
+/**
+ * Called when the player volume changes.
+ *
+ * @param {number} volume The new player volume.
+ */
+DaiController.prototype.onPlayerVolumeChanged = function (volume) {
+  this.sdkImpl.onPlayerVolumeChanged(volume);
+};
+
+/**
+ * Resets the state of the plugin.
+ */
+DaiController.prototype.reset = function () {
+  this.sdkImpl.reset();
+  this.playerWrapper.reset();
+};
+
+/**
+ * Adds an EventListener to the StreamManager. For a list of available events,
+ * see
+ * https://developers.google.com/interactive-media-ads/docs/sdks/html5/dai/reference/js/StreamEvent
+ * @param {google.ima.StreamEvent.Type} event The AdEvent.Type for which to
+ *     listen.
+ * @param {callback} callback The method to call when the event is fired.
+ */
+DaiController.prototype.addEventListener = function (event, callback) {
+  this.sdkImpl.addEventListener(event, callback);
+};
+
+/**
+ * Returns the instance of the StreamManager.
+ * @return {google.ima.StreamManager} The StreamManager being used by the plugin.
+ */
+DaiController.prototype.getStreamManager = function () {
+  return this.sdkImpl.getStreamManager();
+};
+
+/**
+ * Returns the instance of the player id.
+ * @return {string} The player id.
+ */
+DaiController.prototype.getPlayerId = function () {
+  return this.playerWrapper.getPlayerId();
+};
+
+/**
+ * Toggles stream playback.
+ */
+DaiController.prototype.togglePlayback = function () {
+  this.playerWrapper.togglePlayback();
+};
+
+/**
+ * @return {boolean} true if we expect that the stream will autoplay. false otherwise.
+ */
+DaiController.prototype.streamWillAutoplay = function () {
+  if (this.settings.streamWillAutoplay !== undefined) {
+    return this.settings.streamWillAutoplay;
+  } else {
+    return !!this.playerWrapper.getPlayerOptions().autoplay;
+  }
+};
+
+/**
+ * @return {boolean} true if we expect that the stream will autoplay muted. false otherwise.
+ */
+DaiController.prototype.streamWillPlayMuted = function () {
+  if (this.settings.streamWillPlayMuted !== undefined) {
+    return this.settings.streamWillPlayMuted;
+  } else if (this.playerWrapper.getPlayerOptions().muted !== undefined) {
+    return !!this.playerWrapper.getPlayerOptions().muted;
+  } else {
+    return this.playerWrapper.getVolume() == 0;
+  }
+};
+
+/**
+ * Triggers an event on the VJS player
+ * @param  {string} name The event name.
+ * @param  {Object} data The event data.
+ */
+DaiController.prototype.triggerPlayerEvent = function (name, data) {
+  this.playerWrapper.triggerPlayerEvent(name, data);
+};
+
+/**
+ * Extends an object to include the contents of objects at parameters 2 onward.
+ *
+ * @param {Object} obj The object onto which the subsequent objects' parameters
+ *     will be extended. This object will be modified.
+ * @param {...Object} var_args The objects whose properties are to be extended
+ *     onto obj.
+ * @return {Object} The extended object.
+ */
+DaiController.prototype.extend = function (obj) {
+  var arg = void 0;
+  var index = void 0;
+  var key = void 0;
+
+  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    args[_key - 1] = arguments[_key];
+  }
+
+  for (index = 0; index < args.length; index++) {
+    arg = args[index];
+    for (key in arg) {
+      if (arg.hasOwnProperty(key)) {
+        obj[key] = arg[key];
+      }
+    }
+  }
+  return obj;
+};
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
@@ -2864,7 +3673,37 @@ var ImaPlugin = function ImaPlugin(player, options) {
  * @final
  */
 var ImaDaiPlugin = function ImaDaiPlugin(player, options) {
-  console.log(options);
+  this.controller = new DaiController(player, options);
+
+  /**
+   * Adds a listener that will be called when content and all ads in the
+   * stream have finished playing. VOD stream only.
+   * @param {listener} listener The listener to be called when content and ads
+   *     complete.
+   */
+  this.streamEndedListener = function (listener) {
+    this.controller.addStreamEndedListener(listener);
+  }.bind(this);
+
+  /**
+   * Adds an EventListener to the StreamManager. For a list of available events,
+   * see
+   * https://developers.google.com/interactive-media-ads/docs/sdks/html5/dai/reference/js/StreamEvent
+   * @param {google.ima.StreamEvent.Type} event The StreamEvent.Type for which to
+   *     listen.
+   * @param {callback} callback The method to call when the event is fired.
+   */
+  this.addEventListener = function (event, callback) {
+    this.controller.addEventListener(event, callback);
+  }.bind(this);
+
+  /**
+   * Returns the instance of the StreamManager.
+   * @return {google.ima.StreamManager} The StreamManager being used by the plugin.
+   */
+  this.getStreamManager = function () {
+    return this.controller.getStreamManager();
+  }.bind(this);
 };
 
 var init = function init(options) {
@@ -2929,6 +3768,10 @@ var registerPlugin = videojs.registerPlugin || videojs.plugin;
 registerPlugin('ima', init);
 registerPlugin('imaDai', initDai);
 
-return ImaPlugin;
+exports['default'] = ImaPlugin;
+exports.VodStream = VodStream;
+exports.LiveStream = LiveStream;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
