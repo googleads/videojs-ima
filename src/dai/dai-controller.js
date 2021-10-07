@@ -174,14 +174,6 @@ DaiController.prototype.onErrorLoadingAds = function(adErrorEvent) {
 DaiController.prototype.onAdError = function(adErrorEvent) {
   this.playerWrapper.onAdError(adErrorEvent);
 };
- 
-/**
- * Handles ad log messages.
- * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
- */
-DaiController.prototype.onAdLog = function(adEvent) {
-  this.playerWrapper.onAdLog(adEvent);
-};
 
 /**
  * Play stream.

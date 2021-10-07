@@ -218,14 +218,6 @@ SdkImpl.prototype.requestStream = function() {
   });
 };
 
-/**
- * Handles ad log messages.
- * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
- */
-SdkImpl.prototype.onAdLog = function(adEvent) {
-  this.controller.onAdLog(adEvent);
-};
-
 
 /**
  * Called when the player is disposed.

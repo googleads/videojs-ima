@@ -221,21 +221,6 @@ PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
 };
 
 /**
- * Handles ad log messages.
- * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
- */
-PlayerWrapper.prototype.onAdLog = function(adEvent) {
-  const adData = adEvent.getAdData();
-  const errorMessage =
-      adData['adError'] !== undefined ?
-          adData['adError'].getMessage() : undefined;
-  this.vjsPlayer.trigger({type: 'adslog', data: {
-    AdError: errorMessage,
-    AdEvent: adEvent,
-  }});
-};
-
-/**
  * Handles ad break starting.
  */
 PlayerWrapper.prototype.onAdBreakStart = function() {

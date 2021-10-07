@@ -1155,7 +1155,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.11.0";
+var version = "2.0.0";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
@@ -1166,7 +1166,7 @@ var repository = { "type": "git", "url": "https://github.com/googleads/videojs-i
 var files = ["CHANGELOG.md", "LICENSE", "README.md", "dist/", "src/"];
 var peerDependencies = { "video.js": "^5.19.2 || ^6 || ^7" };
 var dependencies = { "@hapi/cryptiles": "^5.1.0", "@videojs/http-streaming": "^2.10.0", "can-autoplay": "^3.0.0", "extend": ">=3.0.2", "lodash": ">=4.17.19", "lodash.template": ">=4.5.0", "videojs-contrib-ads": "^6.6.5" };
-var devDependencies = { "axios": ">=0.21.1", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^94.0.0", "conventional-changelog-cli": "^2.0.31", "conventional-changelog-videojs": "^3.0.1", "ecstatic": ">=4.1.3", "eslint": "^4.19.1", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^1.19.1", "http-server": "^0.12.3", "ini": ">=1.3.7", "mocha": "^7.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^5.19.2 || ^6 || ^7", "watch": "^1.0.2", "webdriver-manager": "^12.1.7", "xmldom": ">=0.5.0" };
+var devDependencies = { "axios": "^0.22.0", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^94.0.0", "conventional-changelog-cli": "^2.1.1", "conventional-changelog-videojs": "^3.0.1", "ecstatic": ">=4.1.3", "eslint": "^7.32.0", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^2.0.4", "http-server": "^13.0.2", "ini": ">=1.3.7", "mocha": "^9.1.2", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^7.16.0", "watch": "^1.0.2", "webdriver-manager": "^12.1.7", "xmldom": "^0.6.0" };
 var keywords = ["videojs", "videojs-plugin"];
 var pkg = {
 	name: name,
@@ -2878,19 +2878,6 @@ PlayerWrapper$2.prototype.onAdError = function (adErrorEvent) {
 };
 
 /**
- * Handles ad log messages.
- * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
- */
-PlayerWrapper$2.prototype.onAdLog = function (adEvent) {
-  var adData = adEvent.getAdData();
-  var errorMessage = adData['adError'] !== undefined ? adData['adError'].getMessage() : undefined;
-  this.vjsPlayer.trigger({ type: 'adslog', data: {
-      AdError: errorMessage,
-      AdEvent: adEvent
-    } });
-};
-
-/**
  * Handles ad break starting.
  */
 PlayerWrapper$2.prototype.onAdBreakStart = function () {
@@ -3122,14 +3109,6 @@ SdkImpl$2.prototype.requestStream = function () {
 };
 
 /**
- * Handles ad log messages.
- * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the AdsManager.
- */
-SdkImpl$2.prototype.onAdLog = function (adEvent) {
-  this.controller.onAdLog(adEvent);
-};
-
-/**
  * Called when the player is disposed.
  */
 SdkImpl$2.prototype.onPlayerDisposed = function () {
@@ -3324,14 +3303,6 @@ DaiController.prototype.onErrorLoadingAds = function (adErrorEvent) {
  */
 DaiController.prototype.onAdError = function (adErrorEvent) {
   this.playerWrapper.onAdError(adErrorEvent);
-};
-
-/**
- * Handles ad log messages.
- * @param {google.ima.AdEvent} adEvent The AdEvent thrown by the IMA SDK.
- */
-DaiController.prototype.onAdLog = function (adEvent) {
-  this.playerWrapper.onAdLog(adEvent);
 };
 
 /**
