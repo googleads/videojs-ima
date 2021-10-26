@@ -2714,7 +2714,6 @@ var PlayerWrapper$2 = function PlayerWrapper(player, adsPluginSettings, daiContr
   this.vjsPlayer.on('seeked', this.onSeekEnd.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
   this.vjsPlayer.ads(adsPluginSettings);
-  console.log('videoJS player', this.vjsControls);
 };
 
 /**
@@ -2962,7 +2961,6 @@ SdkImpl$2.prototype.onStreamPlay = function () {
  * @param {number} currentTime the current time of the stream.
  */
 SdkImpl$2.prototype.onSeekEnd = function (currentTime) {
-  console.log(currentTime);
   var streamType = this.daiController.getSettings().streamType;
   if (streamType === 'live') {
     return;
@@ -2984,7 +2982,6 @@ SdkImpl$2.prototype.onSeekEnd = function (currentTime) {
  * @param {google.ima.StreamEvent} event the IMA event
  */
 SdkImpl$2.prototype.onStreamEvent = function (event) {
-  console.log('IMA Event:', event.type);
   switch (event.type) {
     case google.ima.dai.api.StreamEvent.Type.LOADED:
       this.loadUrl(event.getStreamData().url);
@@ -3023,13 +3020,22 @@ SdkImpl$2.prototype.onStreamEvent = function (event) {
  * @param {string} streamUrl the URL for the stream being loaded.
  */
 SdkImpl$2.prototype.loadUrl = function (streamUrl) {
-  console.log('Loading stream:', streamUrl);
   this.vjsPlayer.ready(function () {
-    this.src({
+    this.vjsPlayer.src({
       src: streamUrl,
       type: 'application/x-mpegURL'
     });
-  });
+
+    var bookmarkTime = this.daiController.getSettings().bookmarkTime;
+    if (bookmarkTime) {
+      var startTime = this.streamManager.streamTimeForContentTime(bookmarkTime);
+      // Seeking on load triggers the onSeekEnd event, so treat this seek as
+      // if it's snapback. Without this, resuming at a bookmark kicks you
+      // back to the ad before the bookmark.
+      this.isSnapback = true;
+      this.vjsPlayer.currentTime(startTime);
+    }
+  }.bind(this));
 };
 
 /**
@@ -3078,7 +3084,6 @@ SdkImpl$2.prototype.requestStream = function () {
     }
   }
 
-  console.log('Requesting stream:', streamRequest);
   this.streamManager.requestStream(streamRequest);
   this.vjsPlayer.trigger({
     type: 'stream-request',

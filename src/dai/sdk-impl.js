@@ -104,14 +104,14 @@ SdkImpl.prototype.initImaDai = function() {
   // Timed metadata is only used for LIVE streams.
   this.vjsPlayer.on(
     Hls.Events.FRAG_PARSING_METADATA, function(event, data) {
-    if (this.streamManager && data) {
-      // For each ID3 tag in the metadata, pass in the type - ID3, the
-      // tag data (a byte array), and the presentation timestamp (PTS).
-      data.samples.forEach(function(sample) {
-        this.streamManager.processMetadata('ID3', sample.data, sample.pts);
-      });
-    }
-  });
+      if (this.streamManager && data) {
+        // For each ID3 tag in the metadata, pass in the type - ID3, the
+        // tag data (a byte array), and the presentation timestamp (PTS).
+        data.samples.forEach(function(sample) {
+          this.streamManager.processMetadata('ID3', sample.data, sample.pts);
+        });
+      }
+    });
 
   this.requestStream();
 };
@@ -213,11 +213,21 @@ SdkImpl.prototype.onStreamPause = function() {
  */
 SdkImpl.prototype.loadUrl = function(streamUrl) {
   this.vjsPlayer.ready(function() {
-    this.src({
+    this.vjsPlayer.src({
       src: streamUrl,
       type: 'application/x-mpegURL',
     });
-  });
+
+    const bookmarkTime = this.daiController.getSettings().bookmarkTime;
+    if (bookmarkTime) {
+      const startTime = this.streamManager.streamTimeForContentTime(bookmarkTime);
+      // Seeking on load triggers the onSeekEnd event, so treat this seek as
+      // if it's snapback. Without this, resuming at a bookmark kicks you
+      // back to the ad before the bookmark.
+      this.isSnapback = true;
+      this.vjsPlayer.currentTime(startTime);
+    }
+  }.bind(this));
 };
 
 /**
