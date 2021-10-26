@@ -31,6 +31,12 @@ import SdkImpl from './sdk-impl.js';
  */
 const DaiController = function(player, options) {
   /**
+  * If the stream is currently in an ad break.
+  * @type {boolean}
+  */
+  this.inAdBreak = false;
+
+  /**
   * Stores user-provided settings.
   * @type {Object}
   */
@@ -134,10 +140,18 @@ DaiController.prototype.getIsIos = function() {
 };
 
 /**
- * @return {Object} The stream player.
+ * @return {Object} The html5 player.
  */
 DaiController.prototype.getStreamPlayer = function() {
   return this.playerWrapper.getStreamPlayer();
+};
+
+getVjsPlayer
+/**
+ * @return {Object} The video.js player.
+ */
+ DaiController.prototype.getVjsPlayer = function() {
+  return this.playerWrapper.getVjsPlayer();
 };
 
 /**
@@ -176,10 +190,19 @@ DaiController.prototype.onAdError = function(adErrorEvent) {
 };
 
 /**
- * Play stream.
+ * Signals player that an ad break has started.
  */
-DaiController.prototype.playStream = function() {
-  this.playerWrapper.play();
+ DaiController.prototype.onAdBreakStart = function() {
+  this.inAdBreak = true;
+  this.playerWrapper.onAdBreakStart();
+};
+
+/**
+ * Signals player that an ad break has ended.
+ */
+ DaiController.prototype.onAdBreakEnd = function() {
+  this.inAdBreak = false;
+  this.playerWrapper.onAdBreakEnd();
 };
  
 /**
@@ -191,19 +214,26 @@ DaiController.prototype.onPlayerDisposed = function() {
 };
 
 /**
+ * Returns if the stream is currently in an ad break.
+ * @return {boolean} If the stream is currently in an ad break.
+ */
+ DaiController.prototype.isInAdBreak = function() {
+  return this.inAdBreak;
+};
+
+/**
+ * Called on seek end to check for ad snapback.
+ * @param {number} currentTime the current time of the stream.
+ */
+ DaiController.prototype.onSeekEnd = function(currentTime) {
+  this.sdkImpl.onSeekEnd(currentTime);
+};
+
+/**
  * Called when the player is ready.
  */
-DaiController.prototype.onPlayerReady = function() {
+ DaiController.prototype.onPlayerReady = function() {
   this.sdkImpl.onPlayerReady();
-};
- 
-/**
- * Called when the player volume changes.
- *
- * @param {number} volume The new player volume.
- */
-DaiController.prototype.onPlayerVolumeChanged = function(volume) {
-  this.sdkImpl.onPlayerVolumeChanged(volume);
 };
 
 /**
@@ -243,13 +273,6 @@ DaiController.prototype.getPlayerId = function() {
 };
 
 /**
- * Toggles stream playback.
- */
-DaiController.prototype.togglePlayback = function() {
-  this.playerWrapper.togglePlayback();
-};
-
-/**
  * @return {boolean} true if we expect that the stream will autoplay. false otherwise.
  */
 DaiController.prototype.streamWillAutoplay = function() {
@@ -257,20 +280,6 @@ DaiController.prototype.streamWillAutoplay = function() {
     return this.settings.streamWillAutoplay;
   } else {
     return !!this.playerWrapper.getPlayerOptions().autoplay;
-  }
-};
- 
- 
-/**
- * @return {boolean} true if we expect that the stream will autoplay muted. false otherwise.
- */
-DaiController.prototype.streamWillPlayMuted = function() {
-  if (this.settings.streamWillPlayMuted !== undefined) {
-    return this.settings.streamWillPlayMuted;
-  } else if (this.playerWrapper.getPlayerOptions().muted !== undefined) {
-    return !!this.playerWrapper.getPlayerOptions().muted;
-  } else {
-    return this.playerWrapper.getVolume() == 0;
   }
 };
  

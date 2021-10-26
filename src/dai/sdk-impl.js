@@ -20,22 +20,27 @@
  /**
   * Implementation of the IMA DAI SDK for the plugin.
   *
-  * @param {DaiController} controller Reference to the parent DAI controller.
+  * @param {DaiController} daiController Reference to the parent DAI controller.
   *
   * @constructor
   * @struct
   * @final
   */
-const SdkImpl = function(controller) {
+const SdkImpl = function(daiController) {
   /**
-   * Plugin controller.
+   * Plugin DAI controller.
    */
-  this.controller = controller;
+  this.daiController = daiController;
+
+  /**
+   * The html5 stream player.
+   */
+  this.streamPlayer = null;
 
   /**
    * The videoJS stream player.
    */
-   this.streamPlayer = null;
+  this.vjsPlayer = null;
 
   /**
    * IMA SDK StreamManager
@@ -53,17 +58,29 @@ const SdkImpl = function(controller) {
    * If the stream is currently in an ad break.
    */
   this.isAdBreak = false
+
+  /**
+   * If the stream is currently seeking from a snapback.
+   */
+  this.isSnapback = false
+
+  /**
+   * Originally seeked to time, to return stream to after ads.
+   */
+  this.snapForwardTime = 0
 };
 
 
 /**
  * Creates and initializes the IMA DAI SDK objects.
  */
-SdkImpl.prototype.initDai = function() {
-  this.streamPlayer = this.controller.getStreamPlayer();
+SdkImpl.prototype.initImaDai = function() {
+  this.streamPlayer = this.daiController.getStreamPlayer();
+  this.vjsPlayer = this.daiController.getVjsPlayer();
+
   this.createAdUiDiv();
-  if (this.controller.getSettings().locale) {
-    this.uiSettings.setLocale(this.controller.getSettings().locale);
+  if (this.daiController.getSettings().locale) {
+    this.uiSettings.setLocale(this.daiController.getSettings().locale);
   }
 
   this.streamManager = new google.ima.dai.api.StreamManager(
@@ -81,11 +98,12 @@ SdkImpl.prototype.initDai = function() {
       google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED,
       google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED
     ],
-    this.onStreamEvent,
+    this.onStreamEvent.bind(this),
     false);
 
   // Timed metadata is only used for LIVE streams.
-  this.streamPlayer.on(Hls.Events.FRAG_PARSING_METADATA, function(event, data) {
+  this.vjsPlayer.on(
+    Hls.Events.FRAG_PARSING_METADATA, function(event, data) {
     if (this.streamManager && data) {
       // For each ID3 tag in the metadata, pass in the type - ID3, the
       // tag data (a byte array), and the presentation timestamp (PTS).
@@ -104,6 +122,8 @@ SdkImpl.prototype.initDai = function() {
  SdkImpl.prototype.createAdUiDiv = function() {
   const uiDiv = document.createElement('div');
   uiDiv.id = 'ad-ui';
+  // 3em is the height of the control bar.
+  uiDiv.style.height = 'calc(100% - 3em)';
   this.streamPlayer.parentNode.appendChild(uiDiv);
   this.adUiDiv = uiDiv;
 };
@@ -113,7 +133,6 @@ SdkImpl.prototype.initDai = function() {
  */
 SdkImpl.prototype.onStreamPause = function() {
   if (this.isAdBreak) {
-    this.streamPlayer.controls = true;
     this.adUiDiv.style.display = 'none';
   }
 };
@@ -123,8 +142,29 @@ SdkImpl.prototype.onStreamPause = function() {
  */
  SdkImpl.prototype.onStreamPlay = function() {
   if (this.isAdBreak) {
-    this.streamPlayer.controls = false;
     this.adUiDiv.style.display = 'block';
+  }
+};
+
+/**
+ * Called on play to update the ad UI.
+ * @param {number} currentTime the current time of the stream.
+ */
+ SdkImpl.prototype.onSeekEnd = function(currentTime) {
+  const streamType = this.daiController.getSettings().streamType;
+  if (streamType === 'live') {
+    return;
+  }
+  if (this.isSnapback) {
+    this.isSnapback = false;
+    return;
+  }
+  const previousCuePoint =
+      this.streamManager.previousCuePointForStreamTime(currentTime);
+  if (previousCuePoint && !previousCuePoint.played) {
+    this.isSnapback = true;
+    this.snapForwardTime = currentTime;
+    this.vjsPlayer.currentTime(previousCuePoint.start);
   }
 };
 
@@ -141,20 +181,26 @@ SdkImpl.prototype.onStreamPause = function() {
       const errorMessage = event.getStreamData().errorMessage;
       window.console.warn('Error loading stream, attempting to play backup stream. '
         + errorMessage);
-      const fallbackUrl = this.controller.getSettings().fallbackStreamUrl;
+      this.daiController.onErrorLoadingAds(event);
+      const fallbackUrl = this.daiController.getSettings().fallbackStreamUrl;
       if (fallbackUrl) {
         this.loadurl(fallbackUrl);
       }
       break;
     case google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED:
       this.isAdBreak = true;
-      this.streamPlayer.controls = false;
       this.adUiDiv.style.display = 'block';
+      this.daiController.onAdBreakStart();
       break;
     case google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED:
       this.isAdBreak = false;
-      this.streamPlayer.controls = true;
       this.adUiDiv.style.display = 'none';
+      this.daiController.onAdBreakEnd();
+      const currentTime = this.vjsPlayer.currentTime();
+      if (this.snapForwardTime && this.snapForwardTime > currentTime) {
+        this.vjsPlayer.currentTime(this.snapForwardTime);
+        this.snapForwardTime = 0;
+      }
       break;
     default:
       break;
@@ -162,40 +208,53 @@ SdkImpl.prototype.onStreamPause = function() {
 };
 
 /**
+ * Loads the stream URL .
+ * @param {string} streamUrl the URL for the stream being loaded.
+ */
+SdkImpl.prototype.loadUrl = function(streamUrl) {
+  this.vjsPlayer.ready(function() {
+    this.src({
+      src: streamUrl,
+      type: 'application/x-mpegURL',
+    });
+  });
+};
+
+/**
  * Creates the AdsRequest and request ads through the AdsLoader.
  */
 SdkImpl.prototype.requestStream = function() {
   let streamRequest;
-  const streamType = this.controller.getSettings().streamType;
+  const streamType = this.daiController.getSettings().streamType;
   if (streamType === 'vod') {
     streamRequest = new google.ima.dai.api.VODStreamRequest();
-    streamRequest.contentSourceId = this.controller.getSettings().cmsId;
-    streamRequest.videoId = this.controller.getSettings().videoId;
+    streamRequest.contentSourceId = this.daiController.getSettings().cmsId;
+    streamRequest.videoId = this.daiController.getSettings().videoId;
   } else if (streamType === 'live') {
     streamRequest = new google.ima.dai.api.LiveStreamRequest();
-    streamRequest.assetKey = this.controller.getSettings().assetKey;
+    streamRequest.assetKey = this.daiController.getSettings().assetKey;
   } else {
     window.console.warn('No valid stream type selected');
   }
-  streamRequest.format = this.controller.getSettings().streamFormat;
+  streamRequest.format = this.daiController.getSettings().streamFormat;
 
-  if (this.controller.getSettings().apiKey) {
-    streamRequest.apiKey = this.controller.getSettings().apiKey;
+  if (this.daiController.getSettings().apiKey) {
+    streamRequest.apiKey = this.daiController.getSettings().apiKey;
   }
-  if (this.controller.getSettings().authKey) {
-    streamRequest.authKey = this.controller.getSettings().authKey;
+  if (this.daiController.getSettings().authKey) {
+    streamRequest.authKey = this.daiController.getSettings().authKey;
   }
-  if (this.controller.getSettings().adTagParameters) {
-    streamRequest.adTagParameters = this.controller.getSettings().adTagParameters;
+  if (this.daiController.getSettings().adTagParameters) {
+    streamRequest.adTagParameters = this.daiController.getSettings().adTagParameters;
   }
-  if (this.controller.getSettings().streamActivityMonitorId) {
+  if (this.daiController.getSettings().streamActivityMonitorId) {
     streamRequest.streamActivityMonitorId =
-      this.controller.getSettings().streamActivityMonitorId;
+      this.daiController.getSettings().streamActivityMonitorId;
   }
 
-  if (this.controller.getSettings().omidMode) {
+  if (this.daiController.getSettings().omidMode) {
     streamRequest.omidAccessModeRules = {};
-    const omidValues = this.controller.getSettings().omidMode;
+    const omidValues = this.daiController.getSettings().omidMode;
 
     if (omidValues.FULL) {
       streamRequest.omidAccessModeRules[google.ima.OmidAccessMode.FULL] =
@@ -212,10 +271,14 @@ SdkImpl.prototype.requestStream = function() {
   }
 
   this.streamManager.requestStream(streamRequest);
-  this.controller.playerWrapper.vjsPlayer.trigger({
+  this.vjsPlayer.trigger({
     type: 'stream-request',
     StreamRequest: streamRequest,
   });
+};
+
+SdkImpl.prototype.onPlayerReady = function() {
+  this.initImaDai();
 };
 
 
