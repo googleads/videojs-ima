@@ -3137,8 +3137,8 @@ SdkImpl$2.prototype.reset = function () {
  * The coordinatorfor the DAI portion of the plugin. Facilitates
  * communication between all other plugin classes.
  *
- * @param {Object} player Instance of the video.js player.
- * @param {Object} options Options provided by the implementation.
+ * @param {Object!} player Instance of the video.js player.
+ * @param {Object!} options Options provided by the implementation.
  * @constructor
  * @struct
  * @final
@@ -3152,7 +3152,7 @@ var DaiController = function DaiController(player, options) {
 
   /**
   * Stores user-provided settings.
-  * @type {Object}
+  * @type {Object!}
   */
   this.settings = {};
 
@@ -3193,7 +3193,7 @@ DaiController.IMA_DEFAULTS = {
 /**
  * Extends the settings to include user-provided settings.
  *
- * @param {Object} options Options to be used in initialization.
+ * @param {Object!} options Options to be used in initialization.
  */
 DaiController.prototype.initWithSettings = function (options) {
   this.settings = this.extend({}, DaiController.IMA_DEFAULTS, options || {});
@@ -3226,7 +3226,7 @@ DaiController.prototype.warnAboutDeprecatedSettings = function () {
 /**
  * Return the settings object.
  *
- * @return {Object} The settings object.
+ * @return {Object!} The settings object.
  */
 DaiController.prototype.getSettings = function () {
   return this.settings;
@@ -3251,14 +3251,14 @@ DaiController.prototype.getIsIos = function () {
 };
 
 /**
- * @return {Object} The html5 player.
+ * @return {Object!} The html5 player.
  */
 DaiController.prototype.getStreamPlayer = function () {
   return this.playerWrapper.getStreamPlayer();
 };
 
 /**
- * @return {Object} The video.js player.
+ * @return {Object!} The video.js player.
  */
 DaiController.prototype.getVjsPlayer = function () {
   return this.playerWrapper.getVjsPlayer();
@@ -3275,7 +3275,7 @@ DaiController.prototype.requestStream = function () {
  * Add or modify a setting.
  *
  * @param {string} key Key to modify
- * @param {Object} value Value to set at key.
+ * @param {Object!} value Value to set at key.
 */
 DaiController.prototype.setSetting = function (key, value) {
   this.settings[key] = value;
@@ -3284,7 +3284,7 @@ DaiController.prototype.setSetting = function (key, value) {
 /**
  * Called when there is an error loading ads.
  *
- * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
+ * @param {Object!} adErrorEvent The ad error event thrown by the IMA SDK.
  */
 DaiController.prototype.onErrorLoadingAds = function (adErrorEvent) {
   this.playerWrapper.onAdError(adErrorEvent);
@@ -3293,7 +3293,7 @@ DaiController.prototype.onErrorLoadingAds = function (adErrorEvent) {
 /**
  * Relays ad errors to the player wrapper.
  *
- * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
+ * @param {Object!} adErrorEvent The ad error event thrown by the IMA SDK.
  */
 DaiController.prototype.onAdError = function (adErrorEvent) {
   this.playerWrapper.onAdError(adErrorEvent);
@@ -3358,9 +3358,9 @@ DaiController.prototype.reset = function () {
  * Adds an EventListener to the StreamManager. For a list of available events,
  * see
  * https://developers.google.com/interactive-media-ads/docs/sdks/html5/dai/reference/js/StreamEvent
- * @param {google.ima.StreamEvent.Type} event The AdEvent.Type for which to
+ * @param {google.ima.StreamEvent.Type!} event The AdEvent.Type for which to
  *     listen.
- * @param {callback} callback The method to call when the event is fired.
+ * @param {callback!} callback The method to call when the event is fired.
  */
 DaiController.prototype.addEventListener = function (event, callback) {
   this.sdkImpl.addEventListener(event, callback);
@@ -3368,7 +3368,7 @@ DaiController.prototype.addEventListener = function (event, callback) {
 
 /**
  * Returns the instance of the StreamManager.
- * @return {google.ima.StreamManager} The StreamManager being used by the plugin.
+ * @return {google.ima.StreamManager!} The StreamManager being used by the plugin.
  */
 DaiController.prototype.getStreamManager = function () {
   return this.sdkImpl.getStreamManager();
@@ -3396,7 +3396,7 @@ DaiController.prototype.streamWillAutoplay = function () {
 /**
  * Triggers an event on the VJS player
  * @param  {string} name The event name.
- * @param  {Object} data The event data.
+ * @param  {Object!} data The event data.
  */
 DaiController.prototype.triggerPlayerEvent = function (name, data) {
   this.playerWrapper.triggerPlayerEvent(name, data);
@@ -3405,11 +3405,11 @@ DaiController.prototype.triggerPlayerEvent = function (name, data) {
 /**
  * Extends an object to include the contents of objects at parameters 2 onward.
  *
- * @param {Object} obj The object onto which the subsequent objects' parameters
+ * @param {Object!} obj The object onto which the subsequent objects' parameters
  *     will be extended. This object will be modified.
- * @param {...Object} var_args The objects whose properties are to be extended
+ * @param {...Object!} var_args The objects whose properties are to be extended
  *     onto obj.
- * @return {Object} The extended object.
+ * @return {Object!} The extended object.
  */
 DaiController.prototype.extend = function (obj) {
   var arg = void 0;
