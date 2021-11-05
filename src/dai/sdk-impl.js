@@ -57,17 +57,32 @@ const SdkImpl = function(daiController) {
   /**
    * If the stream is currently in an ad break.
    */
-  this.isAdBreak = false
+  this.isAdBreak = false;
 
   /**
    * If the stream is currently seeking from a snapback.
    */
-  this.isSnapback = false
+  this.isSnapback = false;
 
   /**
    * Originally seeked to time, to return stream to after ads.
    */
-  this.snapForwardTime = 0
+  this.snapForwardTime = 0;
+
+  /**
+   * Timed metadata for the stream.
+   */
+   this.timedMetadata;
+
+  /**
+   * Timed metadata record.
+   */
+   this.metadataLoaded = {};
+
+  this.SOURCE_TYPES = {
+    hls: 'application/x-mpegURL',
+    dash: 'application/dash+xml',
+  };
 };
 
 
@@ -96,25 +111,88 @@ SdkImpl.prototype.initImaDai = function() {
       google.ima.dai.api.StreamEvent.Type.LOADED,
       google.ima.dai.api.StreamEvent.Type.ERROR,
       google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED,
-      google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED
+      google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED,
+      google.ima.dai.api.StreamEvent.Type.CUEPOINTS_CHANGED,
+      google.ima.dai.api.StreamEvent.Type.STREAM_INITIALIZED,
+      google.ima.dai.api.StreamEvent.Type.STARTED,
+      google.ima.dai.api.StreamEvent.Type.FIRST_QUARTILE,
+      google.ima.dai.api.StreamEvent.Type.MIDPOINT,
+      google.ima.dai.api.StreamEvent.Type.THIRD_QUARTILE
     ],
     this.onStreamEvent.bind(this),
     false);
 
   // Timed metadata is only used for LIVE streams.
-  this.vjsPlayer.on(
-    Hls.Events.FRAG_PARSING_METADATA, function(event, data) {
-      if (this.streamManager && data) {
-        // For each ID3 tag in the metadata, pass in the type - ID3, the
-        // tag data (a byte array), and the presentation timestamp (PTS).
-        data.samples.forEach(function(sample) {
-          this.streamManager.processMetadata('ID3', sample.data, sample.pts);
-        });
-      }
-    });
+  // this.vjsPlayer.on('loadedmetadata', function() {
+  //   this.vjsPlayer.textTracks().tracks_.forEach(track => {
+  //     if (track.label === 'Timed Metadata') {
+  //       this.setTimedTrack(track);
+  //     } else {
+  //       const metadataInterval = setInterval(function() {
+  //         this.vjsPlayer.textTracks().tracks_.forEach(track => {
+  //           if (track.label === 'Timed Metadata') {
+  //             this.setTimedTrack(track);
+  //             clearInterval(metadataInterval);
+  //           }
+  //         });
+  //       }.bind(this), 500);
+  //     }
+  //   });
+  // }.bind(this));
+
+  this.vjsPlayer.textTracks().onaddtrack = this.onAddTrack.bind(this);
 
   this.requestStream();
 };
+
+/**
+ * Sets the 'cuechange' listener for timed metadata.
+ * @param {Object!} timedMetadata of the current stream.
+ * 
+ */
+SdkImpl.prototype.setTimedTrack = function(timedMetadata) {
+  this.processCues(timedMetadata.cues_);
+  timedMetadata.on('cuechange', function() {
+    this.processCues(timedMetadata.cues_);
+  }.bind(this));
+}
+
+/**
+   * Called when the video player has metadata to process.
+   * @param {!Event} event The event that triggered this call.
+   */
+SdkImpl.prototype.onAddTrack = function(event) {
+  const track = event.track;
+  console.log('TRACK', track);
+  if (track.kind === 'metadata') {
+    track.mode = 'hidden';
+    track.oncuechange = (e) => {
+      for (const cue of track.activeCues_) {
+        const metadata = {};
+        metadata[cue.value.key] = cue.value.data;
+        this.streamManager.onTimedMetadata(metadata);
+      }
+    };
+  }
+}
+
+/**
+ * Iterates through all cues and processes new cues.
+ * @param {Object!} cueList of cues for the timed metadata.
+ * 
+ */
+ SdkImpl.prototype.processCues = function(cueList) {
+  cueList.forEach(function(cue) {
+    const cueData = cue.frame.data;
+    if (!this.metadataLoaded[cueData]) {
+      this.metadataLoaded[cueData] = true;
+      const streamTime = this.streamManager.streamTimeForContentTime(cue.startTime);
+      console.log('Cue', cueData);
+      console.log('Time: ' + cue.startTime + ' -> ' + streamTime);
+      this.streamManager.processMetadata('ID3', cueData, streamTime);
+    }
+  }.bind(this));
+ }
 
 /**
  * Creates the ad UI container.
@@ -173,6 +251,7 @@ SdkImpl.prototype.onStreamPause = function() {
  * @param {google.ima.StreamEvent} event the IMA event
  */
  SdkImpl.prototype.onStreamEvent = function(event) {
+  console.log('Event:', event.type);
   switch (event.type) {
     case google.ima.dai.api.StreamEvent.Type.LOADED:
       this.loadUrl(event.getStreamData().url);
@@ -213,9 +292,10 @@ SdkImpl.prototype.onStreamPause = function() {
  */
 SdkImpl.prototype.loadUrl = function(streamUrl) {
   this.vjsPlayer.ready(function() {
+    const streamFormat = this.daiController.getSettings().streamFormat;
     this.vjsPlayer.src({
       src: streamUrl,
-      type: 'application/x-mpegURL',
+      type: this.SOURCE_TYPES[streamFormat],
     });
 
     const bookmarkTime = this.daiController.getSettings().bookmarkTime;

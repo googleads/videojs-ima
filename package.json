@@ -52,8 +52,7 @@
     "extend": ">=3.0.2",
     "lodash": ">=4.17.19",
     "lodash.template": ">=4.5.0",
-    "videojs-contrib-ads": "^6.6.5",
-    "videojs-contrib-hls": "^5.15.0"
+    "videojs-contrib-ads": "^6.6.5"
   },
   "devDependencies": {
     "axios": "^0.22.0",

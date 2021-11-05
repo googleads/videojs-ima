@@ -85,7 +85,7 @@ player.imaDai(vodStream, imaOptions);
 If you don't use npm, you can download the source from the dist/ folder and
 include it directly in your project. You'll also need to download the source for
 the [videojs-contrib-ads plugin](//github.com/videojs/videojs-contrib-ads) and
-the [videojs-contrib-hls plugin](//github.com/videojs/videojs-contrib-hls).
+the [videojs-http-streaming plugin](//github.com/videojs/http-streaming).
 
 In your index.html file, create a new video.js player and load a (currently
 empty) javascript file:
@@ -109,7 +109,7 @@ empty) javascript file:
     <script src="/path/to/video.js"></script>
     <script src="//imasdk.googleapis.com/js/sdkloader/ima3_dai.js"></script>
     <script src="/path/to/videojs-contrib-ads.js"></script>
-    <script src="/path/to/videojs-contrib-hls.js"></script>
+    <script src="/path/to/videojs-http-streaming.min.js"></script>
     <script src="/path/to/videojs.ima.js"></script>
     <script src="player.js"></script>
   </body>
