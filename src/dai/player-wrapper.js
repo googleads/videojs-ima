@@ -20,9 +20,9 @@
  /**
   * Wraps the video.js stream player for the plugin.
   *
-  * @param {Object} player Video.js player instance.
-  * @param {Object} adsPluginSettings Settings for the contrib-ads plugin.
-  * @param {DaiController} daiController Reference to the parent controller.
+  * @param {!Object} player Video.js player instance.
+  * @param {!Object} adsPluginSettings Settings for the contrib-ads plugin.
+  * @param {!DaiController} daiController Reference to the parent controller.
   */
 const PlayerWrapper = function(player, adsPluginSettings, daiController) {
   /**
@@ -54,7 +54,7 @@ const PlayerWrapper = function(player, adsPluginSettings, daiController) {
 };
 
 /**
- * Detects when the video.js player has been disposed.
+ * Called in response to the video.js player's 'disposed' event.
  */
 PlayerWrapper.prototype.playerDisposedListener = function() {
   this.contentEndedListeners = [];
@@ -62,32 +62,38 @@ PlayerWrapper.prototype.playerDisposedListener = function() {
 };
 
 /**
- * Called on player pause.
+ * Called on the player's 'pause' event. Handles displaying controls during
+ * paused ad breaks.
  */
  PlayerWrapper.prototype.onPause = function() {
+  // This code will run if the stream is paused during an ad break. Since
+  // controls are usually hidden during ads, they will now show to allow
+  // users to resume ad playback.
   if (this.daiController.isInAdBreak()) {
-    this.vjsControls.show()
+    this.vjsControls.show();
   }
 };
 
 /**
- * Called on player play.
+ * Called on the player's 'play' event. Handles hiding controls during
+ * ad breaks while playing.
  */
  PlayerWrapper.prototype.onPlay = function() {
   if (this.daiController.isInAdBreak()) {
-    this.vjsControls.hide()
+    this.vjsControls.hide();
   }
 };
 
 /**
- * Called on seek ending.
+ * Called on the player's 'seeked' event. Sets up handling for ad break
+ * snapback for VOD streams.
  */
  PlayerWrapper.prototype.onSeekEnd = function() {
-  this.daiController.onSeekEnd(this.vjsPlayer.currentTime())
+  this.daiController.onSeekEnd(this.vjsPlayer.currentTime());
 };
 
 /**
- * Called when the player fires its 'ready' event.
+ * Called on the player's 'ready' event to begin initiating IMA.
  */
 PlayerWrapper.prototype.onPlayerReady = function() {
   this.h5Player =
@@ -98,21 +104,21 @@ PlayerWrapper.prototype.onPlayerReady = function() {
 };
 
 /**
- * @return {Object} The stream player.
+ * @return {!Object} The stream player.
  */
 PlayerWrapper.prototype.getStreamPlayer = function() {
   return this.h5Player;
 };
 
 /**
- * @return {Object} The video.js player.
+ * @return {!Object} The video.js player.
  */
  PlayerWrapper.prototype.getVjsPlayer = function() {
   return this.vjsPlayer;
 };
 
 /**
- * @return {Object} The vjs player's options object.
+ * @return {!Object} The vjs player's options object.
  */
 PlayerWrapper.prototype.getPlayerOptions = function() {
   return this.vjsPlayer.options_;
@@ -129,12 +135,12 @@ PlayerWrapper.prototype.getPlayerId = function() {
 /**
  * Handles ad errors.
  *
- * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
+ * @param {!Object} adErrorEvent The ad error event thrown by the IMA SDK.
  */
 PlayerWrapper.prototype.onAdError = function(adErrorEvent) {
   this.vjsControls.show();
   const errorMessage =
-      adErrorEvent.getError !== undefined ?
+      (adErrorEvent.getError !== undefined) ?
           adErrorEvent.getError() : adErrorEvent.stack;
   this.vjsPlayer.trigger({type: 'adserror', data: {
     AdError: errorMessage,

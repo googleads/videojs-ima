@@ -2677,9 +2677,9 @@ Controller.prototype.extend = function (obj) {
 /**
  * Wraps the video.js stream player for the plugin.
  *
- * @param {Object} player Video.js player instance.
- * @param {Object} adsPluginSettings Settings for the contrib-ads plugin.
- * @param {DaiController} daiController Reference to the parent controller.
+ * @param {!Object} player Video.js player instance.
+ * @param {!Object} adsPluginSettings Settings for the contrib-ads plugin.
+ * @param {!DaiController} daiController Reference to the parent controller.
  */
 var PlayerWrapper$2 = function PlayerWrapper(player, adsPluginSettings, daiController) {
   /**
@@ -2711,7 +2711,7 @@ var PlayerWrapper$2 = function PlayerWrapper(player, adsPluginSettings, daiContr
 };
 
 /**
- * Detects when the video.js player has been disposed.
+ * Called in response to the video.js player's 'disposed' event.
  */
 PlayerWrapper$2.prototype.playerDisposedListener = function () {
   this.contentEndedListeners = [];
@@ -2719,16 +2719,21 @@ PlayerWrapper$2.prototype.playerDisposedListener = function () {
 };
 
 /**
- * Called on player pause.
+ * Called on the player's 'pause' event. Handles displaying controls during
+ * paused ad breaks.
  */
 PlayerWrapper$2.prototype.onPause = function () {
+  // This code will run if the stream is paused during an ad break. Since
+  // controls are usually hidden during ads, they will now show to allow
+  // users to resume ad playback.
   if (this.daiController.isInAdBreak()) {
     this.vjsControls.show();
   }
 };
 
 /**
- * Called on player play.
+ * Called on the player's 'play' event. Handles hiding controls during
+ * ad breaks while playing.
  */
 PlayerWrapper$2.prototype.onPlay = function () {
   if (this.daiController.isInAdBreak()) {
@@ -2737,14 +2742,15 @@ PlayerWrapper$2.prototype.onPlay = function () {
 };
 
 /**
- * Called on seek ending.
+ * Called on the player's 'seeked' event. Sets up handling for ad break
+ * snapback for VOD streams.
  */
 PlayerWrapper$2.prototype.onSeekEnd = function () {
   this.daiController.onSeekEnd(this.vjsPlayer.currentTime());
 };
 
 /**
- * Called when the player fires its 'ready' event.
+ * Called on the player's 'ready' event to begin initiating IMA.
  */
 PlayerWrapper$2.prototype.onPlayerReady = function () {
   this.h5Player = document.getElementById(this.getPlayerId()).getElementsByClassName('vjs-tech')[0];
@@ -2752,21 +2758,21 @@ PlayerWrapper$2.prototype.onPlayerReady = function () {
 };
 
 /**
- * @return {Object} The stream player.
+ * @return {!Object} The stream player.
  */
 PlayerWrapper$2.prototype.getStreamPlayer = function () {
   return this.h5Player;
 };
 
 /**
- * @return {Object} The video.js player.
+ * @return {!Object} The video.js player.
  */
 PlayerWrapper$2.prototype.getVjsPlayer = function () {
   return this.vjsPlayer;
 };
 
 /**
- * @return {Object} The vjs player's options object.
+ * @return {!Object} The vjs player's options object.
  */
 PlayerWrapper$2.prototype.getPlayerOptions = function () {
   return this.vjsPlayer.options_;
@@ -2783,7 +2789,7 @@ PlayerWrapper$2.prototype.getPlayerId = function () {
 /**
  * Handles ad errors.
  *
- * @param {Object} adErrorEvent The ad error event thrown by the IMA SDK.
+ * @param {!Object} adErrorEvent The ad error event thrown by the IMA SDK.
  */
 PlayerWrapper$2.prototype.onAdError = function (adErrorEvent) {
   this.vjsControls.show();
@@ -2835,14 +2841,14 @@ PlayerWrapper$2.prototype.reset = function () {
  */
 
 /**
- * Implementation of the IMA DAI SDK for the plugin.
- *
- * @param {DaiController} daiController Reference to the parent DAI controller.
- *
- * @constructor
- * @struct
- * @final
- */
+* Implementation of the IMA DAI SDK for the plugin.
+*
+* @param {DaiController!} daiController Reference to the parent DAI controller.
+*
+* @constructor
+* @struct
+* @final
+*/
 var SdkImpl$2 = function SdkImpl(daiController) {
   /**
    * Plugin DAI controller.
@@ -2919,7 +2925,7 @@ SdkImpl$2.prototype.initImaDai = function () {
   this.streamPlayer.addEventListener('pause', this.onStreamPause);
   this.streamPlayer.addEventListener('play', this.onStreamPlay);
 
-  this.streamManager.addEventListener([google.ima.dai.api.StreamEvent.Type.LOADED, google.ima.dai.api.StreamEvent.Type.ERROR, google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED, google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED, google.ima.dai.api.StreamEvent.Type.CUEPOINTS_CHANGED, google.ima.dai.api.StreamEvent.Type.STREAM_INITIALIZED, google.ima.dai.api.StreamEvent.Type.STARTED, google.ima.dai.api.StreamEvent.Type.FIRST_QUARTILE, google.ima.dai.api.StreamEvent.Type.MIDPOINT, google.ima.dai.api.StreamEvent.Type.THIRD_QUARTILE], this.onStreamEvent.bind(this), false);
+  this.streamManager.addEventListener([google.ima.dai.api.StreamEvent.Type.LOADED, google.ima.dai.api.StreamEvent.Type.ERROR, google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED, google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED], this.onStreamEvent.bind(this), false);
 
   // Timed metadata is only used for LIVE streams.
   // this.vjsPlayer.on('loadedmetadata', function() {
@@ -2941,13 +2947,18 @@ SdkImpl$2.prototype.initImaDai = function () {
 
   this.vjsPlayer.textTracks().onaddtrack = this.onAddTrack.bind(this);
 
+  this.vjsPlayer.trigger({
+    type: 'stream-manager',
+    StreamManager: this.streamManager
+  });
+
   this.requestStream();
 };
 
 /**
  * Sets the 'cuechange' listener for timed metadata.
  * @param {Object!} timedMetadata of the current stream.
- * 
+ *
  */
 SdkImpl$2.prototype.setTimedTrack = function (timedMetadata) {
   this.processCues(timedMetadata.cues_);
@@ -2958,7 +2969,7 @@ SdkImpl$2.prototype.setTimedTrack = function (timedMetadata) {
 
 /**
    * Called when the video player has metadata to process.
-   * @param {!Event} event The event that triggered this call.
+   * @param {Event!} event The event that triggered this call.
    */
 SdkImpl$2.prototype.onAddTrack = function (event) {
   var _this = this;
@@ -3001,7 +3012,7 @@ SdkImpl$2.prototype.onAddTrack = function (event) {
 /**
  * Iterates through all cues and processes new cues.
  * @param {Object!} cueList of cues for the timed metadata.
- * 
+ *
  */
 SdkImpl$2.prototype.processCues = function (cueList) {
   cueList.forEach(function (cue) {
@@ -3069,10 +3080,9 @@ SdkImpl$2.prototype.onSeekEnd = function (currentTime) {
 
 /**
  * Handles IMA events.
- * @param {google.ima.StreamEvent} event the IMA event
+ * @param {google.ima.StreamEvent!} event the IMA event
  */
 SdkImpl$2.prototype.onStreamEvent = function (event) {
-  console.log('Event:', event.type);
   switch (event.type) {
     case google.ima.dai.api.StreamEvent.Type.LOADED:
       this.loadUrl(event.getStreamData().url);
@@ -3183,12 +3193,15 @@ SdkImpl$2.prototype.requestStream = function () {
   });
 };
 
+/**
+ * Initiates IMA when the player is ready.
+ */
 SdkImpl$2.prototype.onPlayerReady = function () {
   this.initImaDai();
 };
 
 /**
- * Called when the player is disposed.
+ * Reset the StreamManager when the player is disposed.
  */
 SdkImpl$2.prototype.onPlayerDisposed = function () {
   if (this.streamManager) {
@@ -3198,7 +3211,7 @@ SdkImpl$2.prototype.onPlayerDisposed = function () {
 
 /**
  * Returns the instance of the StreamManager.
- * @return {google.ima.StreamManager} The StreamManager being used by the plugin.
+ * @return {google.ima.StreamManager!} The StreamManager being used by the plugin.
  */
 SdkImpl$2.prototype.getStreamManager = function () {
   return this.StreamManager;
@@ -3232,7 +3245,7 @@ SdkImpl$2.prototype.reset = function () {
  * https://www.github.com/googleads/videojs-ima
  */
 /**
- * The coordinatorfor the DAI portion of the plugin. Facilitates
+ * The coordinator for the DAI portion of the plugin. Facilitates
  * communication between all other plugin classes.
  *
  * @param {Object!} player Instance of the video.js player.
@@ -3274,7 +3287,7 @@ var DaiController = function DaiController(player, options) {
     timeout: this.settings.timeout,
     prerollTimeout: this.settings.prerollTimeout
   };
-  var adsPluginSettings = this.extend({}, contribAdsDefaults, options.contribAdsSettings || {});
+  var adsPluginSettings = Object.assign({}, contribAdsDefaults, options.contribAdsSettings || {});
 
   this.playerWrapper = new PlayerWrapper$2(player, adsPluginSettings, this);
   this.sdkImpl = new SdkImpl$2(this);
@@ -3294,7 +3307,7 @@ DaiController.IMA_DEFAULTS = {
  * @param {Object!} options Options to be used in initialization.
  */
 DaiController.prototype.initWithSettings = function (options) {
-  this.settings = this.extend({}, DaiController.IMA_DEFAULTS, options || {});
+  this.settings = Object.assign({}, DaiController.IMA_DEFAULTS, options || {});
 
   this.warnAboutDeprecatedSettings();
 
@@ -3498,35 +3511,6 @@ DaiController.prototype.streamWillAutoplay = function () {
  */
 DaiController.prototype.triggerPlayerEvent = function (name, data) {
   this.playerWrapper.triggerPlayerEvent(name, data);
-};
-
-/**
- * Extends an object to include the contents of objects at parameters 2 onward.
- *
- * @param {Object!} obj The object onto which the subsequent objects' parameters
- *     will be extended. This object will be modified.
- * @param {...Object!} var_args The objects whose properties are to be extended
- *     onto obj.
- * @return {Object!} The extended object.
- */
-DaiController.prototype.extend = function (obj) {
-  var arg = void 0;
-  var index = void 0;
-  var key = void 0;
-
-  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    args[_key - 1] = arguments[_key];
-  }
-
-  for (index = 0; index < args.length; index++) {
-    arg = args[index];
-    for (key in arg) {
-      if (arg.hasOwnProperty(key)) {
-        obj[key] = arg[key];
-      }
-    }
-  }
-  return obj;
 };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }

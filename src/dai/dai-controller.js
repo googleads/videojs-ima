@@ -20,7 +20,7 @@ import PlayerWrapper from './player-wrapper.js';
 import SdkImpl from './sdk-impl.js';
 
 /**
- * The coordinatorfor the DAI portion of the plugin. Facilitates
+ * The coordinator for the DAI portion of the plugin. Facilitates
  * communication between all other plugin classes.
  *
  * @param {Object!} player Instance of the video.js player.
@@ -65,8 +65,8 @@ const DaiController = function(player, options) {
     timeout: this.settings.timeout,
     prerollTimeout: this.settings.prerollTimeout,
   };
-  const adsPluginSettings = this.extend(
-      {}, contribAdsDefaults, options.contribAdsSettings || {});
+  const adsPluginSettings =
+      Object.assign({}, contribAdsDefaults, options.contribAdsSettings || {});
 
   this.playerWrapper = new PlayerWrapper(player, adsPluginSettings, this);
   this.sdkImpl = new SdkImpl(this);
@@ -86,7 +86,7 @@ DaiController.IMA_DEFAULTS = {
  * @param {Object!} options Options to be used in initialization.
  */
 DaiController.prototype.initWithSettings = function(options) {
-  this.settings = this.extend({}, DaiController.IMA_DEFAULTS, options || {});
+  this.settings = Object.assign({}, DaiController.IMA_DEFAULTS, options || {});
 
   this.warnAboutDeprecatedSettings();
 
@@ -289,31 +289,6 @@ DaiController.prototype.streamWillAutoplay = function() {
  */
 DaiController.prototype.triggerPlayerEvent = function(name, data) {
   this.playerWrapper.triggerPlayerEvent(name, data);
-};
-
-
-/**
- * Extends an object to include the contents of objects at parameters 2 onward.
- *
- * @param {Object!} obj The object onto which the subsequent objects' parameters
- *     will be extended. This object will be modified.
- * @param {...Object!} var_args The objects whose properties are to be extended
- *     onto obj.
- * @return {Object!} The extended object.
- */
-DaiController.prototype.extend = function(obj, ...args) {
-  let arg;
-  let index;
-  let key;
-  for (index = 0; index < args.length; index++) {
-    arg = args[index];
-    for (key in arg) {
-      if (arg.hasOwnProperty(key)) {
-        obj[key] = arg[key];
-      }
-    }
-  }
-  return obj;
 };
 
 export default DaiController;
