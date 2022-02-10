@@ -43,7 +43,7 @@
     "src/"
   ],
   "peerDependencies": {
-    "video.js": "^5.19.2 || ^6 || ^7"
+    "video.js": "^7.14.3"
   },
   "dependencies": {
     "can-autoplay": "^3.0.0",
@@ -80,7 +80,7 @@
     "rollup-plugin-uglify": "^2.0.1",
     "selenium-webdriver": "^3.6.0",
     "uglify-es": "^3.3.9",
-    "video.js": "^5.19.2 || ^6 || ^7",
+    "video.js": "^7.14.3",
     "watch": "^1.0.2",
     "webdriver-manager": "^12.1.7",
     "xmldom": ">=0.5.0"
