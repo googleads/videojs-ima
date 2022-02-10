@@ -5,16 +5,16 @@ const rimraf = require('rimraf');
 
 process.chdir(path.resolve(__dirname, '..'));
 
-// Push master.
+// Push main.
 // Check out gh-pages.
-// Merge master.
+// Merge main.
 // npm install.
 const preNpmInstallCommands = [
-  'git push origin master',
+  'git push origin main',
   'git push --tags',
   'git branch -D gh-pages',
   'git checkout -b gh-pages origin/gh-pages',
-  'git merge -X theirs master -m "Syncing gh-pages to master v' + pkg.version + '"'
+  'git merge -X theirs main -m "Syncing gh-pages to main v' + pkg.version + '"'
 ];
 console.log('Executing pre npm install commands');
 try {
@@ -33,7 +33,7 @@ console.log('Removed old node_modules on gh-pages.');
 // Build latest.
 // Add modified files (examples, dist, and node_modules).
 // Commit and push to gh-pages
-// Switch back to master.
+// Switch back to main.
 const postNpmInstallCommands = [
   'npm install',
   'npm run rollup',
@@ -46,7 +46,7 @@ const postNpmInstallCommands = [
   'git add -f node_modules/can-autoplay/build/can-autoplay.min.js',
   'git commit -m "Build for samples at v' + pkg.version + '"',
   'git push -f origin gh-pages',
-  'git checkout master'
+  'git checkout main'
 ];
 console.log('Running install and pushing new gh-pages.');
 try {
@@ -56,21 +56,21 @@ try {
   console.log('Error runninng install and pushing new gh-pages:', error.error);
 }
 
-// Remove the node_modules directory on master.
-console.log('Removing old node_modules on master.');
+// Remove the node_modules directory on main.
+console.log('Removing old node_modules on main.');
 rimraf.sync('node_modules');
-console.log('Removed old node_modules on master.');
+console.log('Removed old node_modules on main.');
 
 // Install node modules.
 // Build latest.
-const backOnMasterCommands = [
+const backOnMainCommands = [
   'npm install',
   'npm run rollup'
 ];
-console.log('Running build on master.');
+console.log('Running build on main.');
 try {
-  var cmdOut = execSync(backOnMasterCommands.join(' && '));
-  console.log('Ran build on master', cmdOut);
+  var cmdOut = execSync(backOnMainCommands.join(' && '));
+  console.log('Ran build on main', cmdOut);
 } catch (error) {
-  console.log('Error runninng build on master:', error.error);
+  console.log('Error runninng build on main:', error.error);
 }
