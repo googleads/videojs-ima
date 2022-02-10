@@ -1,6 +1,6 @@
 # IMA SDK Plugin for Video.js
 
-[![Build Status](https://travis-ci.org/googleads/videojs-ima.svg?branch=master)](https://travis-ci.org/googleads/videojs-ima)
+[![Build Status](https://travis-ci.org/googleads/videojs-ima.svg?branch=main)](https://travis-ci.org/googleads/videojs-ima)
 
 ## Introduction
 The IMA SDK Plugin for Video.js provides a quick and easy IMA SDK integration
@@ -184,7 +184,7 @@ the previous snippet. A summary of all settings follows:
 (5) [ImaSdkSettings.setVpaidMode](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.ImaSdkSettings#setVpaidMode)
 
 ## IMA Plugin Ad Events
-The IMA Plugin will fire events that can be listened for. Ad lifecycle events can be listened for by following our [Advanced Example](https://github.com/googleads/videojs-ima/blob/master/examples/advanced/ads.js). Other events are emited from the videojs player. Please see the below example to set up listeners for these events.
+The IMA Plugin will fire events that can be listened for. Ad lifecycle events can be listened for by following our [Advanced Example](https://github.com/googleads/videojs-ima/blob/main/examples/advanced/ads.js). Other events are emited from the videojs player. Please see the below example to set up listeners for these events.
 
 ```javascript
 this.player = videojs('content_video');
