@@ -1,35 +1,42 @@
 # IMA DAI implementation for the Video.js-IMA plugin
 
 ## Introduction
-The IMA SDK Plugin for Video.js now provides a quick and easy IMA DAI SDK integration
-for users of the Video.js player.
+You can use the IMA SDK Plugin for Video.js to integrate with the Video.js
+player.
+
+If you're using the plugin for a client-side implementation, please see
+the [client-side readme](//github.com/googleads/videojs-ima/blob/master/README.md)
+for documentation.
 
 To see the plugin in action for DAI, check out this
 [sample](//googleads.github.io/videojs-ima/examples/dai).
 
 ## Features
-- Easily integrate the Google IMA DAI SDK into Video.js to playback for your
-streams integrated with ads. Using DAI requires an
-[Ad Manager 360 Advanced](//support.google.com/admanager/answer/3485387) account.
-For more information, on the
-[IMA DAI SDK documentation](//developers.google.com/interactive-media-ads/docs/sdks/html5/dai).
+Enable playback for streams integrated with ads by integrating the Google IMA
+DAI SDK into Video.js. Using DAI requires an [Ad Manager 360
+Advanced](//support.google.com/admanager/answer/3485387) account.
+
+For more information, see the
+[IMA DAI SDK
+documentation](//developers.google.com/interactive-media-ads/docs/sdks/html5/dai).
 
 ## Requirements
   - Your favorite text editor
   - A JavaScript enabled browser
-  - An [Ad Manager 360 Advanced](//support.google.com/admanager/answer/3485387) account.
+  - An [Ad Manager 360 Advanced](//support.google.com/admanager/answer/3485387)
+  account.
 
-## Getting started
+## Get started
 
 ### ES6 Imports
-The easiest way to get started is by using [npm](//www.npmjs.org/).
+The easiest way to get started is to use [npm](//www.npmjs.org/).
 
 ```
 npm install videojs-ima
 ```
 
-Your index.html should contain a video.js player for stream playback, and script tags for
-the IMA DAI SDK and your own javascript file.
+Your index.html should contain a video.js player for stream playback, and script
+tags for the IMA DAI SDK and your own javascript file.
 
 ```html
 <html>
@@ -41,8 +48,11 @@ the IMA DAI SDK and your own javascript file.
   <body>
     <video id='video_player' class="video-js">
         <p class='vjs-no-js'>
-            To view this video, please enable JavaScript and consider upgrading to a web browser that
-            <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+            To view this video, please enable JavaScript and consider upgrading
+          to a web browser that
+            <a href='https://videojs.com/html5-video-support/' target='_blank'>
+              supports HTML5 video
+          </a>
         </p>
     </video>
     <!-- Load dependent scripts -->
@@ -52,9 +62,9 @@ the IMA DAI SDK and your own javascript file.
 </html>
 ```
 
-The following imports are required to use the videojs-ima module, as seen in the player.js example below.
-Note that both the `VodStream` and `LiveStream` class are imported, but most likely only one will be used
-at a time.
+The following imports are required to use the videojs-ima module, as seen in the
+player.js example below. Note that both the `VodStream` and `LiveStream` class
+are imported, but most likely only one will be used at a time.
 
 ```javascript
 import videojs from 'video.js';
@@ -82,7 +92,7 @@ player.imaDai(vodStream, imaOptions);
 ```
 
 ### Alternative Setup
-If you don't use npm, you can download the source from the dist/ folder and
+If you don't use npm, you can download the source from the `dist/` folder and
 include it directly in your project. You'll also need to download the source for
 the [videojs-contrib-ads plugin](//github.com/videojs/videojs-contrib-ads) and
 the [videojs-http-streaming plugin](//github.com/videojs/http-streaming).
@@ -101,8 +111,11 @@ empty) javascript file:
   <body>
     <video id='video_player' class="video-js">
         <p class='vjs-no-js'>
-            To view this video, please enable JavaScript and consider upgrading to a web browser that
-            <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+            To view this video, please enable JavaScript and consider upgrading
+            to a web browser that
+            <a href='https://videojs.com/html5-video-support/' target='_blank'>
+                supports HTML5 video
+            </a>
         </p>
     </video>
     <!-- Load dependent scripts -->
@@ -141,8 +154,6 @@ const imaOptions = {
 player.imaDai(vodStream, imaOptions);
 ```
 
-That's all there is to it!
-
 ## Stream constructors
 The following options are required by the following class constructors:
 
@@ -162,8 +173,8 @@ The following options are required by the following class constructors:
 | videoId | string | The VOD stream's video ID |
 
 ## Additional settings
-The DAI portion of the plugin accepts a number of settings for stream playback. A summary of all settings
-follows:
+The DAI portion of the plugin accepts a number of settings for stream playback.
+A summary of all settings follows:
 
 | Settings | Type | Description |
 |----------|------|-------------|
