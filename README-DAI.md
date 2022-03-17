@@ -12,9 +12,10 @@ To see the plugin in action for DAI, check out this
 [sample](//googleads.github.io/videojs-ima/examples/dai).
 
 ## Features
-Enable playback for streams integrated with ads by integrating the Google IMA
-DAI SDK into Video.js. Using DAI requires an [Ad Manager 360
-Advanced](//support.google.com/admanager/answer/3485387) account.
+Enable playback for HLS streams integrated with ads by integrating the Google
+IMA DAI SDK into Video.js. Using DAI requires an [Ad Manager 360
+Advanced](//support.google.com/admanager/answer/3485387) account. DASH streams
+are currently not supported by this plugin.
 
 For more information, see the
 [IMA DAI SDK
@@ -161,14 +162,14 @@ The following options are required by the following class constructors:
 
 | Settings | Type | Description |
 |----------|------|-------------|
-| streamFormat | string | 'hls' or 'dash'. |
+| streamFormat | string | 'hls'. 'dash' streams are currently not supported. |
 | assetKey | string | The live stream's asset key. |
 
 ### VodStream(streamFormat, cmsId, videoId)
 
 | Settings | Type | Description |
 |----------|------|-------------|
-| streamFormat | string | 'hls' or 'dash'. |
+| streamFormat | string | 'hls'. 'dash' streams are currently not supported. |
 | cmsId | string | The VOD stream's CSM ID. |
 | videoId | string | The VOD stream's video ID |
 
