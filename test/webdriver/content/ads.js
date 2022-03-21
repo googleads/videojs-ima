@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var onAdErrorEvent = function(event) {
-  console.log(event);
-};
-
 var adTags = {
-  linear: 'http://localhost:8000/test/webdriver/content/canned_ads/linear.xml',
-  skippable: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-      'skippable_linear.xml',
-  vmap_preroll: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-    'vmap_preroll.xml',
-  vmap_midroll: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-    'vmap_midroll.xml',
-  nonlinear: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-      'nonlinear.xml',
-  error_303: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-      'empty_wrapper.xml'
+  linear: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/' +
+  'external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&' +
+  'ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&' +
+  'env=vp&impl=s&correlator=',
+  skippable: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/' +
+  'external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&' +
+  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=',
+  vmap_preroll: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/' +
+  'external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&' +
+  'ciu_szs=300x250%2C728x90&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&' +
+  'env=vp&impl=s&correlator=',
+  vmap_midroll: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/' +
+  'vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dmidonly&ciu_szs=300x250&' +
+  'gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&cmsid=496&' +
+  'vid=short_onecue&correlator=',
+  nonlinear: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/' +
+  'nonlinear_ad_samples&sz=480x70&cust_params=sample_ct%3Dnonlinear&ciu_szs=300x250%2C728x90&' +
+  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=',
+  error_303: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/' +
+  'single_ad_samples&sz=640x480&cust_params=sample_ct%3Dredirecterror&ciu_szs=300x250%2C728x90&' +
+  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator='
 };
 
 var searchParams = new URLSearchParams(location.search);
@@ -38,9 +44,17 @@ var player = videojs('content_video');
 
 var onAdsManagerLoaded = function() {
   player.ima.addEventListener(google.ima.AdEvent.Type.STARTED, onAdStarted);
+  player.ima.addEventListener(google.ima.AdEvent.Type.AD_ERROR, onAdError);
 };
 
 var onAdStarted = function(event) {
+  var message = event.type;
+  var log = document.getElementById('log');
+  log.innerHTML += message + "<br>";
+};
+
+var onAdError = function(event) {
+  console.log('ERRRRRRRRORORORO');
   var message = event.type;
   var log = document.getElementById('log');
   log.innerHTML += message + "<br>";
@@ -51,10 +65,10 @@ var options = {
   disableFlagAds: true,
   adTagUrl: adTags[adTagName],
   adsManagerLoadedCallback: onAdsManagerLoaded,
-  debug: true,
-  vastLoadTimeout: 15000
+  debug: true
 };
 
+console.log(options.adTagUrl);
 player.ima(options);
 
 // Remove controls from the player on iPad to stop native controls from stealing
@@ -76,6 +90,7 @@ if (navigator.userAgent.match(/iPhone/i) ||
 }
 
 player.on("adserror", function(event) {
+  console.log('ERROR');
   var log = document.getElementById('log');
   log.innerHTML += event.data.AdError + "<br>";
 });
