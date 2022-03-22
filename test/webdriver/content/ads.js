@@ -44,17 +44,9 @@ var player = videojs('content_video');
 
 var onAdsManagerLoaded = function() {
   player.ima.addEventListener(google.ima.AdEvent.Type.STARTED, onAdStarted);
-  player.ima.addEventListener(google.ima.AdEvent.Type.AD_ERROR, onAdError);
 };
 
 var onAdStarted = function(event) {
-  var message = event.type;
-  var log = document.getElementById('log');
-  log.innerHTML += message + "<br>";
-};
-
-var onAdError = function(event) {
-  console.log('ERRRRRRRRORORORO');
   var message = event.type;
   var log = document.getElementById('log');
   log.innerHTML += message + "<br>";
@@ -68,7 +60,6 @@ var options = {
   debug: true
 };
 
-console.log(options.adTagUrl);
 player.ima(options);
 
 // Remove controls from the player on iPad to stop native controls from stealing
@@ -90,7 +81,6 @@ if (navigator.userAgent.match(/iPhone/i) ||
 }
 
 player.on("adserror", function(event) {
-  console.log('ERROR');
   var log = document.getElementById('log');
   log.innerHTML += event.data.AdError + "<br>";
 });
