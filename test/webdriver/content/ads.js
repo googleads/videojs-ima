@@ -93,4 +93,3 @@ player.on("playing", function(event) {
 player.one(startEvent, function() {
     player.ima.initializeAdDisplayContainer();
 });
-
