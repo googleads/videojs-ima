@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * Logs ad error events.
- * @param {!google.ima.AdErrorEvent} event for the ad error.
- */
-const onAdErrorEvent = function(event) {
-  console.log(event);
-};
-
-const adTags = {
-  linear: 'http://localhost:8000/test/webdriver/content/canned_ads/linear.xml',
-  skippable: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-      'skippable_linear.xml',
-  vmap_preroll: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-    'vmap_preroll.xml',
-  vmap_midroll: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-    'vmap_midroll.xml',
-  nonlinear: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-      'nonlinear.xml',
-  error_303: 'http://localhost:8000/test/webdriver/content/canned_ads/' +
-      'empty_wrapper.xml'
+var adTags = {
+  linear: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/' +
+  'external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&' +
+  'ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&' +
+  'env=vp&impl=s&correlator=',
+  skippable: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/' +
+  'external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&' +
+  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=',
+  vmap_preroll: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/' +
+  'external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&' +
+  'ciu_szs=300x250%2C728x90&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&' +
+  'env=vp&impl=s&correlator=',
+  vmap_midroll: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/' +
+  'vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dmidonly&ciu_szs=300x250&' +
+  'gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&cmsid=496&' +
+  'vid=short_onecue&correlator=',
+  nonlinear: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/' +
+  'nonlinear_ad_samples&sz=480x70&cust_params=sample_ct%3Dnonlinear&ciu_szs=300x250%2C728x90&' +
+  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=',
+  error_303: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/' +
+  'single_ad_samples&sz=640x480&cust_params=sample_ct%3Dredirecterror&ciu_szs=300x250%2C728x90&' +
+  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator='
 };
 
 const searchParams = new URLSearchParams(location.search);
@@ -41,37 +42,29 @@ const adTagName = searchParams.get('ad');
 
 const player = videojs('content_video');
 
-/**
- * Adds a STARTED event listener when the ads manager is loaded.
- */
 const onAdsManagerLoaded = function() {
   player.ima.addEventListener(google.ima.AdEvent.Type.STARTED, onAdStarted);
 };
 
-/**
- * Called on the STARTED ad event.
- * @param {!google.ima.AdEvent} event for the ad.
- */
 const onAdStarted = function(event) {
   const message = event.type;
   const log = document.getElementById('log');
   log.innerHTML += message + "<br>";
 };
 
-const options = {
+var options = {
   id: 'content_video',
   disableFlagAds: true,
   adTagUrl: adTags[adTagName],
   adsManagerLoadedCallback: onAdsManagerLoaded,
-  debug: true,
-  vastLoadTimeout: 15000
+  debug: true
 };
 
 player.ima(options);
 
 // Remove controls from the player on iPad to stop native controls from stealing
 // our click
-const contentPlayer =  document.getElementById('content_video_html5_api');
+var contentPlayer =  document.getElementById('content_video_html5_api');
 if ((navigator.userAgent.match(/iPad/i) ||
       navigator.userAgent.match(/Android/i)) &&
     contentPlayer.hasAttribute('controls')) {
@@ -80,7 +73,7 @@ if ((navigator.userAgent.match(/iPad/i) ||
 
 // Initialize the ad container when the video player is clicked, but only the
 // first time it's clicked.
-let startEvent = 'click';
+const startEvent = 'click';
 if (navigator.userAgent.match(/iPhone/i) ||
     navigator.userAgent.match(/iPad/i) ||
     navigator.userAgent.match(/Android/i)) {
@@ -100,4 +93,3 @@ player.on("playing", function(event) {
 player.one(startEvent, function() {
     player.ima.initializeAdDisplayContainer();
 });
-

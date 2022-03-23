@@ -37,16 +37,14 @@ let browsers = [
       'chromeOptions' : {args: ['--headless']}
     }
   },
-  // Currently experiencing an issue where the firefox browser is timing out (2/24/2020)
-  // Removing until this is resolved.
-  // {
-  //   name: 'firefox-local',
-  //   server: '', //local
-  //   capabilities: {
-  //     'browserName' : 'firefox',
-  //     'moz:firefoxOptions' : {args: ['-headless']}
-  //   }
-  // },
+  {
+    name: 'firefox-local',
+    server: '', //local
+    capabilities: {
+      'browserName' : 'firefox',
+      'moz:firefoxOptions' : {args: ['-headless']}
+    }
+  },
 ];
 
 for (let browser of browsers) {
