@@ -1,7 +1,5 @@
 # IMA SDK Plugin for Video.js
 
-[![Build Status](https://travis-ci.org/googleads/videojs-ima.svg?branch=main)](https://travis-ci.org/googleads/videojs-ima)
-
 ## Introduction
 The IMA SDK Plugin for Video.js provides a quick and easy IMA SDK integration
 for the Video.js player.
