@@ -1,6 +1,6 @@
 {
   "name": "videojs-ima",
-  "version": "1.11.0",
+  "version": "2.0.0",
   "license": "Apache-2.0",
   "main": "./dist/videojs.ima.js",
   "module": "./dist/videojs.ima.es.js",
@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@hapi/cryptiles": "^5.1.0",
+    "@videojs/http-streaming": "^2.10.0",
     "can-autoplay": "^3.0.2",
     "extend": ">=3.0.2",
     "lodash": ">=4.17.19",

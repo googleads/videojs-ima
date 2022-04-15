@@ -6,6 +6,9 @@
 The IMA SDK Plugin for Video.js provides a quick and easy IMA SDK integration
 for the Video.js player.
 
+If you are using the this plugin for a DAI implementation, please use the
+[DAI readme](//github.com/googleads/videojs-ima/blob/master/README.md) for documentation.
+
 To see the plugin in action, check out our
 [samples](//googleads.github.io/videojs-ima/).
 
