@@ -1159,7 +1159,7 @@ var scripts = { "contBuild": "watch 'npm run rollup:max' src", "predevServer": "
 var repository = { "type": "git", "url": "https://github.com/googleads/videojs-ima" };
 var files = ["CHANGELOG.md", "LICENSE", "README.md", "dist/", "src/"];
 var peerDependencies = { "video.js": "^5.19.2 || ^6 || ^7" };
-var dependencies = { "@hapi/cryptiles": "^5.1.0", "can-autoplay": "^3.0.2", "extend": ">=3.0.2", "lodash": ">=4.17.19", "lodash.template": ">=4.5.0", "videojs-contrib-ads": "^6.9.0" };
+var dependencies = { "@hapi/cryptiles": "^5.1.0", "@videojs/http-streaming": "^2.10.0", "can-autoplay": "^3.0.2", "extend": ">=3.0.2", "lodash": ">=4.17.19", "lodash.template": ">=4.5.0", "videojs-contrib-ads": "^6.9.0" };
 var devDependencies = { "axios": "^0.25.0", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^99.0.0", "conventional-changelog-cli": "^2.2.2", "conventional-changelog-videojs": "^3.0.2", "ecstatic": "^4.1.4", "eslint": "^8.8.0", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^2.0.4", "http-server": "^14.1.0", "ini": ">=1.3.7", "mocha": "^9.2.0", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^7.17.0", "watch": "^0.13.0", "webdriver-manager": "^12.1.7", "xmldom": "^0.6.0" };
 var keywords = ["videojs", "videojs-plugin"];
 var pkg = {
@@ -2719,7 +2719,7 @@ PlayerWrapper$2.prototype.playerDisposedListener = function () {
 };
 
 /**
- * Called on the player's 'pause' event. Handles displaying controls during
+ * Called on the player 'pause' event. Handles displaying controls during
  * paused ad breaks.
  */
 PlayerWrapper$2.prototype.onPause = function () {
@@ -2732,7 +2732,7 @@ PlayerWrapper$2.prototype.onPause = function () {
 };
 
 /**
- * Called on the player's 'play' event. Handles hiding controls during
+ * Called on the player 'play' event. Handles hiding controls during
  * ad breaks while playing.
  */
 PlayerWrapper$2.prototype.onPlay = function () {
@@ -2841,14 +2841,14 @@ PlayerWrapper$2.prototype.reset = function () {
  */
 
 /**
-* Implementation of the IMA DAI SDK for the plugin.
-*
-* @param {DaiController!} daiController Reference to the parent DAI controller.
-*
-* @constructor
-* @struct
-* @final
-*/
+ * Implementation of the IMA DAI SDK for the plugin.
+ *
+ * @param {DaiController!} daiController Reference to the parent DAI controller.
+ *
+ * @constructor
+ * @struct
+ * @final
+ */
 var SdkImpl$2 = function SdkImpl(daiController) {
   /**
    * Plugin DAI controller.
@@ -2927,24 +2927,6 @@ SdkImpl$2.prototype.initImaDai = function () {
 
   this.streamManager.addEventListener([google.ima.dai.api.StreamEvent.Type.LOADED, google.ima.dai.api.StreamEvent.Type.ERROR, google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED, google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED], this.onStreamEvent.bind(this), false);
 
-  // Timed metadata is only used for LIVE streams.
-  // this.vjsPlayer.on('loadedmetadata', function() {
-  //   this.vjsPlayer.textTracks().tracks_.forEach(track => {
-  //     if (track.label === 'Timed Metadata') {
-  //       this.setTimedTrack(track);
-  //     } else {
-  //       const metadataInterval = setInterval(function() {
-  //         this.vjsPlayer.textTracks().tracks_.forEach(track => {
-  //           if (track.label === 'Timed Metadata') {
-  //             this.setTimedTrack(track);
-  //             clearInterval(metadataInterval);
-  //           }
-  //         });
-  //       }.bind(this), 500);
-  //     }
-  //   });
-  // }.bind(this));
-
   this.vjsPlayer.textTracks().onaddtrack = this.onAddTrack.bind(this);
 
   this.vjsPlayer.trigger({
@@ -2956,21 +2938,9 @@ SdkImpl$2.prototype.initImaDai = function () {
 };
 
 /**
- * Sets the 'cuechange' listener for timed metadata.
- * @param {Object!} timedMetadata of the current stream.
- *
+ * Called when the video player has metadata to process.
+ * @param {Event!} event The event that triggered this call.
  */
-SdkImpl$2.prototype.setTimedTrack = function (timedMetadata) {
-  this.processCues(timedMetadata.cues_);
-  timedMetadata.on('cuechange', function () {
-    this.processCues(timedMetadata.cues_);
-  }.bind(this));
-};
-
-/**
-   * Called when the video player has metadata to process.
-   * @param {Event!} event The event that triggered this call.
-   */
 SdkImpl$2.prototype.onAddTrack = function (event) {
   var _this = this;
 
@@ -3007,24 +2977,6 @@ SdkImpl$2.prototype.onAddTrack = function (event) {
       }
     };
   }
-};
-
-/**
- * Iterates through all cues and processes new cues.
- * @param {Object!} cueList of cues for the timed metadata.
- *
- */
-SdkImpl$2.prototype.processCues = function (cueList) {
-  cueList.forEach(function (cue) {
-    var cueData = cue.frame.data;
-    if (!this.metadataLoaded[cueData]) {
-      this.metadataLoaded[cueData] = true;
-      var streamTime = this.streamManager.streamTimeForContentTime(cue.startTime);
-      console.log('Cue', cueData);
-      console.log('Time: ' + cue.startTime + ' -> ' + streamTime);
-      this.streamManager.processMetadata('ID3', cueData, streamTime);
-    }
-  }.bind(this));
 };
 
 /**
@@ -3761,6 +3713,9 @@ var LiveStream = function LiveStream(streamFormat, assetKey) {
   if (streamFormat !== 'hls' && streamFormat !== 'dash') {
     window.console.error('VodStream error: incorrect streamFormat.');
     return;
+  } else if (streamFormat === 'dash') {
+    window.console.error('streamFormat error: DASH streams are not' + 'currently supported by this plugin.');
+    return;
   } else if (typeof assetKey !== 'string') {
     window.console.error('assetKey error: value must be string.');
     return;
@@ -3775,6 +3730,9 @@ var VodStream = function VodStream(streamFormat, cmsId, videoId) {
   streamFormat = streamFormat.toLowerCase();
   if (streamFormat !== 'hls' && streamFormat !== 'dash') {
     window.console.error('VodStream error: incorrect streamFormat.');
+    return;
+  } else if (streamFormat === 'dash') {
+    window.console.error('streamFormat error: DASH streams are not' + 'currently supported by this plugin.');
     return;
   } else if (typeof cmsId !== 'string') {
     window.console.error('cmsId error: value must be string.');
