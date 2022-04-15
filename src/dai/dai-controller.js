@@ -292,4 +292,3 @@ DaiController.prototype.triggerPlayerEvent = function(name, data) {
 };
 
 export default DaiController;
-

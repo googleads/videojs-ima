@@ -62,7 +62,7 @@ PlayerWrapper.prototype.playerDisposedListener = function() {
 };
 
 /**
- * Called on the player's 'pause' event. Handles displaying controls during
+ * Called on the player 'pause' event. Handles displaying controls during
  * paused ad breaks.
  */
  PlayerWrapper.prototype.onPause = function() {
@@ -75,7 +75,7 @@ PlayerWrapper.prototype.playerDisposedListener = function() {
 };
 
 /**
- * Called on the player's 'play' event. Handles hiding controls during
+ * Called on the player 'play' event. Handles hiding controls during
  * ad breaks while playing.
  */
  PlayerWrapper.prototype.onPlay = function() {

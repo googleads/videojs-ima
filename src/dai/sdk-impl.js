@@ -17,15 +17,15 @@
  * https://www.github.com/googleads/videojs-ima
  */
 
-/**
-* Implementation of the IMA DAI SDK for the plugin.
-*
-* @param {DaiController!} daiController Reference to the parent DAI controller.
-*
-* @constructor
-* @struct
-* @final
-*/
+ /**
+  * Implementation of the IMA DAI SDK for the plugin.
+  *
+  * @param {DaiController!} daiController Reference to the parent DAI controller.
+  *
+  * @constructor
+  * @struct
+  * @final
+  */
 const SdkImpl = function(daiController) {
   /**
    * Plugin DAI controller.
@@ -72,12 +72,12 @@ const SdkImpl = function(daiController) {
   /**
    * Timed metadata for the stream.
    */
-    this.timedMetadata;
+   this.timedMetadata;
 
   /**
    * Timed metadata record.
    */
-    this.metadataLoaded = {};
+   this.metadataLoaded = {};
 
   this.SOURCE_TYPES = {
     hls: 'application/x-mpegURL',
@@ -116,24 +116,6 @@ SdkImpl.prototype.initImaDai = function() {
     this.onStreamEvent.bind(this),
     false);
 
-  // Timed metadata is only used for LIVE streams.
-  // this.vjsPlayer.on('loadedmetadata', function() {
-  //   this.vjsPlayer.textTracks().tracks_.forEach(track => {
-  //     if (track.label === 'Timed Metadata') {
-  //       this.setTimedTrack(track);
-  //     } else {
-  //       const metadataInterval = setInterval(function() {
-  //         this.vjsPlayer.textTracks().tracks_.forEach(track => {
-  //           if (track.label === 'Timed Metadata') {
-  //             this.setTimedTrack(track);
-  //             clearInterval(metadataInterval);
-  //           }
-  //         });
-  //       }.bind(this), 500);
-  //     }
-  //   });
-  // }.bind(this));
-
   this.vjsPlayer.textTracks().onaddtrack = this.onAddTrack.bind(this);
 
   this.vjsPlayer.trigger({
@@ -145,21 +127,9 @@ SdkImpl.prototype.initImaDai = function() {
 };
 
 /**
- * Sets the 'cuechange' listener for timed metadata.
- * @param {Object!} timedMetadata of the current stream.
- *
+ * Called when the video player has metadata to process.
+ * @param {Event!} event The event that triggered this call.
  */
-SdkImpl.prototype.setTimedTrack = function(timedMetadata) {
-  this.processCues(timedMetadata.cues_);
-  timedMetadata.on('cuechange', function() {
-    this.processCues(timedMetadata.cues_);
-  }.bind(this));
-};
-
-/**
-   * Called when the video player has metadata to process.
-   * @param {Event!} event The event that triggered this call.
-   */
 SdkImpl.prototype.onAddTrack = function(event) {
   const track = event.track;
   console.log('TRACK', track);
@@ -176,27 +146,9 @@ SdkImpl.prototype.onAddTrack = function(event) {
 };
 
 /**
- * Iterates through all cues and processes new cues.
- * @param {Object!} cueList of cues for the timed metadata.
- *
- */
-SdkImpl.prototype.processCues = function(cueList) {
-  cueList.forEach(function(cue) {
-    const cueData = cue.frame.data;
-    if (!this.metadataLoaded[cueData]) {
-      this.metadataLoaded[cueData] = true;
-      const streamTime = this.streamManager.streamTimeForContentTime(cue.startTime);
-      console.log('Cue', cueData);
-      console.log('Time: ' + cue.startTime + ' -> ' + streamTime);
-      this.streamManager.processMetadata('ID3', cueData, streamTime);
-    }
-  }.bind(this));
-};
-
-/**
  * Creates the ad UI container.
  */
-  SdkImpl.prototype.createAdUiDiv = function() {
+ SdkImpl.prototype.createAdUiDiv = function() {
   const uiDiv = document.createElement('div');
   uiDiv.id = 'ad-ui';
   // 3em is the height of the control bar.
@@ -217,7 +169,7 @@ SdkImpl.prototype.onStreamPause = function() {
 /**
  * Called on play to update the ad UI.
  */
-  SdkImpl.prototype.onStreamPlay = function() {
+ SdkImpl.prototype.onStreamPlay = function() {
   if (this.isAdBreak) {
     this.adUiDiv.style.display = 'block';
   }
@@ -227,7 +179,7 @@ SdkImpl.prototype.onStreamPause = function() {
  * Called on play to update the ad UI.
  * @param {number} currentTime the current time of the stream.
  */
-  SdkImpl.prototype.onSeekEnd = function(currentTime) {
+ SdkImpl.prototype.onSeekEnd = function(currentTime) {
   const streamType = this.daiController.getSettings().streamType;
   if (streamType === 'live') {
     return;
@@ -249,7 +201,7 @@ SdkImpl.prototype.onStreamPause = function() {
  * Handles IMA events.
  * @param {google.ima.StreamEvent!} event the IMA event
  */
-  SdkImpl.prototype.onStreamEvent = function(event) {
+ SdkImpl.prototype.onStreamEvent = function(event) {
   switch (event.type) {
     case google.ima.dai.api.StreamEvent.Type.LOADED:
       this.loadUrl(event.getStreamData().url);

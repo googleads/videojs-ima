@@ -265,6 +265,10 @@ class LiveStream {
     if (streamFormat !== 'hls' && streamFormat !== 'dash') {
       window.console.error('VodStream error: incorrect streamFormat.');
       return;
+    } else if (streamFormat === 'dash') {
+      window.console.error('streamFormat error: DASH streams are not' +
+                           'currently supported by this plugin.');
+      return;
     } else if (typeof assetKey !== 'string') {
       window.console.error('assetKey error: value must be string.');
       return;
@@ -279,6 +283,10 @@ class VodStream {
     streamFormat = streamFormat.toLowerCase();
     if (streamFormat !== 'hls' && streamFormat !== 'dash') {
       window.console.error('VodStream error: incorrect streamFormat.');
+      return;
+    } else if (streamFormat === 'dash') {
+      window.console.error('streamFormat error: DASH streams are not' +
+                           'currently supported by this plugin.');
       return;
     } else if (typeof cmsId !== 'string') {
       window.console.error('cmsId error: value must be string.');
@@ -306,7 +314,7 @@ const initDai = function(stream, options) {
     window.console.error('initDai() first parameter must be an instance of LiveStream or VodStream.');
     return;
   }
-  
+
   options.streamFormat = stream.streamFormat;
   /* eslint no-invalid-this: 'off' */
   this.imaDai = new ImaDaiPlugin(this, options);
