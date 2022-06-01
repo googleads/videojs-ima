@@ -16,7 +16,6 @@
 
 body {
   font-family: arial, verdana, sans-serif;
-  overflow: hidden;
 }
 
 header, footer { text-align:center; width: 100%; }
@@ -43,6 +42,20 @@ footer {
   color: blue;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.stream-type-container {
+  display: inline;
+  margin-bottom: 15px;
+}
+
+.stream-param-title {
+  margin: 15px 0 0;
+}
+
+.dai-player {
+  width: 640px;
+  height= 360px;
 }
 
 #ima-sample-videoplayer {
@@ -101,4 +114,12 @@ footer {
   width: 728px;
   height: 90px;
   margin-top: 20px;
+}
+
+#live-api-key, #vod-api-key {
+  margin-top: 5px;
+}
+
+#dai-load-button {
+  margin-top: 15px;
 }
