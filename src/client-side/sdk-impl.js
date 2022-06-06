@@ -17,7 +17,7 @@
  * https://www.github.com/googleads/videojs-ima
  */
 
- import pkg from '../package.json';
+ import pkg from '../../package.json';
 
  /**
   * Implementation of the IMA SDK for the plugin.
