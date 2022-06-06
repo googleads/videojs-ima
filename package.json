@@ -48,8 +48,6 @@
     "@hapi/cryptiles": "^5.1.0",
     "can-autoplay": "^3.0.2",
     "extend": ">=3.0.2",
-    "lodash": ">=4.17.19",
-    "lodash.template": ">=4.5.0",
     "videojs-contrib-ads": "^6.9.0"
   },
   "devDependencies": {
