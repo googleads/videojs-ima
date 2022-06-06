@@ -1153,7 +1153,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "1.11.0";
+var version = "2.0.1";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
