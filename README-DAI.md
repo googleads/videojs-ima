@@ -180,7 +180,7 @@ A summary of all settings follows:
 | Settings | Type | Description |
 |----------|------|-------------|
 | apiKey | string | The API key. |
-| authKey | string | The stream request authorization token. |
+| authToken | string | The stream request authorization token. |
 | bookmarkTime | number | The content time in seconds where the user previously left off. |
 | locale | string | Supported country codes for localization. The supported locale codes can be found in [Localizing for Language and Locale](//developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/localization) |
 | adTagParameters | object | This object will be set as `streamRequest.adTagParameters` on stream requests. |
