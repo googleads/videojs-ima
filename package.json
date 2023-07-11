@@ -1,6 +1,6 @@
 {
   "name": "videojs-ima",
-  "version": "2.1.0",
+  "version": "1.11.0",
   "license": "Apache-2.0",
   "main": "./dist/videojs.ima.js",
   "module": "./dist/videojs.ima.es.js",
@@ -42,13 +42,13 @@
     "src/"
   ],
   "peerDependencies": {
-    "video.js": "^5.19.2 || ^6 || ^7"
+    "video.js": "^5.19.2 || ^6 || ^7 || ^8"
   },
   "dependencies": {
     "@hapi/cryptiles": "^5.1.0",
     "can-autoplay": "^3.0.2",
     "extend": ">=3.0.2",
-    "videojs-contrib-ads": "^6.9.0"
+    "videojs-contrib-ads": "^6.9.0 || ^7"
   },
   "devDependencies": {
     "axios": "^0.25.0",
