@@ -18,8 +18,7 @@ Advanced](//support.google.com/admanager/answer/3485387) account. DASH streams
 are currently not supported by this plugin.
 
 For more information, see the
-[IMA DAI SDK
-documentation](//developers.google.com/interactive-media-ads/docs/sdks/html5/dai).
+[IMA DAI SDK documentation](//developers.google.com/ad-manager/dynamic-ad-insertion/sdk/html5).
 
 ## Requirements
   - Your favorite text editor
