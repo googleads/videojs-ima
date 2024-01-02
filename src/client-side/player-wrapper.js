@@ -157,6 +157,13 @@ const PlayerWrapper = function(player, adsPluginSettings, controller) {
  * Set up the intervals we use on the player.
  */
 PlayerWrapper.prototype.setUpPlayerIntervals = function() {
+  /**
+   * Clear old interval handers in case the method was called more than once
+   */
+  clearInterval(this.updateTimeIntervalHandle);
+  clearInterval(this.seekCheckIntervalHandle);
+  clearInterval(this.resizeCheckIntervalHandle);
+ 
   this.updateTimeIntervalHandle =
       setInterval(this.updateCurrentTime.bind(this), this.updateTimeInterval);
   this.seekCheckIntervalHandle =
@@ -225,9 +232,6 @@ PlayerWrapper.prototype.localContentEndedListener = function() {
     }
   }
 
-  clearInterval(this.updateTimeIntervalHandle);
-  clearInterval(this.seekCheckIntervalHandle);
-  clearInterval(this.resizeCheckIntervalHandle);
   if (this.vjsPlayer.el()) {
     this.vjsPlayer.one('play', this.setUpPlayerIntervals.bind(this));
   }
