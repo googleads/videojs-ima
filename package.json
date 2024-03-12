@@ -51,7 +51,7 @@
     "videojs-contrib-ads": "^6.9.0"
   },
   "devDependencies": {
-    "axios": "^1.6.4",
+    "axios": "^0.28.0",
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.7",
     "child_process": "^1.0.2",
