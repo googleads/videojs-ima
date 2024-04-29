@@ -80,7 +80,7 @@ const videoOptions = {
 const player = videojs('video_player', videoOptions);
 
 // Example of a Live and VOD stream using IMA's samples streams.
-const vodStream = new VodStream('hls', '2528370', 'tears-of-steel');
+const vodStream = new VodStream('hls', '2548831', 'tears-of-steel');
 const liveStream = new LiveStream('hls', 'sN_IYUG8STe1ZzhIIE_ksA');
 
 const imaOptions = {
@@ -143,7 +143,7 @@ const videoOptions = {
 const player = videojs('video_player', videoOptions);
 
 // Example of a Live and VOD stream using IMA's samples streams.
-const vodStream = new VodStream('hls', '2528370', 'tears-of-steel');
+const vodStream = new VodStream('hls', '2548831', 'tears-of-steel');
 const liveStream = new LiveStream('hls', 'sN_IYUG8STe1ZzhIIE_ksA');
 
 const imaOptions = {
