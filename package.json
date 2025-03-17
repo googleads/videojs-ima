@@ -48,7 +48,7 @@
     "@hapi/cryptiles": "^5.1.0",
     "can-autoplay": "^3.0.2",
     "extend": ">=3.0.2",
-    "videojs-contrib-ads": "^7.0.0"
+    "videojs-contrib-ads": "^6.9.0 || ^7"
   },
   "devDependencies": {
     "axios": "^1.6.4",
