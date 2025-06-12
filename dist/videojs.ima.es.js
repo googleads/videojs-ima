@@ -1,5 +1,103 @@
 import videojs from 'video.js';
 
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
+}
+function _classCallCheck(a, n) {
+  if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");
+}
+function _defineProperties(e, r) {
+  for (var t = 0; t < r.length; t++) {
+    var o = r[t];
+    o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o);
+  }
+}
+function _createClass(e, r, t) {
+  return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", {
+    writable: !1
+  }), e;
+}
+function _createForOfIteratorHelper(r, e) {
+  var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (!t) {
+    if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {
+      t && (r = t);
+      var n = 0,
+        F = function () {};
+      return {
+        s: F,
+        n: function () {
+          return n >= r.length ? {
+            done: !0
+          } : {
+            done: !1,
+            value: r[n++]
+          };
+        },
+        e: function (r) {
+          throw r;
+        },
+        f: F
+      };
+    }
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+  var o,
+    a = !0,
+    u = !1;
+  return {
+    s: function () {
+      t = t.call(r);
+    },
+    n: function () {
+      var r = t.next();
+      return a = r.done, r;
+    },
+    e: function (r) {
+      u = !0, o = r;
+    },
+    f: function () {
+      try {
+        a || null == t.return || t.return();
+      } finally {
+        if (u) throw o;
+      }
+    }
+  };
+}
+function _toPrimitive(t, r) {
+  if ("object" != typeof t || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != typeof i) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+function _toPropertyKey(t) {
+  var i = _toPrimitive(t, "string");
+  return "symbol" == typeof i ? i : i + "";
+}
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
+}
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return _arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+  }
+}
+
 /**
  * Copyright 2017 Google Inc.
  *
@@ -133,7 +231,6 @@ var PlayerWrapper = function PlayerWrapper(player, adsPluginSettings, controller
    * Vanilla HTML5 video player underneath the video.js player.
    */
   this.h5Player = null;
-
   this.vjsPlayer.one('play', this.setUpPlayerIntervals.bind(this));
   this.boundContentEndedListener = this.localContentEndedListener.bind(this);
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
@@ -141,11 +238,9 @@ var PlayerWrapper = function PlayerWrapper(player, adsPluginSettings, controller
   this.vjsPlayer.on('readyforpreroll', this.onReadyForPreroll.bind(this));
   this.vjsPlayer.on('adtimeout', this.onAdTimeout.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
-
   if (this.controller.getSettings().requestMode === 'onPlay') {
     this.vjsPlayer.one('play', this.controller.requestAds.bind(this.controller));
   }
-
   if (!this.vjsPlayer.ads) {
     window.console.warn('You may be using a version of videojs-contrib-ads ' + 'that is not compatible with your version of video.js.');
   }
@@ -156,6 +251,18 @@ var PlayerWrapper = function PlayerWrapper(player, adsPluginSettings, controller
  * Set up the intervals we use on the player.
  */
 PlayerWrapper.prototype.setUpPlayerIntervals = function () {
+  /**
+   * Clear old interval handers in case the method was called more than once
+   */
+  if (this.updateTimeIntervalHandle) {
+    clearInterval(this.updateTimeIntervalHandle);
+  }
+  if (this.seekCheckIntervalHandle) {
+    clearInterval(this.seekCheckIntervalHandle);
+  }
+  if (this.resizeCheckIntervalHandle) {
+    clearInterval(this.resizeCheckIntervalHandle);
+  }
   this.updateTimeIntervalHandle = setInterval(this.updateCurrentTime.bind(this), this.updateTimeInterval);
   this.seekCheckIntervalHandle = setInterval(this.checkForSeeking.bind(this), this.seekCheckInterval);
   this.resizeCheckIntervalHandle = setInterval(this.checkForResize.bind(this), this.resizeCheckInterval);
@@ -196,7 +303,6 @@ PlayerWrapper.prototype.checkForSeeking = function () {
 PlayerWrapper.prototype.checkForResize = function () {
   var currentWidth = this.getPlayerWidth();
   var currentHeight = this.getPlayerHeight();
-
   if (currentWidth != this.vjsPlayerDimensions.width || currentHeight != this.vjsPlayerDimensions.height) {
     this.vjsPlayerDimensions.width = currentWidth;
     this.vjsPlayerDimensions.height = currentHeight;
@@ -212,16 +318,11 @@ PlayerWrapper.prototype.localContentEndedListener = function () {
     this.contentComplete = true;
     this.controller.onContentComplete();
   }
-
   for (var index in this.contentEndedListeners) {
     if (typeof this.contentEndedListeners[index] === 'function') {
       this.contentEndedListeners[index]();
     }
   }
-
-  clearInterval(this.updateTimeIntervalHandle);
-  clearInterval(this.seekCheckIntervalHandle);
-  clearInterval(this.resizeCheckIntervalHandle);
   if (this.vjsPlayer.el()) {
     this.vjsPlayer.one('play', this.setUpPlayerIntervals.bind(this));
   }
@@ -240,7 +341,6 @@ PlayerWrapper.prototype.onNoPostroll = function () {
 PlayerWrapper.prototype.playerDisposedListener = function () {
   this.contentEndedListeners = [];
   this.controller.onPlayerDisposed();
-
   this.contentComplete = true;
   this.vjsPlayer.off('contentended', this.boundContentEndedListener);
 
@@ -248,7 +348,6 @@ PlayerWrapper.prototype.playerDisposedListener = function () {
   if (this.vjsPlayer.ads.adTimeoutTimeout) {
     clearTimeout(this.vjsPlayer.ads.adTimeoutTimeout);
   }
-
   var intervalsToClear = [this.updateTimeIntervalHandle, this.seekCheckIntervalHandle, this.resizeCheckIntervalHandle];
   for (var index in intervalsToClear) {
     if (intervalsToClear[index]) {
@@ -287,7 +386,6 @@ PlayerWrapper.prototype.onPlayerReady = function () {
   this.onVolumeChange();
   this.vjsPlayer.on('fullscreenchange', this.onFullscreenChange.bind(this));
   this.vjsPlayer.on('volumechange', this.onVolumeChange.bind(this));
-
   this.controller.onPlayerReady();
 };
 
@@ -389,11 +487,9 @@ PlayerWrapper.prototype.togglePlayback = function () {
  */
 PlayerWrapper.prototype.getPlayerWidth = function () {
   var width = (getComputedStyle(this.vjsPlayer.el()) || {}).width;
-
   if (!width || parseFloat(width) === 0) {
     width = (this.vjsPlayer.el().getBoundingClientRect() || {}).width;
   }
-
   return parseFloat(width) || this.vjsPlayer.width();
 };
 
@@ -404,11 +500,9 @@ PlayerWrapper.prototype.getPlayerWidth = function () {
  */
 PlayerWrapper.prototype.getPlayerHeight = function () {
   var height = (getComputedStyle(this.vjsPlayer.el()) || {}).height;
-
   if (!height || parseFloat(height) === 0) {
     height = (this.vjsPlayer.el().getBoundingClientRect() || {}).height;
   }
-
   return parseFloat(height) || this.vjsPlayer.height();
 };
 
@@ -455,10 +549,13 @@ PlayerWrapper.prototype.getContentPlayheadTracker = function () {
 PlayerWrapper.prototype.onAdError = function (adErrorEvent) {
   this.vjsControls.show();
   var errorMessage = adErrorEvent.getError !== undefined ? adErrorEvent.getError() : adErrorEvent.stack;
-  this.vjsPlayer.trigger({ type: 'adserror', data: {
+  this.vjsPlayer.trigger({
+    type: 'adserror',
+    data: {
       AdError: errorMessage,
       AdErrorEvent: adErrorEvent
-    } });
+    }
+  });
 };
 
 /**
@@ -468,10 +565,13 @@ PlayerWrapper.prototype.onAdError = function (adErrorEvent) {
 PlayerWrapper.prototype.onAdLog = function (adEvent) {
   var adData = adEvent.getAdData();
   var errorMessage = adData['adError'] !== undefined ? adData['adError'].getMessage() : undefined;
-  this.vjsPlayer.trigger({ type: 'adslog', data: {
+  this.vjsPlayer.trigger({
+    type: 'adslog',
+    data: {
       AdError: errorMessage,
       AdEvent: adEvent
-    } });
+    }
+  });
 };
 
 /**
@@ -589,7 +689,6 @@ PlayerWrapper.prototype.reset = function () {
   // This is to prevent an error where an erroring video caused multiple
   // contentEndedListeners to be added.
   this.vjsPlayer.off('contentended', this.boundContentEndedListener);
-
   this.vjsPlayer.on('contentended', this.boundContentEndedListener);
   this.vjsControls.show();
   if (this.vjsPlayer.ads.inAdBreak()) {
@@ -724,7 +823,6 @@ var AdUi = function AdUi(controller) {
    * Boolean flag if the current ad is nonlinear.
    */
   this.isAdNonlinear = false;
-
   this.createAdContainer();
 };
 
@@ -748,7 +846,6 @@ AdUi.prototype.createAdContainer = function () {
 AdUi.prototype.createControls = function () {
   this.assignControlAttributes(this.controlsDiv, 'ima-controls-div');
   this.controlsDiv.style.width = '100%';
-
   if (!this.controller.getIsMobile()) {
     this.assignControlAttributes(this.countdownDiv, 'ima-countdown-div');
     this.countdownDiv.innerHTML = this.controller.getSettings().adLabel;
@@ -756,20 +853,15 @@ AdUi.prototype.createControls = function () {
   } else {
     this.countdownDiv.style.display = 'none';
   }
-
   this.assignControlAttributes(this.seekBarDiv, 'ima-seek-bar-div');
   this.seekBarDiv.style.width = '100%';
-
   this.assignControlAttributes(this.progressDiv, 'ima-progress-div');
-
   this.assignControlAttributes(this.playPauseDiv, 'ima-play-pause-div');
   this.addClass(this.playPauseDiv, 'ima-playing');
   this.playPauseDiv.addEventListener('click', this.onAdPlayPauseClick.bind(this), false);
-
   this.assignControlAttributes(this.muteDiv, 'ima-mute-div');
   this.addClass(this.muteDiv, 'ima-non-muted');
   this.muteDiv.addEventListener('click', this.onAdMuteClick.bind(this), false);
-
   this.assignControlAttributes(this.sliderDiv, 'ima-slider-div');
   this.sliderDiv.addEventListener('mousedown', this.onAdVolumeSliderMouseDown.bind(this), false);
 
@@ -777,13 +869,10 @@ AdUi.prototype.createControls = function () {
   if (this.controller.getIsIos()) {
     this.sliderDiv.style.display = 'none';
   }
-
   this.assignControlAttributes(this.sliderLevelDiv, 'ima-slider-level-div');
-
   this.assignControlAttributes(this.fullscreenDiv, 'ima-fullscreen-div');
   this.addClass(this.fullscreenDiv, 'ima-non-fullscreen');
   this.fullscreenDiv.addEventListener('click', this.onAdFullscreenClick.bind(this), false);
-
   this.adContainerDiv.appendChild(this.controlsDiv);
   this.controlsDiv.appendChild(this.countdownDiv);
   this.controlsDiv.appendChild(this.seekBarDiv);
@@ -976,7 +1065,6 @@ AdUi.prototype.onAdError = function () {
  */
 AdUi.prototype.onAdBreakStart = function (adEvent) {
   this.showAdContainer();
-
   var contentType = adEvent.getAd().getContentType();
   if (contentType === 'application/javascript' && !this.controller.getSettings().showControlsForJSAds) {
     this.controlsDiv.style.display = 'none';
@@ -993,7 +1081,8 @@ AdUi.prototype.onAdBreakStart = function (adEvent) {
  */
 AdUi.prototype.onAdBreakEnd = function () {
   var currentAd = this.controller.getCurrentAd();
-  if (currentAd == null || // hide for post-roll only playlist
+  if (currentAd == null ||
+  // hide for post-roll only playlist
   currentAd.isLinear()) {
     // don't hide for non-linear ads
     this.hideAdContainer();
@@ -1029,12 +1118,10 @@ AdUi.prototype.onNonLinearAdLoad = function () {
   this.addClass(this.adContainerDiv, 'bumpable-ima-ad-container');
   this.isAdNonlinear = true;
 };
-
 AdUi.prototype.onPlayerEnterFullscreen = function () {
   this.addClass(this.fullscreenDiv, 'ima-fullscreen');
   this.removeClass(this.fullscreenDiv, 'ima-non-fullscreen');
 };
-
 AdUi.prototype.onPlayerExitFullscreen = function () {
   this.addClass(this.fullscreenDiv, 'ima-non-fullscreen');
   this.removeClass(this.fullscreenDiv, 'ima-fullscreen');
@@ -1061,9 +1148,8 @@ AdUi.prototype.onPlayerVolumeChanged = function (volume) {
  * Shows ad controls on mouseover.
  */
 AdUi.prototype.showAdControls = function () {
-  var _controller$getSettin = this.controller.getSettings(),
-      disableAdControls = _controller$getSettin.disableAdControls;
-
+  var _this$controller$getS = this.controller.getSettings(),
+    disableAdControls = _this$controller$getS.disableAdControls;
   if (!disableAdControls) {
     this.addClass(this.controlsDiv, 'ima-controls-div-showing');
   }
@@ -1152,19 +1238,93 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
 };
 
 var name = "videojs-ima";
-var version = "2.1.0";
+var version = "2.3.0";
 var license = "Apache-2.0";
 var main = "./dist/videojs.ima.js";
 var module$1 = "./dist/videojs.ima.es.js";
-var author = { "name": "Google Inc." };
-var engines = { "node": ">=0.8.0" };
-var scripts = { "contBuild": "watch 'npm run rollup:max' src", "predevServer": "echo \"Starting up server on localhost:8000.\"", "devServer": "npm-run-all -p testServer contBuild", "lint": "eslint \"src/**/*.js\"", "rollup": "npm-run-all rollup:*", "rollup:max": "rollup -c configs/rollup.config.js", "rollup:es": "rollup -c configs/rollup.config.es.js", "rollup:min": "rollup -c configs/rollup.config.min.js", "pretest": "npm run rollup", "start": "npm run devServer", "test": "npm-run-all test:*", "test:vjs6": "npm install video.js@6 --no-save && npm-run-all -p -r testServer webdriver", "test:vjs7": "npm install video.js@7 --no-save && npm-run-all -p -r testServer webdriver", "testServer": "http-server --cors -p 8000 --silent", "preversion": "node scripts/preversion.js && npm run lint && npm test", "version": "node scripts/version.js", "postversion": "node scripts/postversion.js", "webdriver": "mocha test/webdriver/*.js --no-timeouts" };
-var repository = { "type": "git", "url": "https://github.com/googleads/videojs-ima" };
-var files = ["CHANGELOG.md", "LICENSE", "README.md", "dist/", "src/"];
-var peerDependencies = { "video.js": "^5.19.2 || ^6 || ^7 || ^8" };
-var dependencies = { "@hapi/cryptiles": "^5.1.0", "can-autoplay": "^3.0.2", "extend": ">=3.0.2", "videojs-contrib-ads": "^6.9.0 || ^7" };
-var devDependencies = { "axios": "^0.25.0", "babel-core": "^6.26.3", "babel-preset-env": "^1.7.0", "child_process": "^1.0.2", "chromedriver": "^114.0.2", "conventional-changelog-cli": "^2.2.2", "conventional-changelog-videojs": "^3.0.2", "ecstatic": "^4.1.4", "eslint": "^8.8.0", "eslint-config-google": "^0.9.1", "eslint-plugin-jsdoc": "^3.15.1", "geckodriver": "^2.0.4", "http-server": "^14.1.0", "ini": ">=1.3.7", "mocha": "^9.2.0", "npm-run-all": "^4.1.5", "path": "^0.12.7", "protractor": "^7.0.0", "rimraf": "^2.7.1", "rollup": "^0.51.8", "rollup-plugin-babel": "^3.0.7", "rollup-plugin-copy": "^0.2.3", "rollup-plugin-json": "^2.3.1", "rollup-plugin-uglify": "^2.0.1", "selenium-webdriver": "^3.6.0", "uglify-es": "^3.3.9", "video.js": "^7.17.0", "watch": "^0.13.0", "webdriver-manager": "^12.1.7", "xmldom": "^0.6.0" };
-var keywords = ["videojs", "videojs-plugin"];
+var author = {
+	name: "Google Inc."
+};
+var engines = {
+	node: ">=0.8.0"
+};
+var scripts = {
+	contBuild: "watch 'npm run rollup:max' src",
+	predevServer: "echo \"Starting up server on localhost:8000.\"",
+	devServer: "npm-run-all -p testServer contBuild",
+	lint: "eslint \"src/**/*.js\"",
+	rollup: "npm-run-all rollup:*",
+	"rollup:max": "rollup -c configs/rollup.config.js",
+	"rollup:es": "rollup -c configs/rollup.config.es.js",
+	"rollup:min": "rollup -c configs/rollup.config.min.js",
+	pretest: "npm run rollup",
+	start: "npm run devServer",
+	test: "npm-run-all test:*",
+	"test:vjs6": "npm install video.js@6 --no-save && npm-run-all -p -r testServer webdriver",
+	"test:vjs7": "npm install video.js@7 --no-save && npm-run-all -p -r testServer webdriver",
+	testServer: "http-server --cors -p 8000 --silent",
+	preversion: "node scripts/preversion.js && npm run lint && npm test",
+	version: "node scripts/version.js",
+	postversion: "node scripts/postversion.js",
+	webdriver: "mocha test/webdriver/*.js --no-timeouts"
+};
+var repository = {
+	type: "git",
+	url: "https://github.com/googleads/videojs-ima"
+};
+var files = [
+	"CHANGELOG.md",
+	"LICENSE",
+	"README.md",
+	"dist/",
+	"src/"
+];
+var peerDependencies = {
+	"video.js": "^5.19.2 || ^6 || ^7 || ^8"
+};
+var dependencies = {
+	"@hapi/cryptiles": "^5.1.0",
+	"can-autoplay": "^3.0.2",
+	extend: ">=3.0.2",
+	"videojs-contrib-ads": "^6.9.0 || ^7"
+};
+var devDependencies = {
+	axios: "^1.6.4",
+	"@babel/core": "^7.23.7",
+	"@babel/preset-env": "^7.23.7",
+	child_process: "^1.0.2",
+	chromedriver: "^137.0.3",
+	"conventional-changelog-cli": "^2.2.2",
+	"conventional-changelog-videojs": "^3.0.2",
+	ecstatic: "^4.1.4",
+	eslint: "^8.8.0",
+	"eslint-config-google": "^0.9.1",
+	"eslint-plugin-jsdoc": "^3.15.1",
+	geckodriver: "^4.3.0",
+	"http-server": "^14.1.1",
+	ini: ">=1.3.7",
+	mocha: "^9.2.0",
+	"npm-run-all": "^4.1.5",
+	path: "^0.12.7",
+	protractor: "^7.0.0",
+	rimraf: "^2.7.1",
+	rollup: "^0.60.0",
+	"rollup-plugin-babel": "^4.4.0",
+	"rollup-plugin-copy": "^0.2.3",
+	"rollup-plugin-json": "^4.0.0",
+	"rollup-plugin-uglify": "^2.0.1",
+	"selenium-webdriver": "^4.16.0",
+	"shell-quote": "^1.8.1",
+	"uglify-es": "^3.3.9",
+	"video.js": "^7.17.0",
+	watch: "^0.13.0",
+	"webdriver-manager": "^12.1.7",
+	"@xmldom/xmldom": "^0.8.10"
+};
+var keywords = [
+	"videojs",
+	"videojs-plugin"
+];
 var pkg = {
 	name: name,
 	version: version,
@@ -1181,27 +1341,6 @@ var pkg = {
 	devDependencies: devDependencies,
 	keywords: keywords
 };
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/**
- * Copyright 2017 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * IMA SDK integration plugin for Video.js. For more information see
- * https://www.github.com/googleads/videojs-ima
- */
 
 /**
  * Implementation of the IMA SDK for the plugin.
@@ -1324,11 +1463,9 @@ var SdkImpl = function SdkImpl(controller) {
   if (this.controller.getSettings().disableCustomPlaybackForIOS10Plus) {
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(this.controller.getSettings().disableCustomPlaybackForIOS10Plus);
   }
-
   if (this.controller.getSettings().ppid) {
     google.ima.settings.setPpid(this.controller.getSettings().ppid);
   }
-
   if (this.controller.getSettings().featureFlags) {
     google.ima.settings.setFeatureFlags(this.controller.getSettings().featureFlags);
   }
@@ -1339,9 +1476,7 @@ var SdkImpl = function SdkImpl(controller) {
  */
 SdkImpl.prototype.initAdObjects = function () {
   this.adDisplayContainer = new google.ima.AdDisplayContainer(this.controller.getAdContainerDiv(), this.controller.getContentPlayer());
-
   this.adsLoader = new google.ima.AdsLoader(this.adDisplayContainer);
-
   this.adsLoader.getSettings().setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
   if (this.controller.getSettings().vpaidAllowed == false) {
     this.adsLoader.getSettings().setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.DISABLED);
@@ -1349,26 +1484,20 @@ SdkImpl.prototype.initAdObjects = function () {
   if (this.controller.getSettings().vpaidMode !== undefined) {
     this.adsLoader.getSettings().setVpaidMode(this.controller.getSettings().vpaidMode);
   }
-
   if (this.controller.getSettings().locale) {
     this.adsLoader.getSettings().setLocale(this.controller.getSettings().locale);
   }
-
   if (this.controller.getSettings().numRedirects) {
     this.adsLoader.getSettings().setNumRedirects(this.controller.getSettings().numRedirects);
   }
-
   if (this.controller.getSettings().sessionId) {
     this.adsLoader.getSettings().setSessionId(this.controller.getSettings().sessionId);
   }
-
   this.adsLoader.getSettings().setPlayerType('videojs-ima');
   this.adsLoader.getSettings().setPlayerVersion(pkg.version);
   this.adsLoader.getSettings().setAutoPlayAdBreaks(this.autoPlayAdBreaks);
-
   this.adsLoader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, this.onAdsManagerLoaded.bind(this), false);
   this.adsLoader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, this.onAdsLoaderError.bind(this), false);
-
   this.controller.playerWrapper.vjsPlayer.trigger({
     type: 'ads-loader',
     adsLoader: this.adsLoader
@@ -1388,24 +1517,19 @@ SdkImpl.prototype.requestAds = function () {
   if (this.controller.getSettings().forceNonLinearFullSlot) {
     adsRequest.forceNonLinearFullSlot = true;
   }
-
   if (this.controller.getSettings().vastLoadTimeout) {
     adsRequest.vastLoadTimeout = this.controller.getSettings().vastLoadTimeout;
   }
-
   if (this.controller.getSettings().omidMode) {
     window.console.warn('The additional setting `omidMode` has been removed. ' + 'Use `omidVendorAccess` instead.');
   }
-
   if (this.controller.getSettings().omidVendorAccess) {
     adsRequest.omidAccessModeRules = {};
     var omidVendorValues = this.controller.getSettings().omidVendorAccess;
-
     Object.keys(omidVendorValues).forEach(function (vendorKey) {
       adsRequest.omidAccessModeRules[vendorKey] = omidVendorValues[vendorKey];
     });
   }
-
   adsRequest.linearAdSlotWidth = this.controller.getPlayerWidth();
   adsRequest.linearAdSlotHeight = this.controller.getPlayerHeight();
   adsRequest.nonLinearAdSlotWidth = this.controller.getSettings().nonLinearWidth || this.controller.getPlayerWidth();
@@ -1416,12 +1540,11 @@ SdkImpl.prototype.requestAds = function () {
   // Populate the adsRequestproperties with those provided in the AdsRequest
   // object in the settings.
   var providedAdsRequest = this.controller.getSettings().adsRequest;
-  if (providedAdsRequest && (typeof providedAdsRequest === 'undefined' ? 'undefined' : _typeof(providedAdsRequest)) === 'object') {
+  if (providedAdsRequest && _typeof(providedAdsRequest) === 'object') {
     Object.keys(providedAdsRequest).forEach(function (key) {
       adsRequest[key] = providedAdsRequest[key];
     });
   }
-
   this.adsLoader.requestAds(adsRequest);
   this.controller.playerWrapper.vjsPlayer.trigger({
     type: 'ads-request',
@@ -1439,15 +1562,12 @@ SdkImpl.prototype.requestAds = function () {
  */
 SdkImpl.prototype.onAdsManagerLoaded = function (adsManagerLoadedEvent) {
   this.createAdsRenderingSettings();
-
   this.adsManager = adsManagerLoadedEvent.getAdsManager(this.controller.getContentPlayheadTracker(), this.adsRenderingSettings);
-
   this.adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, this.onAdError.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.AD_BREAK_READY, this.onAdBreakReady.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, this.onContentPauseRequested.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, this.onContentResumeRequested.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, this.onAllAdsCompleted.bind(this));
-
   this.adsManager.addEventListener(google.ima.AdEvent.Type.LOADED, this.onAdLoaded.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.STARTED, this.onAdStarted.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, this.onAdComplete.bind(this));
@@ -1455,25 +1575,20 @@ SdkImpl.prototype.onAdsManagerLoaded = function (adsManagerLoadedEvent) {
   this.adsManager.addEventListener(google.ima.AdEvent.Type.LOG, this.onAdLog.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.PAUSED, this.onAdPaused.bind(this));
   this.adsManager.addEventListener(google.ima.AdEvent.Type.RESUMED, this.onAdResumed.bind(this));
-
   this.controller.playerWrapper.vjsPlayer.trigger({
     type: 'ads-manager',
     adsManager: this.adsManager
   });
-
   if (!this.autoPlayAdBreaks) {
     this.initAdsManager();
   }
-
-  var _controller$getSettin = this.controller.getSettings(),
-      preventLateAdStart = _controller$getSettin.preventLateAdStart;
-
+  var _this$controller$getS = this.controller.getSettings(),
+    preventLateAdStart = _this$controller$getS.preventLateAdStart;
   if (!preventLateAdStart) {
     this.controller.onAdsReady();
   } else if (preventLateAdStart && !this.isAdTimedOut) {
     this.controller.onAdsReady();
   }
-
   if (this.controller.getSettings().adsManagerLoadedCallback) {
     this.controller.getSettings().adsManagerLoadedCallback();
   }
@@ -1502,7 +1617,7 @@ SdkImpl.prototype.initAdsManager = function () {
     var initHeight = this.controller.getPlayerHeight();
     this.adsManagerDimensions.width = initWidth;
     this.adsManagerDimensions.height = initHeight;
-    this.adsManager.init(initWidth, initHeight, google.ima.ViewMode.NORMAL);
+    this.adsManager.init(initWidth, initHeight);
     this.adsManager.setVolume(this.controller.getPlayerVolume());
     this.initializeAdDisplayContainer();
   } catch (adError) {
@@ -1533,7 +1648,6 @@ SdkImpl.prototype.createAdsRenderingSettings = function () {
 SdkImpl.prototype.onAdError = function (adErrorEvent) {
   var errorMessage = adErrorEvent.getError !== undefined ? adErrorEvent.getError() : adErrorEvent.stack;
   window.console.warn('Ad error: ' + errorMessage);
-
   this.adsManager.destroy();
   this.controller.onAdError(adErrorEvent);
 
@@ -1652,12 +1766,11 @@ SdkImpl.prototype.onAdPlayheadTrackerInterval = function () {
   var currentTime = duration - remainingTime;
   currentTime = currentTime > 0 ? currentTime : 0;
   var totalAds = 0;
-  var adPosition = void 0;
+  var adPosition;
   if (this.currentAd.getAdPodInfo()) {
     adPosition = this.currentAd.getAdPodInfo().getAdPosition();
     totalAds = this.currentAd.getAdPodInfo().getTotalAds();
   }
-
   this.controller.onAdPlayheadUpdated(currentTime, remainingTime, duration, adPosition, totalAds);
 };
 
@@ -1669,11 +1782,9 @@ SdkImpl.prototype.onContentComplete = function () {
     this.adsLoader.contentComplete();
     this.contentCompleteCalled = true;
   }
-
   if (this.adsManager && this.adsManager.getCuePoints() && !this.adsManager.getCuePoints().includes(-1) || !this.adsManager) {
     this.controller.onNoPostroll();
   }
-
   if (this.allAdsCompleted) {
     this.controller.onContentAndAdsCompleted();
   }
@@ -1691,7 +1802,6 @@ SdkImpl.prototype.onPlayerDisposed = function () {
     this.adsManager = null;
   }
 };
-
 SdkImpl.prototype.onPlayerReadyForPreroll = function () {
   if (this.autoPlayAdBreaks) {
     this.initAdsManager();
@@ -1705,28 +1815,23 @@ SdkImpl.prototype.onPlayerReadyForPreroll = function () {
     }
   }
 };
-
 SdkImpl.prototype.onAdTimeout = function () {
   this.isAdTimedOut = true;
 };
-
 SdkImpl.prototype.onPlayerReady = function () {
   this.initAdObjects();
-
   if ((this.controller.getSettings().adTagUrl || this.controller.getSettings().adsResponse) && this.controller.getSettings().requestMode === 'onLoad') {
     this.requestAds();
   }
 };
-
 SdkImpl.prototype.onPlayerEnterFullscreen = function () {
   if (this.adsManager) {
-    this.adsManager.resize(window.screen.width, window.screen.height, google.ima.ViewMode.FULLSCREEN);
+    this.adsManager.resize(window.screen.width, window.screen.height);
   }
 };
-
 SdkImpl.prototype.onPlayerExitFullscreen = function () {
   if (this.adsManager) {
-    this.adsManager.resize(this.controller.getPlayerWidth(), this.controller.getPlayerHeight(), google.ima.ViewMode.NORMAL);
+    this.adsManager.resize(this.controller.getPlayerWidth(), this.controller.getPlayerHeight());
   }
 };
 
@@ -1739,7 +1844,6 @@ SdkImpl.prototype.onPlayerVolumeChanged = function (volume) {
   if (this.adsManager) {
     this.adsManager.setVolume(volume);
   }
-
   if (volume == 0) {
     this.adMuted = true;
   } else {
@@ -1758,7 +1862,7 @@ SdkImpl.prototype.onPlayerResize = function (width, height) {
     this.adsManagerDimensions.width = width;
     this.adsManagerDimensions.height = height;
     /* eslint no-undef: 'error' */
-    this.adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
+    this.adsManager.resize(width, height);
   }
 };
 
@@ -1937,6 +2041,7 @@ SdkImpl.prototype.reset = function () {
  * IMA SDK integration plugin for Video.js. For more information see
  * https://www.github.com/googleads/videojs-ima
  */
+
 /**
  * The grand coordinator of the plugin. Facilitates communication between all
  * other plugin classes.
@@ -1973,7 +2078,6 @@ var Controller = function Controller(player, options) {
    * Whether or not we are running on an iOS platform.
    */
   this.isIos = navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i);
-
   this.initWithSettings(options);
 
   /**
@@ -1985,12 +2089,10 @@ var Controller = function Controller(player, options) {
     prerollTimeout: this.settings.prerollTimeout
   };
   var adsPluginSettings = Object.assign({}, contribAdsDefaults, options.contribAdsSettings || {});
-
   this.playerWrapper = new PlayerWrapper(player, adsPluginSettings, this);
   this.adUi = new AdUi(this);
   this.sdkImpl = new SdkImpl(this);
 };
-
 Controller.IMA_DEFAULTS = {
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
@@ -2010,7 +2112,6 @@ Controller.IMA_DEFAULTS = {
  */
 Controller.prototype.initWithSettings = function (options) {
   this.settings = Object.assign({}, Controller.IMA_DEFAULTS, options || {});
-
   this.warnAboutDeprecatedSettings();
 
   // Default showing countdown timer to true.
@@ -2025,7 +2126,6 @@ Controller.prototype.initWithSettings = function (options) {
  */
 Controller.prototype.warnAboutDeprecatedSettings = function () {
   var _this = this;
-
   var deprecatedSettings = ['adWillAutoplay', 'adsWillAutoplay', 'adWillPlayMuted', 'adsWillPlayMuted'];
   deprecatedSettings.forEach(function (setting) {
     if (_this.settings[setting] !== undefined) {
@@ -2652,7 +2752,7 @@ Controller.prototype.triggerPlayerEvent = function (name, data) {
  * @param {!Object} adsPluginSettings Settings for the contrib-ads plugin.
  * @param {!DaiController} daiController Reference to the parent controller.
  */
-var PlayerWrapper$2 = function PlayerWrapper(player, adsPluginSettings, daiController) {
+var PlayerWrapper$1 = function PlayerWrapper(player, adsPluginSettings, daiController) {
   /**
    * Instance of the video.js player.
    */
@@ -2672,13 +2772,11 @@ var PlayerWrapper$2 = function PlayerWrapper(player, adsPluginSettings, daiContr
    * Vanilla HTML5 video player underneath the video.js player.
    */
   this.h5Player = null;
-
   this.vjsPlayer.on('dispose', this.playerDisposedListener.bind(this));
   this.vjsPlayer.on('pause', this.onPause.bind(this));
   this.vjsPlayer.on('play', this.onPlay.bind(this));
   this.vjsPlayer.on('seeked', this.onSeekEnd.bind(this));
   this.vjsPlayer.ready(this.onPlayerReady.bind(this));
-
   if (!this.vjsPlayer.ads) {
     window.console.warn('You may be using a version of videojs-contrib-ads ' + 'that is not compatible with your version of video.js.');
   }
@@ -2688,7 +2786,7 @@ var PlayerWrapper$2 = function PlayerWrapper(player, adsPluginSettings, daiContr
 /**
  * Called in response to the video.js player's 'disposed' event.
  */
-PlayerWrapper$2.prototype.playerDisposedListener = function () {
+PlayerWrapper$1.prototype.playerDisposedListener = function () {
   this.contentEndedListeners = [];
   this.daiController.onPlayerDisposed();
 };
@@ -2697,7 +2795,7 @@ PlayerWrapper$2.prototype.playerDisposedListener = function () {
  * Called on the player 'pause' event. Handles displaying controls during
  * paused ad breaks.
  */
-PlayerWrapper$2.prototype.onPause = function () {
+PlayerWrapper$1.prototype.onPause = function () {
   // This code will run if the stream is paused during an ad break. Since
   // controls are usually hidden during ads, they will now show to allow
   // users to resume ad playback.
@@ -2710,7 +2808,7 @@ PlayerWrapper$2.prototype.onPause = function () {
  * Called on the player 'play' event. Handles hiding controls during
  * ad breaks while playing.
  */
-PlayerWrapper$2.prototype.onPlay = function () {
+PlayerWrapper$1.prototype.onPlay = function () {
   if (this.daiController.isInAdBreak()) {
     this.vjsControls.hide();
   }
@@ -2720,14 +2818,14 @@ PlayerWrapper$2.prototype.onPlay = function () {
  * Called on the player's 'seeked' event. Sets up handling for ad break
  * snapback for VOD streams.
  */
-PlayerWrapper$2.prototype.onSeekEnd = function () {
+PlayerWrapper$1.prototype.onSeekEnd = function () {
   this.daiController.onSeekEnd(this.vjsPlayer.currentTime());
 };
 
 /**
  * Called on the player's 'ready' event to begin initiating IMA.
  */
-PlayerWrapper$2.prototype.onPlayerReady = function () {
+PlayerWrapper$1.prototype.onPlayerReady = function () {
   this.h5Player = document.getElementById(this.getPlayerId()).getElementsByClassName('vjs-tech')[0];
   this.daiController.onPlayerReady();
 };
@@ -2735,21 +2833,21 @@ PlayerWrapper$2.prototype.onPlayerReady = function () {
 /**
  * @return {!Object} The stream player.
  */
-PlayerWrapper$2.prototype.getStreamPlayer = function () {
+PlayerWrapper$1.prototype.getStreamPlayer = function () {
   return this.h5Player;
 };
 
 /**
  * @return {!Object} The video.js player.
  */
-PlayerWrapper$2.prototype.getVjsPlayer = function () {
+PlayerWrapper$1.prototype.getVjsPlayer = function () {
   return this.vjsPlayer;
 };
 
 /**
  * @return {!Object} The vjs player's options object.
  */
-PlayerWrapper$2.prototype.getPlayerOptions = function () {
+PlayerWrapper$1.prototype.getPlayerOptions = function () {
   return this.vjsPlayer.options_;
 };
 
@@ -2757,7 +2855,7 @@ PlayerWrapper$2.prototype.getPlayerOptions = function () {
  * Returns the instance of the player id.
  * @return {string} The player id.
  */
-PlayerWrapper$2.prototype.getPlayerId = function () {
+PlayerWrapper$1.prototype.getPlayerId = function () {
   return this.vjsPlayer.id();
 };
 
@@ -2766,33 +2864,36 @@ PlayerWrapper$2.prototype.getPlayerId = function () {
  *
  * @param {!Object} adErrorEvent The ad error event thrown by the IMA SDK.
  */
-PlayerWrapper$2.prototype.onAdError = function (adErrorEvent) {
+PlayerWrapper$1.prototype.onAdError = function (adErrorEvent) {
   this.vjsControls.show();
   var errorMessage = adErrorEvent.getError !== undefined ? adErrorEvent.getError() : adErrorEvent.stack;
-  this.vjsPlayer.trigger({ type: 'adserror', data: {
+  this.vjsPlayer.trigger({
+    type: 'adserror',
+    data: {
       AdError: errorMessage,
       AdErrorEvent: adErrorEvent
-    } });
+    }
+  });
 };
 
 /**
  * Handles ad break starting.
  */
-PlayerWrapper$2.prototype.onAdBreakStart = function () {
+PlayerWrapper$1.prototype.onAdBreakStart = function () {
   this.vjsControls.hide();
 };
 
 /**
  * Handles ad break ending.
  */
-PlayerWrapper$2.prototype.onAdBreakEnd = function () {
+PlayerWrapper$1.prototype.onAdBreakEnd = function () {
   this.vjsControls.show();
 };
 
 /**
  * Reset the player.
  */
-PlayerWrapper$2.prototype.reset = function () {
+PlayerWrapper$1.prototype.reset = function () {
   this.vjsControls.show();
 };
 
@@ -2825,7 +2926,7 @@ PlayerWrapper$2.prototype.reset = function () {
  * @struct
  * @final
  */
-var SdkImpl$2 = function SdkImpl(daiController) {
+var SdkImpl$1 = function SdkImpl(daiController) {
   /**
    * Plugin DAI controller.
    */
@@ -2877,7 +2978,6 @@ var SdkImpl$2 = function SdkImpl(daiController) {
    * Timed metadata record.
    */
   this.metadataLoaded = {};
-
   this.SOURCE_TYPES = {
     hls: 'application/x-mpegURL',
     dash: 'application/dash+xml'
@@ -2887,29 +2987,22 @@ var SdkImpl$2 = function SdkImpl(daiController) {
 /**
  * Creates and initializes the IMA DAI SDK objects.
  */
-SdkImpl$2.prototype.initImaDai = function () {
+SdkImpl$1.prototype.initImaDai = function () {
   this.streamPlayer = this.daiController.getStreamPlayer();
   this.vjsPlayer = this.daiController.getVjsPlayer();
-
   this.createAdUiDiv();
   if (this.daiController.getSettings().locale) {
     this.uiSettings.setLocale(this.daiController.getSettings().locale);
   }
-
   this.streamManager = new google.ima.dai.api.StreamManager(this.streamPlayer, this.adUiDiv, this.uiSettings);
-
   this.streamPlayer.addEventListener('pause', this.onStreamPause);
   this.streamPlayer.addEventListener('play', this.onStreamPlay);
-
   this.streamManager.addEventListener([google.ima.dai.api.StreamEvent.Type.LOADED, google.ima.dai.api.StreamEvent.Type.ERROR, google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED, google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED], this.onStreamEvent.bind(this), false);
-
   this.vjsPlayer.textTracks().onaddtrack = this.onAddTrack.bind(this);
-
   this.vjsPlayer.trigger({
     type: 'stream-manager',
     StreamManager: this.streamManager
   });
-
   this.requestStream();
 };
 
@@ -2917,47 +3010,34 @@ SdkImpl$2.prototype.initImaDai = function () {
  * Called when the video player has metadata to process.
  * @param {Event!} event The event that triggered this call.
  */
-SdkImpl$2.prototype.onAddTrack = function (event) {
+SdkImpl$1.prototype.onAddTrack = function (event) {
   var _this = this;
-
   var track = event.track;
   if (track.kind === 'metadata') {
     track.mode = 'hidden';
-    track.oncuechange = function (e) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
+    track.addEventListener('cuechange', function (e) {
+      var _iterator = _createForOfIteratorHelper(track.activeCues_),
+        _step;
       try {
-        for (var _iterator = track.activeCues_[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var cue = _step.value;
-
           var metadata = {};
           metadata[cue.value.key] = cue.value.data;
           _this.streamManager.onTimedMetadata(metadata);
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
-    };
+    });
   }
 };
 
 /**
  * Creates the ad UI container.
  */
-SdkImpl$2.prototype.createAdUiDiv = function () {
+SdkImpl$1.prototype.createAdUiDiv = function () {
   var uiDiv = document.createElement('div');
   uiDiv.id = 'ad-ui';
   // 3em is the height of the control bar.
@@ -2969,7 +3049,7 @@ SdkImpl$2.prototype.createAdUiDiv = function () {
 /**
  * Called on pause to update the ad UI.
  */
-SdkImpl$2.prototype.onStreamPause = function () {
+SdkImpl$1.prototype.onStreamPause = function () {
   if (this.isAdBreak) {
     this.adUiDiv.style.display = 'none';
   }
@@ -2978,7 +3058,7 @@ SdkImpl$2.prototype.onStreamPause = function () {
 /**
  * Called on play to update the ad UI.
  */
-SdkImpl$2.prototype.onStreamPlay = function () {
+SdkImpl$1.prototype.onStreamPlay = function () {
   if (this.isAdBreak) {
     this.adUiDiv.style.display = 'block';
   }
@@ -2988,7 +3068,7 @@ SdkImpl$2.prototype.onStreamPlay = function () {
  * Called on play to update the ad UI.
  * @param {number} currentTime the current time of the stream.
  */
-SdkImpl$2.prototype.onSeekEnd = function (currentTime) {
+SdkImpl$1.prototype.onSeekEnd = function (currentTime) {
   var streamType = this.daiController.getSettings().streamType;
   if (streamType === 'live') {
     return;
@@ -3009,7 +3089,7 @@ SdkImpl$2.prototype.onSeekEnd = function (currentTime) {
  * Handles IMA events.
  * @param {google.ima.StreamEvent!} event the IMA event
  */
-SdkImpl$2.prototype.onStreamEvent = function (event) {
+SdkImpl$1.prototype.onStreamEvent = function (event) {
   switch (event.type) {
     case google.ima.dai.api.StreamEvent.Type.LOADED:
       this.loadUrl(event.getStreamData().url);
@@ -3044,14 +3124,13 @@ SdkImpl$2.prototype.onStreamEvent = function (event) {
  * Loads the stream URL .
  * @param {string} streamUrl the URL for the stream being loaded.
  */
-SdkImpl$2.prototype.loadUrl = function (streamUrl) {
+SdkImpl$1.prototype.loadUrl = function (streamUrl) {
   this.vjsPlayer.ready(function () {
     var streamFormat = this.daiController.getSettings().streamFormat;
     this.vjsPlayer.src({
       src: streamUrl,
       type: this.SOURCE_TYPES[streamFormat]
     });
-
     var bookmarkTime = this.daiController.getSettings().bookmarkTime;
     if (bookmarkTime) {
       var startTime = this.streamManager.streamTimeForContentTime(bookmarkTime);
@@ -3067,8 +3146,8 @@ SdkImpl$2.prototype.loadUrl = function (streamUrl) {
 /**
  * Creates the AdsRequest and request ads through the AdsLoader.
  */
-SdkImpl$2.prototype.requestStream = function () {
-  var streamRequest = void 0;
+SdkImpl$1.prototype.requestStream = function () {
+  var streamRequest;
   var streamType = this.daiController.getSettings().streamType;
   if (streamType === 'vod') {
     streamRequest = new google.ima.dai.api.VODStreamRequest();
@@ -3081,7 +3160,6 @@ SdkImpl$2.prototype.requestStream = function () {
     window.console.warn('No valid stream type selected');
   }
   streamRequest.format = this.daiController.getSettings().streamFormat;
-
   if (this.daiController.getSettings().apiKey) {
     streamRequest.apiKey = this.daiController.getSettings().apiKey;
   }
@@ -3094,11 +3172,9 @@ SdkImpl$2.prototype.requestStream = function () {
   if (this.daiController.getSettings().streamActivityMonitorId) {
     streamRequest.streamActivityMonitorId = this.daiController.getSettings().streamActivityMonitorId;
   }
-
   if (this.daiController.getSettings().omidMode) {
     streamRequest.omidAccessModeRules = {};
     var omidValues = this.daiController.getSettings().omidMode;
-
     if (omidValues.FULL) {
       streamRequest.omidAccessModeRules[google.ima.OmidAccessMode.FULL] = omidValues.FULL;
     }
@@ -3109,7 +3185,6 @@ SdkImpl$2.prototype.requestStream = function () {
       streamRequest.omidAccessModeRules[google.ima.OmidAccessMode.LIMITED] = omidValues.LIMITED;
     }
   }
-
   this.streamManager.requestStream(streamRequest);
   this.vjsPlayer.trigger({
     type: 'stream-request',
@@ -3120,14 +3195,14 @@ SdkImpl$2.prototype.requestStream = function () {
 /**
  * Initiates IMA when the player is ready.
  */
-SdkImpl$2.prototype.onPlayerReady = function () {
+SdkImpl$1.prototype.onPlayerReady = function () {
   this.initImaDai();
 };
 
 /**
  * Reset the StreamManager when the player is disposed.
  */
-SdkImpl$2.prototype.onPlayerDisposed = function () {
+SdkImpl$1.prototype.onPlayerDisposed = function () {
   if (this.streamManager) {
     this.streamManager.reset();
   }
@@ -3138,14 +3213,14 @@ SdkImpl$2.prototype.onPlayerDisposed = function () {
  * @return {google.ima.StreamManager!} The StreamManager being used by the
  * plugin.
  */
-SdkImpl$2.prototype.getStreamManager = function () {
+SdkImpl$1.prototype.getStreamManager = function () {
   return this.StreamManager;
 };
 
 /**
  * Reset the SDK implementation.
  */
-SdkImpl$2.prototype.reset = function () {
+SdkImpl$1.prototype.reset = function () {
   if (this.StreamManager) {
     this.StreamManager.reset();
   }
@@ -3169,6 +3244,7 @@ SdkImpl$2.prototype.reset = function () {
  * IMA SDK integration plugin for Video.js. For more information see
  * https://www.github.com/googleads/videojs-ima
  */
+
 /**
  * The coordinator for the DAI portion of the plugin. Facilitates
  * communication between all other plugin classes.
@@ -3201,7 +3277,6 @@ var DaiController = function DaiController(player, options) {
   * Whether or not we are running on an iOS platform.
   */
   this.isIos = navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i);
-
   this.initWithSettings(options);
 
   /**
@@ -3213,11 +3288,9 @@ var DaiController = function DaiController(player, options) {
     prerollTimeout: this.settings.prerollTimeout
   };
   var adsPluginSettings = Object.assign({}, contribAdsDefaults, options.contribAdsSettings || {});
-
-  this.playerWrapper = new PlayerWrapper$2(player, adsPluginSettings, this);
-  this.sdkImpl = new SdkImpl$2(this);
+  this.playerWrapper = new PlayerWrapper$1(player, adsPluginSettings, this);
+  this.sdkImpl = new SdkImpl$1(this);
 };
-
 DaiController.IMA_DEFAULTS = {
   adLabel: 'Advertisement',
   adLabelNofN: 'of',
@@ -3233,7 +3306,6 @@ DaiController.IMA_DEFAULTS = {
  */
 DaiController.prototype.initWithSettings = function (options) {
   this.settings = Object.assign({}, DaiController.IMA_DEFAULTS, options || {});
-
   this.warnAboutDeprecatedSettings();
 
   // Default showing countdown timer to true.
@@ -3248,7 +3320,6 @@ DaiController.prototype.initWithSettings = function (options) {
  */
 DaiController.prototype.warnAboutDeprecatedSettings = function () {
   var _this = this;
-
   var deprecatedSettings = [
     // Currently no DAI plugin settings are deprecated.
   ];
@@ -3393,7 +3464,7 @@ DaiController.prototype.reset = function () {
 /**
  * Adds an EventListener to the StreamManager. For a list of available events,
  * see
- * https://developers.google.com/interactive-media-ads/docs/sdks/html5/dai/reference/js/StreamEvent
+ * https://developers.google.com/ad-manager/dynamic-ad-insertion/sdk/html5/reference/js/StreamEvent
  * @param {google.ima.StreamEvent.Type!} event The AdEvent.Type for which to
  *     listen.
  * @param {callback!} callback The method to call when the event is fired.
@@ -3439,27 +3510,6 @@ DaiController.prototype.streamWillAutoplay = function () {
 DaiController.prototype.triggerPlayerEvent = function (name, data) {
   this.playerWrapper.triggerPlayerEvent(name, data);
 };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Copyright 2017 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * IMA SDK integration plugin for Video.js. For more information see
- * https://www.github.com/googleads/videojs-ima
- */
 
 /**
  * Exposes the ImaPlugin to a publisher implementation.
@@ -3687,8 +3737,7 @@ var init = function init(options) {
 /**
  * LiveStream class used for DAI live streams.
  */
-
-var LiveStream =
+var LiveStream = /*#__PURE__*/_createClass(
 /**
  * LiveStream class constructor used for DAI live streams.
  * @param {string} streamFormat stream format, plugin currently supports only
@@ -3697,7 +3746,6 @@ var LiveStream =
  */
 function LiveStream(streamFormat, assetKey) {
   _classCallCheck(this, LiveStream);
-
   streamFormat = streamFormat.toLowerCase();
   if (streamFormat !== 'hls' && streamFormat !== 'dash') {
     window.console.error('VodStream error: incorrect streamFormat.');
@@ -3711,14 +3759,11 @@ function LiveStream(streamFormat, assetKey) {
   }
   this.streamFormat = streamFormat;
   this.assetKey = assetKey;
-};
-
+});
 /**
  * VodStream class used for DAI VOD streams.
  */
-
-
-var VodStream =
+var VodStream = /*#__PURE__*/_createClass(
 /**
  * VodStream class constructor used for DAI VOD streams.
  * @param {string} streamFormat stream format, plugin currently supports only
@@ -3728,7 +3773,6 @@ var VodStream =
  */
 function VodStream(streamFormat, cmsId, videoId) {
   _classCallCheck(this, VodStream);
-
   streamFormat = streamFormat.toLowerCase();
   if (streamFormat !== 'hls' && streamFormat !== 'dash') {
     window.console.error('VodStream error: incorrect streamFormat.');
@@ -3743,20 +3787,16 @@ function VodStream(streamFormat, cmsId, videoId) {
     window.console.error('videoId error: value must be string.');
     return;
   }
-
   this.streamFormat = streamFormat;
   this.cmsId = cmsId;
   this.videoId = videoId;
-};
-
+});
 /**
  * Initializes the plugin for DAI ads.
  * @param {Object} stream Accepts either an instance of the LiveStream or
  * VodStream classes.
  * @param {Object} options Plugin option set on initiation.
  */
-
-
 var initDai = function initDai(stream, options) {
   if (stream instanceof LiveStream) {
     options.streamType = 'live';
@@ -3769,15 +3809,13 @@ var initDai = function initDai(stream, options) {
     window.console.error('initDai() first parameter must be an instance of LiveStream or ' + 'VodStream.');
     return;
   }
-
   options.streamFormat = stream.streamFormat;
   /* eslint no-invalid-this: 'off' */
   this.imaDai = new ImaDaiPlugin(this, options);
 };
-
 var registerPlugin = videojs.registerPlugin || videojs.plugin;
 registerPlugin('ima', init);
 registerPlugin('imaDai', initDai);
 
-export { VodStream, LiveStream };
 export default ImaPlugin;
+export { VodStream, LiveStream };
