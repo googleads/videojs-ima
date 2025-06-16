@@ -1,13 +1,14 @@
 import copy from 'rollup-plugin-copy';
-import json from 'rollup-plugin-json';
-import babel from 'rollup-plugin-babel';
+import json from '@rollup/plugin-json';
+import {babel} from '@rollup/plugin-babel';
 
 export default {
   name: 'videojsIma',
   input: 'src/ima-plugin.js',
   output: {
-    file: 'dist/videojs.ima.es.js',
-    format: 'es',
+    file: 'dist/videojs.ima.js',
+    format: 'umd',
+    name: 'videojsIma',
   },
   external: ['video.js', 'videojs-contrib-ads'],
   globals: {
