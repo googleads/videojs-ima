@@ -73,7 +73,7 @@
     "path": "^0.12.7",
     "protractor": "^7.0.0",
     "rimraf": "^2.7.1",
-    "rollup": "^4.43.0",
+    "rollup": "^2.79.2",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-uglify": "^2.0.1",
     "selenium-webdriver": "^4.16.0",
