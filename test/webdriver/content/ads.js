@@ -17,24 +17,24 @@ var adTags = {
   linear: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/' +
   'external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&' +
   'ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&' +
-  'env=vp&impl=s&correlator=',
+  'env=vp&correlator=',
   skippable: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/' +
   'external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&' +
-  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=',
+  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&correlator=',
   vmap_preroll: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/' +
   'external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&' +
   'ciu_szs=300x250%2C728x90&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&' +
-  'env=vp&impl=s&correlator=',
+  'env=vp&correlator=',
   vmap_midroll: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/' +
   'vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dmidonly&ciu_szs=300x250&' +
-  'gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&cmsid=496&' +
+  'gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&cmsid=496&' +
   'vid=short_onecue&correlator=',
   nonlinear: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/' +
   'nonlinear_ad_samples&sz=480x70&cust_params=sample_ct%3Dnonlinear&ciu_szs=300x250%2C728x90&' +
-  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=',
+  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&correlator=',
   error_303: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/' +
   'single_ad_samples&sz=640x480&cust_params=sample_ct%3Dredirecterror&ciu_szs=300x250%2C728x90&' +
-  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator='
+  'gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&correlator='
 };
 
 const searchParams = new URLSearchParams(location.search);
