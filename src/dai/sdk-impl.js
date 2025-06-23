@@ -340,7 +340,7 @@ SdkImpl.prototype.onPlayerDisposed = function() {
  * plugin.
  */
 SdkImpl.prototype.getStreamManager = function() {
-  return this.StreamManager;
+  return this.streamManager;
 };
 
 
@@ -348,8 +348,8 @@ SdkImpl.prototype.getStreamManager = function() {
  * Reset the SDK implementation.
  */
 SdkImpl.prototype.reset = function() {
-  if (this.StreamManager) {
-    this.StreamManager.reset();
+  if (this.streamManager) {
+    this.streamManager.reset();
   }
 };
 
