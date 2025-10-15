@@ -137,7 +137,7 @@ SdkImpl.prototype.onAddTrack = function(event) {
   if (track.kind === 'metadata') {
     track.mode = 'hidden';
     track.addEventListener('cuechange', (e) => {
-      for (const cue of track.activeCues_) {
+      for (const cue of track.activeCues) {
         const metadata = {};
         metadata[cue.value.key] = cue.value.data;
         this.streamManager.onTimedMetadata(metadata);
