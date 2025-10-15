@@ -107,15 +107,16 @@ SdkImpl.prototype.initImaDai = function() {
   this.streamPlayer.addEventListener('pause', this.onStreamPause);
   this.streamPlayer.addEventListener('play', this.onStreamPlay);
 
-  this.streamManager.addEventListener(
-    [
-      google.ima.dai.api.StreamEvent.Type.LOADED,
-      google.ima.dai.api.StreamEvent.Type.ERROR,
-      google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED,
-      google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED,
-    ],
-    this.onStreamEvent.bind(this),
-    false);
+  const imaEvents = [
+    google.ima.dai.api.StreamEvent.Type.LOADED,
+    google.ima.dai.api.StreamEvent.Type.ERROR,
+    google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED,
+    google.ima.dai.api.StreamEvent.Type.AD_BREAK_ENDED,
+  ];
+
+  imaEvents.forEach((event) => {
+    this.streamManager.addEventListener(event, this.onStreamEvent.bind(this));
+  });
 
   this.vjsPlayer.textTracks().onaddtrack = this.onAddTrack.bind(this);
 
