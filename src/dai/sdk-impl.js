@@ -212,7 +212,7 @@ SdkImpl.prototype.onStreamPause = function() {
         'stream. ' + event.getStreamData().errorMessage);
       this.daiController.onErrorLoadingAds(event);
       if (this.daiController.getSettings().fallbackStreamUrl) {
-        this.loadurl(this.daiController.getSettings().fallbackStreamUrl);
+        this.loadUrl(this.daiController.getSettings().fallbackStreamUrl);
       }
       break;
     case google.ima.dai.api.StreamEvent.Type.AD_BREAK_STARTED:
