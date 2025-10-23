@@ -336,6 +336,20 @@ SdkImpl.prototype.onPlayerDisposed = function() {
 };
 
 /**
+ * Adds an EventListener to the StreamManager. For a list of available events,
+ * see
+ * https://developers.google.com/ad-manager/dynamic-ad-insertion/sdk/html5/reference/js/StreamEvent#.Type
+ * @param {google.ima.dai.api.StreamEvent.Type} event The StreamEvent.Type for
+ *     which to listen.
+ * @param {callback} callback The method to call when the event is fired.
+ */
+SdkImpl.prototype.addEventListener = function(event, callback) {
+  if (this.streamManager) {
+    this.streamManager.addEventListener(event, callback);
+  }
+};
+
+/**
  * Returns the instance of the StreamManager.
  * @return {google.ima.StreamManager!} The StreamManager being used by the
  * plugin.
