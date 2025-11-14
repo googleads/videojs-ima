@@ -1214,7 +1214,7 @@ AdUi.prototype.setShowCountdown = function (showCountdownIn) {
   this.countdownDiv.style.display = this.showCountdown ? 'block' : 'none';
 };
 
-var version = "2.4.0";
+var version = "2.5.0";
 var pkg = {
 	version: version};
 
