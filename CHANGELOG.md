@@ -1,8 +1,8 @@
-<a name="2.4.0"></a>
-# [2.4.0](https://github.com/googleads/videojs-ima/compare/v2.3.0...v2.4.0) (2025-06-17)
+<a name="2.5.0"></a>
+# [2.5.0](https://github.com/googleads/videojs-ima/compare/v2.4.0...v2.5.0) (2025-11-14)
 
-<a name="2.3.0"></a>
-# [2.3.0](https://github.com/googleads/videojs-ima/compare/v2.2.0...v2.3.0) (2024-01-04)
+<a name="2.4.0"></a>
+# [2.4.0](https://github.com/googleads/videojs-ima/compare/v2.2.0...v2.4.0) (2025-06-17)
 
 <a name="2.2.0"></a>
 # [2.2.0](https://github.com/googleads/videojs-ima/compare/v2.1.0...v2.2.0) (2023-07-18)
@@ -12,9 +12,6 @@
 
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/googleads/videojs-ima/compare/v2.0.0...v2.0.1) (2022-06-06)
-
-<a name="2.0.0"></a>
-# [2.0.0](https://github.com/googleads/videojs-ima/compare/v1.11.0...v2.0.0) (2022-04-18)
 
 <a name="1.11.0"></a>
 # [1.11.0](https://github.com/googleads/videojs-ima/compare/v1.10.1...v1.11.0) (2021-05-07)
@@ -37,9 +34,6 @@
 <a name="1.8.2"></a>
 ## [1.8.2](https://github.com/googleads/videojs-ima/compare/v1.8.1...v1.8.2) (2020-10-14)
 
-<a name="1.8.1"></a>
-## [1.8.1](https://github.com/googleads/videojs-ima/compare/v1.8.0...v1.8.1) (2020-08-05)
-
 ### Bug Fixes
 
 * updates urls in README ([63043a0](https://github.com/googleads/videojs-ima/commit/63043a0))
@@ -54,7 +48,10 @@
 ## [1.7.4](https://github.com/googleads/videojs-ima/compare/v1.7.3...v1.7.4) (2019-12-12)
 
 <a name="1.7.3"></a>
-## [1.7.3](https://github.com/googleads/videojs-ima/compare/v1.7.0...v1.7.3) (2019-12-12)
+## [1.7.3](https://github.com/googleads/videojs-ima/compare/v1.7.1...v1.7.3) (2019-12-12)
+
+<a name="1.7.1"></a>
+## [1.7.1](https://github.com/googleads/videojs-ima/compare/v1.7.0...v1.7.1) (2019-10-14)
 
 <a name="1.7.0"></a>
 # [1.7.0](https://github.com/googleads/videojs-ima/compare/v1.6.3...v1.7.0) (2019-10-04)
@@ -251,9 +248,9 @@
 
 ### Tests
 
-* **webdriver:** Adds browserstack config (local only). ([#510](https://github.com/googleads/videojs-ima/issues/510)) ([d7d7939](https://github.com/googleads/videojs-ima/commit/d7d7939))
 * Added Travis CI credentials for browserstack. ([#511](https://github.com/googleads/videojs-ima/issues/511)) ([6b6f124](https://github.com/googleads/videojs-ima/commit/6b6f124))
 * Fix error with BrowserStack tests. ([#519](https://github.com/googleads/videojs-ima/issues/519)) ([e4722d0](https://github.com/googleads/videojs-ima/commit/e4722d0))
+* **webdriver:** Adds browserstack config (local only). ([#510](https://github.com/googleads/videojs-ima/issues/510)) ([d7d7939](https://github.com/googleads/videojs-ima/commit/d7d7939))
 
 <a name="1.0.4"></a>
 ## [1.0.4](https://github.com/googleads/videojs-ima/compare/v1.0.3...v1.0.4) (2018-01-17)
