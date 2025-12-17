@@ -1,7 +1,6 @@
 import copy from 'rollup-plugin-copy';
 import json from '@rollup/plugin-json';
-import {minify} from 'uglify-js';
-import uglify from 'rollup-plugin-uglify';
+import terser from '@rollup/plugin-terser';
 import {babel} from '@rollup/plugin-babel';
 
 export default {
@@ -21,7 +20,7 @@ export default {
     babel({
       exclude: 'node_modules/**',
     }),
-    uglify({}, minify),
+    terser(),
     copy({
       'src/css/videojs.ima.css': 'dist/videojs.ima.css',
     }),
