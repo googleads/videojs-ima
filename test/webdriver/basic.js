@@ -136,5 +136,40 @@ browsers.browsers.forEach(function(browser) {
       await driver.wait(until.elementTextContains(log, '303'), timeoutTime);
       await driver.sleep();
     });
+
+    /**
+     * Helper function to test DAI ad UI display.
+     * @param {string} adType The type of DAI ad ('live' or 'vod').
+     * @param {number} timeoutMultiplier Multiplier for the timeout duration.
+     */
+    async function testDaiAdUI(adType, timeoutMultiplier) {
+      this.retries(retryCount);
+      await driver.get(`http://localhost:8000/test/webdriver/index_dai.html?ad=${adType}`);
+
+      // Get the Video.js version from the browser window.
+      const vjsVersion = await driver.executeScript('return videojs.VERSION;');
+      const vjsMajorVersion = parseInt(vjsVersion.split('.')[0], 10);
+
+      // Check if version is less than 7.
+      if (vjsMajorVersion < 7) {
+        console.log(`Skipping test for Video.js version ${vjsVersion}`);
+        this.skip();
+      }
+
+      await driver.findElement(By.id('video-dai')).click();
+      let log = await driver.findElement(By.id('log'));
+      await driver.wait(until.elementTextContains(log, 'firstquartile'), timeoutTime * timeoutMultiplier);
+      // The 'ad-ui' element is dynamically created by the DAI SDK.
+      await driver.wait(until.elementIsVisible(driver.findElement(
+        By.id('ad-ui'))), timeoutTime * timeoutMultiplier);
+    }
+
+    it(`Displays HLS DAI livestream ad UI ${browser.name}`, async function(){
+      await testDaiAdUI.call(this, 'hls_live', 2);
+    });
+
+    it(`Displays HLS DAI VOD ad UI ${browser.name}`, async function(){
+      await testDaiAdUI.call(this, 'hls_vod', 1);
+    });
   });
 });

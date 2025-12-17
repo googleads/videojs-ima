@@ -21,6 +21,8 @@ For more information, see the
 [IMA DAI SDK documentation](//developers.google.com/ad-manager/dynamic-ad-insertion/sdk/html5).
 
 ## Requirements
+  - Video.js [v7.0.0+](//github.com/videojs/video.js/releases/tag/v7.0.0) for
+    HLS playback support.
   - Your favorite text editor
   - A JavaScript enabled browser
   - An [Ad Manager 360 Advanced](//support.google.com/admanager/answer/3485387)
