@@ -26,7 +26,7 @@
     "test:vjs7": "npm install video.js@7 videojs-contrib-ads@6.9.0  --no-save && npm-run-all -p -r testServer webdriver",
     "test:vjs8": "npm install video.js@8 videojs-contrib-ads@7  --no-save && npm-run-all -p -r testServer webdriver",
     "testServer": "http-server --cors -p 8000 --silent",
-    "preversion": "node scripts/preversion.js && npm run lint",
+    "preversion": "node scripts/preversion.js && npm run lint && npm test",
     "version": "node scripts/version.js",
     "postversion": "node scripts/postversion.js",
     "webdriver": "mocha test/webdriver/*.js --no-timeouts"
