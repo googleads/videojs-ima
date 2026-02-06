@@ -146,7 +146,7 @@ SdkImpl.prototype.onAddTrack = function(event) {
         return;
       }
       for (const cue of activeCues) {
-        if (cue?.value?.key === GOOGLE_DAI_TIMED_METADATA_KEY) {
+        if (cue.value && cue.value.key === GOOGLE_DAI_TIMED_METADATA_KEY) {
           this.streamManager.onTimedMetadata({
             [GOOGLE_DAI_TIMED_METADATA_KEY]: cue.value.data,
           });

@@ -1,6 +1,6 @@
 {
   "name": "videojs-ima",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "license": "Apache-2.0",
   "main": "./dist/videojs.ima.js",
   "module": "./dist/videojs.ima.es.js",
@@ -60,7 +60,7 @@
     "@xmldom/xmldom": "^0.8.10",
     "axios": "^1.8.4",
     "child_process": "^1.0.2",
-    "chromedriver": "^142.0.1",
+    "chromedriver": "^144.0.1",
     "conventional-changelog-cli": "^2.2.2",
     "conventional-changelog-videojs": "^3.0.2",
     "ecstatic": "^4.1.4",
