@@ -1,5 +1,5 @@
 <a name="2.6.0"></a>
-# [2.6.0](https://github.com/googleads/videojs-ima/compare/v2.4.0...v2.6.0) (2026-02-06)
+# [2.6.0](https://github.com/googleads/videojs-ima/compare/v2.5.0...v2.6.0) (2026-02-06)
 
 <a name="2.5.0"></a>
 # [2.5.0](https://github.com/googleads/videojs-ima/compare/v2.4.0...v2.5.0) (2025-11-14)
@@ -302,4 +302,3 @@
 
 <a name="0.5.0"></a>
 # [0.5.0](https://github.com/googleads/videojs-ima/compare/0.4.0...0.5.0) (2016-09-20)
-
