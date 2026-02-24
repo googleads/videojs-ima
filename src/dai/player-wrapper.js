@@ -101,10 +101,20 @@ PlayerWrapper.prototype.playerDisposedListener = function() {
  * Called on the player's 'ready' event to begin initiating IMA.
  */
 PlayerWrapper.prototype.onPlayerReady = function() {
-  this.h5Player =
-      document.getElementById(
-          this.getPlayerId()).getElementsByClassName(
-              'vjs-tech')[0];
+
+  // Find vjs player container.
+  // If vjsContainer no exist, find vjsPlayer parent element container..
+  var vjsContainer =  document.getElementById(this.getPlayerId())?.
+                      getElementsByClassName('vjs-tech')[0];
+  
+  if (vjsContainer) {
+    this.h5Player = vjsContainer;
+  } else {
+    window.console.warn('VideoJS player container out of DOM.');
+    this.h5Player = (this.vjsPlayer.el().parentElement).
+                    getElementsByClassName('vjs-tech')[0];
+  }
+
   this.daiController.onPlayerReady();
 };
 
