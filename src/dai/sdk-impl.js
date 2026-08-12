@@ -73,6 +73,11 @@ const SdkImpl = function(daiController) {
   this.snapForwardTime = 0;
 
   /**
+   * Earliest stream time eligible for snapback.
+   */
+  this.snapbackFloor = 0;
+
+  /**
    * Timed metadata for the stream.
    */
    this.timedMetadata;
@@ -201,7 +206,8 @@ SdkImpl.prototype.onStreamPause = function() {
   }
   const previousCuePoint =
       this.streamManager.previousCuePointForStreamTime(currentTime);
-  if (previousCuePoint && !previousCuePoint.played) {
+  if (previousCuePoint && !previousCuePoint.played &&
+      previousCuePoint.start >= this.snapbackFloor) {
     this.isSnapback = true;
     this.snapForwardTime = currentTime;
     this.vjsPlayer.currentTime(previousCuePoint.start);
@@ -261,10 +267,8 @@ SdkImpl.prototype.loadUrl = function(streamUrl) {
     if (bookmarkTime) {
       const startTime =
           this.streamManager.streamTimeForContentTime(bookmarkTime);
-      // Seeking on load triggers the onSeekEnd event, so treat this seek as
-      // if it's snapback. Without this, resuming at a bookmark kicks you
-      // back to the ad before the bookmark.
-      this.isSnapback = true;
+      // Prevent snapback to ad breaks before the bookmark.
+      this.snapbackFloor = startTime;
       this.vjsPlayer.currentTime(startTime);
     }
   }.bind(this));
